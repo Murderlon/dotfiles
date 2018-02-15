@@ -59,7 +59,7 @@ alias g "git"; and funcsave g;
 
 ## Tmux
 
-Nothing special going on here, in [`.tmux.conf`](https://github.com/Murderlon/ubicomp/blob/master/.tmux.conf) I change the tmux prefix and use [`tpn`](https://github.com/tmux-plugins/tpm) (Tmux Plugin Manager) to add [`tmux-sensible`](https://github.com/tmux-plugins/tmux-sensible). Also, the snapshot file for [`tmuxline`](https://github.com/edkolev/tmuxline.vim) is sourced there.
+Nothing special going on here, in [`.tmux.conf`](https://github.com/Murderlon/dotfiles/blob/master/.tmux.conf) I change the tmux prefix and use [`tpn`](https://github.com/tmux-plugins/tpm) (Tmux Plugin Manager) to add [`tmux-sensible`](https://github.com/tmux-plugins/tmux-sensible). Also, the snapshot file for [`tmuxline`](https://github.com/edkolev/tmuxline.vim) is sourced there.
 
 ## Vim
 
@@ -130,7 +130,7 @@ If you want the entire setup, simply run this script.
 
 ### Shell
 
-Checkout [`.shell.sh`](https://github.com/Murderlon/ubicomp/blob/master/.shell.sh) to see the installation process.
+Checkout [`.shell.sh`](https://github.com/Murderlon/dotfiles/blob/master/.shell.sh) to see the installation process.
 
 ```
 ./.shell
@@ -147,7 +147,7 @@ Move the following files to your user folder.
 
 ### macOS
 
-Sensible macOS defaults. See [`.macOS.sh`](https://github.com/Murderlon/ubicomp/blob/master/.macOS.sh) to find out what that entails.
+Sensible macOS defaults. See [`.macOS.sh`](https://github.com/Murderlon/dotfiles/blob/master/.macOS.sh) to find out what that entails.
 
 ```
 ./.macOS
