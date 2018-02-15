@@ -1,0 +1,84 @@
+[submodule "dotbot"]
+	path = dotbot
+	url = https://github.com/anishathalye/dotbot
+[submodule ".vim_runtime/plugins/ack.vim"]
+	path = .vim_runtime/plugins/ack.vim
+	url = https://github.com/mileszs/ack.vim
+[submodule ".vim_runtime/plugins/bufexplorer.zip"]
+	path = .vim_runtime/plugins/bufexplorer.zip
+	url = https://github.com/vim-scripts/bufexplorer.zip
+[submodule ".vim_runtime/plugins/ctrlp.vim"]
+	path = .vim_runtime/plugins/ctrlp.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim
+[submodule ".vim_runtime/plugins/goyo.vim"]
+	path = .vim_runtime/plugins/goyo.vim
+	url = https://github.com/junegunn/goyo.vim
+[submodule ".vim_runtime/plugins/vim-zenroom2"]
+	path = .vim_runtime/plugins/vim-zenroom2
+	url = https://github.com/amix/vim-zenroom2
+[submodule ".vim_runtime/plugins/lightline.vim"]
+	path = .vim_runtime/plugins/lightline.vim
+	url = https://github.com/itchyny/lightline.vim
+[submodule ".vim_runtime/plugins/nerdtree"]
+	path = .vim_runtime/plugins/nerdtree
+	url = https://github.com/scrooloose/nerdtree
+[submodule ".vim_runtime/plugins/mru.vim"]
+	path = .vim_runtime/plugins/mru.vim
+	url = https://github.com/vim-scripts/mru.vim
+[submodule ".vim_runtime/plugins/open_file_under_cursor.vim"]
+	path = .vim_runtime/plugins/open_file_under_cursor.vim
+	url = https://github.com/amix/open_file_under_cursor.vim
+[submodule ".vim_runtime/plugins/vim-pathogen"]
+	path = .vim_runtime/plugins/vim-pathogen
+	url = https://github.com/tpope/vim-pathogen
+[submodule ".vim_runtime/plugins/vim-snipmate"]
+	path = .vim_runtime/plugins/vim-snipmate
+	url = https://github.com/garbas/vim-snipmate
+[submodule ".vim_runtime/plugins/syntastic"]
+	path = .vim_runtime/plugins/syntastic
+	url = https://github.com/scrooloose/syntastic
+[submodule ".vim_runtime/plugins/vim-commentary"]
+	path = .vim_runtime/plugins/vim-commentary
+	url = https://github.com/tpope/vim-commentary
+[submodule ".vim_runtime/plugins/vim-expand-region"]
+	path = .vim_runtime/plugins/vim-expand-region
+	url = https://github.com/terryma/vim-expand-region
+[submodule ".vim_runtime/plugins/vim-fugitive"]
+	path = .vim_runtime/plugins/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive
+[submodule ".vim_runtime/plugins/vim-indent-object"]
+	path = .vim_runtime/plugins/vim-indent-object
+	url = https://github.com/michaeljsmith/vim-indent-object
+[submodule ".vim_runtime/plugins/vim-multiple-cursors"]
+	path = .vim_runtime/plugins/vim-multiple-cursors
+	url = https://github.com/terryma/vim-multiple-cursors
+[submodule ".vim_runtime/plugins/vim-yankstack"]
+	path = .vim_runtime/plugins/vim-yankstack
+	url = https://github.com/maxbrunsfeld/vim-yankstack
+[submodule ".vim_runtime/plugins/dracula"]
+	path = .vim_runtime/plugins/dracula
+	url = https://github.com/dracula/vim
+[submodule ".vim_runtime/plugins/indentLine"]
+	path = .vim_runtime/plugins/indentLine
+	url = https://github.com/Yggdroot/indentLine
+[submodule ".vim_runtime/plugins/onedark.vim"]
+	path = .vim_runtime/plugins/onedark.vim
+	url = https://github.com/joshdick/onedark.vim
+[submodule ".vim_runtime/plugins/tmuxline.vim"]
+	path = .vim_runtime/plugins/tmuxline.vim
+	url = https://github.com/edkolev/tmuxline.vim
+[submodule ".vim_runtime/plugins/vim-gitgutter"]
+	path = .vim_runtime/plugins/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter
+[submodule ".vim_runtime/plugins/vim-javascript"]
+	path = .vim_runtime/plugins/vim-javascript
+	url = https://github.com/pangloss/vim-javascript
+[submodule ".vim_runtime/plugins/vim-jsx"]
+	path = .vim_runtime/plugins/vim-jsx
+	url = https://github.com/mxw/vim-jsx
+[submodule ".vim_runtime/plugins/vim-markdown"]
+	path = .vim_runtime/plugins/vim-markdown
+	url = https://github.com/plasticboy/vim-markdown
+[submodule ".vim_runtime/plugins/vim-repeat"]
+	path = .vim_runtime/plugins/vim-repeat
+	url = https://github.com/tpope/vim-repeat

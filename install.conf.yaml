@@ -1,0 +1,21 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+
+- clean: ['~']
+
+- link:
+    ~/.gitconfig: .gitconfig
+    ~/.gitignore: .gitignore
+    ~/.macOS.sh: .macOS.sh
+    ~/.shell.sh: .shell.sh
+    ~/.tmux.conf: .tmux.conf
+    ~/.tmuxline: .tmuxline
+    ~/.vim_runtime: .vim_runtime
+    ~/.vimrc: .vimrc
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
+  - [./.shell, Installing fish shell, fisherman, and several plugins]
+  - [./.macOS, Set macOS sensible defaults]
