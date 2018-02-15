@@ -82,3 +82,9 @@
 [submodule ".vim_runtime/plugins/vim-repeat"]
 	path = .vim_runtime/plugins/vim-repeat
 	url = https://github.com/tpope/vim-repeat
+[submodule ".vim_runtime/plugins/vim-addon-mw-utils"]
+	path = .vim_runtime/plugins/vim-addon-mw-utils
+	url = https://github.com/MarcWeber/vim-addon-mw-utils
+[submodule ".vim_runtime/plugins/peaksea"]
+	path = .vim_runtime/plugins/peaksea
+	url = https://github.com/vim-scripts/peaksea
