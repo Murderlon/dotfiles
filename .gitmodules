@@ -88,3 +88,6 @@
 [submodule ".vim_runtime/plugins/peaksea"]
 	path = .vim_runtime/plugins/peaksea
 	url = https://github.com/vim-scripts/peaksea
+[submodule ".vim_runtime/plugins/tlib_vim"]
+	path = .vim_runtime/plugins/tlib_vim
+	url = https://github.com/tomtom/tlib_vim

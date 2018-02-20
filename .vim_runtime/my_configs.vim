@@ -3,12 +3,14 @@ let g:jsx_ext_required=0
 
 " Remove mode indication (already provided by lightline)
 set noshowmode
+set relativenumber
 
-let g:lightline = {'colorscheme': 'onedark'}
+let g:lightline = {'colorscheme': 'Dracula'}
 " Always use the lightline theme declared above
 let g:tmuxline_theme = 'lightline'
+let g:tmuxline_powerline_separators = 0
 
-colorscheme onedark
+colorscheme Dracula
 
-" Disable folding 
-set nofoldenable
+" Show hidden files in NERDTree
+let NERDTreeShowHidden=1
