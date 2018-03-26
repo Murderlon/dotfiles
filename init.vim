@@ -14,10 +14,17 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
 
   call dein#add('Shougo/neosnippet.vim')
   call dein#add('Shougo/neosnippet-snippets')
-  call dein#add('Yggdroot/indentLine')
+  call dein#add('tpope/vim-surround')
+  call dein#add('terryma/vim-multiple-cursors')
+  call dein#add('jiangmiao/auto-pairs')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('scrooloose/nerdtree')
+  call dein#add('Yggdroot/indentLine')
+  call dein#add('yegappan/mru')
+  call dein#add('Shougo/deoplete.nvim')
+  call dein#add('ryanoasis/vim-devicons')
+  call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
   
   call dein#add('kenwheeler/glow-in-the-dark-gucci-shark-bites-vim')
   call dein#add('mhartington/oceanic-next')
@@ -28,6 +35,7 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   
   call dein#add('w0rp/ale')
   call dein#add('prettier/vim-prettier')
+  call dein#add('xojs/vim-xo')
 
   call dein#end()
   call dein#save_state()
@@ -74,7 +82,7 @@ command W w !sudo tee % > /dev/null
 syntax enable
 set termguicolors
 set background=dark
-colorscheme onedark 
+colorscheme nord 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -227,8 +235,21 @@ map <leader>nf :NERDTreeFind<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ale
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_linters = {'js': ['xo', 'eslint']}
 let g:ale_fixers = {}
 let g:ale_fixers['javascript'] = ['prettier']
 let g:ale_fix_on_save = 1
 let g:ale_javascript_prettier_use_local_config = 1
 let g:ale_javascript_prettier_options = '--single-quote'
+
+""""""""""""""""""""""""""""""
+" => MRU plugin
+""""""""""""""""""""""""""""""
+let MRU_Max_Entries = 400
+map <leader>f :MRU<CR>
+
+""""""""""""""""""""""""""""""
+" => Misc
+""""""""""""""""""""""""""""""
+let g:deoplete#enable_at_startup = 1
+let g:airline_powerline_fonts = 1
