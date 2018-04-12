@@ -2,8 +2,7 @@
 
 > 🛠 fish shell, CLI tooling, Git, Vim/Tmux for JS/React, sensible macOS defaults
 
-![Screenshot of the shell environment](docs/shell-preview.png)
-![Screenshot of vim editing a project](docs/vim-preview.png)
+![preview of vim]docs/preview.png)
 
 ## Shell
 
