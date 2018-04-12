@@ -1,6 +1,6 @@
 # dotfiles
 
-> 🛠 fish shell, CLI tooling, Git, Vim/Tmux for JS/React, sensible macOS defaults
+> 🛠 fish shell, CLI tooling, Git, Vim for JS/React, sensible macOS defaults
 
 ![Preview of vim](docs/preview.png)
 
@@ -82,15 +82,6 @@ Checkout [`.shell.sh`](https://github.com/Murderlon/dotfiles/blob/master/.shell.
 ./.shell
 ```
 
-### Vim / Tmux
-
-Move the following files to your user folder.
-
-* `.vimrc`
-* `.tmux.conf`
-* `.tmuxline`
-* `.vim_runtime/`
-
 ### macOS
 
 Sensible macOS defaults. See [`.macOS.sh`](https://github.com/Murderlon/dotfiles/blob/master/.macOS.sh) to find out what that entails.
@@ -98,12 +89,6 @@ Sensible macOS defaults. See [`.macOS.sh`](https://github.com/Murderlon/dotfiles
 ```
 ./.macOS
 ```
-
-## Todo
-
-* Add [vim-prettier](https://github.com/prettier/vim-prettier).
-* Setup eslint for vim.
-* Further improve vim for React and CSS-in-JS.
 
 ## Credits
 
