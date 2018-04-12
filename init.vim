@@ -17,11 +17,13 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('tpope/vim-surround')
   call dein#add('terryma/vim-multiple-cursors')
   call dein#add('jiangmiao/auto-pairs')
+  call dein#add('mattn/emmet-vim')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('scrooloose/nerdtree')
   call dein#add('Yggdroot/indentLine')
   call dein#add('yegappan/mru')
+  call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('Shougo/deoplete.nvim')
   call dein#add('ryanoasis/vim-devicons')
   call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
@@ -30,12 +32,14 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('mhartington/oceanic-next')
   call dein#add('arcticicestudio/nord-vim')
   call dein#add('joshdick/onedark.vim')
+  call dein#add('altercation/vim-colors-solarized')
   
   call dein#add('sheerun/vim-polyglot')
   
   call dein#add('w0rp/ale')
-  call dein#add('prettier/vim-prettier')
-  call dein#add('xojs/vim-xo')
+  call dein#add('editorconfig/editorconfig-vim')
+
+  call dein#add('tpope/vim-fugitive')
 
   call dein#end()
   call dein#save_state()
@@ -61,6 +65,9 @@ set autoread
 " Relative line numbers
 set number
 
+" Disable line wrapping 
+set nowrap
+
 " Remove mode indication (already provided by airline)
 set noshowmode
 
@@ -82,7 +89,7 @@ command W w !sudo tee % > /dev/null
 syntax enable
 set termguicolors
 set background=dark
-colorscheme nord 
+colorscheme nord
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -235,13 +242,12 @@ map <leader>nf :NERDTreeFind<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ale
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_linters = {'js': ['xo', 'eslint']}
-let g:ale_fixers = {}
-let g:ale_fixers['javascript'] = ['prettier']
+let g:ale_sign_column_always = 1
+let g:ale_fixers = {'javascript': ['eslint']}
+let g:ale_linters = {'javascript': ['eslint']}
 let g:ale_fix_on_save = 1
-let g:ale_javascript_prettier_use_local_config = 1
-let g:ale_javascript_prettier_options = '--single-quote'
-
+let g:ale_sign_column_always = 1
+autocmd bufwritepost *.js silent !standard --fix %
 """"""""""""""""""""""""""""""
 " => MRU plugin
 """"""""""""""""""""""""""""""
@@ -252,4 +258,11 @@ map <leader>f :MRU<CR>
 " => Misc
 """"""""""""""""""""""""""""""
 let g:deoplete#enable_at_startup = 1
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 let g:airline_powerline_fonts = 1
+
+""""""""""""""""""""""""""""""
+" => crtlp
+""""""""""""""""""""""""""""""
+let g:ctrlp_user_command = ['.git', 'cd %s; and git ls-files -co --exclude-standard']
+let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\build\|^\dist'
