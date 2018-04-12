@@ -2,7 +2,7 @@
 
 > 🛠 fish shell, CLI tooling, Git, Vim/Tmux for JS/React, sensible macOS defaults
 
-![preview of vim]docs/preview.png)
+![Preview of vim](docs/preview.png)
 
 ## Shell
 
@@ -57,6 +57,7 @@ alias g "git"; and funcsave g;
 ```
 
 ## Vim
+
 <a name="vim"/>
 
 All settings are commented in [`init.vim`](https://github.com/Murderlon/dotfiles/blob/master/init.vim)
