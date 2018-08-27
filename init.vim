@@ -18,6 +18,7 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('terryma/vim-multiple-cursors')
   call dein#add('jiangmiao/auto-pairs')
   call dein#add('mattn/emmet-vim')
+  call dein#add('prettier/vim-prettier')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('scrooloose/nerdtree')
@@ -27,12 +28,15 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('Shougo/deoplete.nvim')
   call dein#add('ryanoasis/vim-devicons')
   call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
+  call dein#add('terryma/vim-smooth-scroll')
+  call dein#add('junegunn/goyo.vim')
   
   call dein#add('kenwheeler/glow-in-the-dark-gucci-shark-bites-vim')
   call dein#add('mhartington/oceanic-next')
   call dein#add('arcticicestudio/nord-vim')
   call dein#add('joshdick/onedark.vim')
   call dein#add('altercation/vim-colors-solarized')
+  call dein#add('morhetz/gruvbox')
   
   call dein#add('sheerun/vim-polyglot')
   
@@ -64,17 +68,15 @@ set autoread
 
 " Relative line numbers
 set number
+set relativenumber
 
 " Disable line wrapping 
 set nowrap
 
-" Remove mode indication (already provided by airline)
-set noshowmode
-
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
+let mapleader = " "
+let g:mapleader = " "
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -83,13 +85,14 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
 
+let g:python3_host_prog = '/Users/merlin/.pyenv/versions/3.6.5/bin/python'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax enable
 set termguicolors
 set background=dark
-colorscheme nord
+colorscheme onedark 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -168,8 +171,8 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
-map <c-space> ?
+"map <space> /
+"map <c-space> ?
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -243,11 +246,8 @@ map <leader>nf :NERDTreeFind<cr>
 " => Ale
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ale_sign_column_always = 1
-let g:ale_fixers = {'javascript': ['eslint']}
-let g:ale_linters = {'javascript': ['eslint']}
 let g:ale_fix_on_save = 1
 let g:ale_sign_column_always = 1
-autocmd bufwritepost *.js silent !standard --fix %
 """"""""""""""""""""""""""""""
 " => MRU plugin
 """"""""""""""""""""""""""""""
@@ -265,4 +265,17 @@ let g:airline_powerline_fonts = 1
 " => crtlp
 """"""""""""""""""""""""""""""
 let g:ctrlp_user_command = ['.git', 'cd %s; and git ls-files -co --exclude-standard']
-let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\build\|^\dist'
+
+""""""""""""""""""""""""""""""
+" => smooth scroll
+""""""""""""""""""""""""""""""
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 0, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 0, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+
+""""""""""""""""""""""""""""""
+" => Prettier
+""""""""""""""""""""""""""""""
+let g:prettier#config#bracket_spacing = 'true'
+
