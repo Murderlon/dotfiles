@@ -19,6 +19,7 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('jiangmiao/auto-pairs')
   call dein#add('mattn/emmet-vim')
   call dein#add('prettier/vim-prettier')
+  call dein#add('tpope/vim-commentary')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('scrooloose/nerdtree')
@@ -36,7 +37,8 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('arcticicestudio/nord-vim')
   call dein#add('joshdick/onedark.vim')
   call dein#add('altercation/vim-colors-solarized')
-  call dein#add('morhetz/gruvbox')
+  call dein#add('haishanh/night-owl.vim')
+  call dein#add('vim-airline/vim-airline-themes')
   
   call dein#add('sheerun/vim-polyglot')
   
@@ -85,6 +87,7 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
 
+let g:python_host_prog = '/usr/local/bin/python'
 let g:python3_host_prog = '/Users/merlin/.pyenv/versions/3.6.5/bin/python'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -92,7 +95,7 @@ let g:python3_host_prog = '/Users/merlin/.pyenv/versions/3.6.5/bin/python'
 syntax enable
 set termguicolors
 set background=dark
-colorscheme onedark 
+colorscheme night-owl 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -245,9 +248,8 @@ map <leader>nf :NERDTreeFind<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ale
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_sign_column_always = 1
+" let g:ale_sign_column_always = 1
 let g:ale_fix_on_save = 1
-let g:ale_sign_column_always = 1
 """"""""""""""""""""""""""""""
 " => MRU plugin
 """"""""""""""""""""""""""""""
@@ -260,6 +262,9 @@ map <leader>f :MRU<CR>
 let g:deoplete#enable_at_startup = 1
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='night_owl'
+let g:airline_section_z = ''
 
 """"""""""""""""""""""""""""""
 " => crtlp
@@ -279,3 +284,19 @@ noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 """"""""""""""""""""""""""""""
 let g:prettier#config#bracket_spacing = 'true'
 
+""""""""""""""""""""""""""""""
+" => Neosnippets
+""""""""""""""""""""""""""""""
+let g:neosnippet#snippets_directory='~/.config/nvim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets'
+let g:neosnippet#disable_runtime_snippets = {
+\   '_' : 1,
+\ }
+
+imap <c-k> <Plug>(neosnippet_expand_or_jump)
+smap <c-k> <Plug>(neosnippet_expand_or_jump)
+xmap <c-k> <Plug>(neosnippet_expand_target)
+vmap <c-k> <Plug>(neosnippet_expand_target)
+inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
+vmap <c-u> <Plug>(neosnippet_expand_target)
+let g:neosnippet#enable_completed_snippet=1
+" }}}
