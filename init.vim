@@ -11,6 +11,7 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('/Users/merlin/.config/nvim/dein/repos/github.com/Shougo/dein.vim')
 
   call dein#add('tpope/vim-sensible')
+  call dein#add('christoomey/vim-tmux-navigator')
 
   call dein#add('Shougo/neosnippet.vim')
   call dein#add('Shougo/neosnippet-snippets')
@@ -20,6 +21,7 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('mattn/emmet-vim')
   call dein#add('prettier/vim-prettier')
   call dein#add('tpope/vim-commentary')
+  call dein#add('lifepillar/vim-cheat40')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('scrooloose/nerdtree')
@@ -30,7 +32,6 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('ryanoasis/vim-devicons')
   call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
   call dein#add('terryma/vim-smooth-scroll')
-  call dein#add('junegunn/goyo.vim')
   
   call dein#add('kenwheeler/glow-in-the-dark-gucci-shark-bites-vim')
   call dein#add('mhartington/oceanic-next')
@@ -39,8 +40,11 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
   call dein#add('altercation/vim-colors-solarized')
   call dein#add('haishanh/night-owl.vim')
   call dein#add('vim-airline/vim-airline-themes')
+  call dein#add('dracula/vim')
   
   call dein#add('sheerun/vim-polyglot')
+  call dein#add('styled-components/vim-styled-components')
+  call dein#add('hail2u/vim-css3-syntax')
   
   call dein#add('w0rp/ale')
   call dein#add('editorconfig/editorconfig-vim')
@@ -92,10 +96,15 @@ let g:python3_host_prog = '/Users/merlin/.pyenv/versions/3.6.5/bin/python'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if exists('$TMUX')
+  let &t_8f = "<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "<Esc>[48;2;%lu;%lu;%lum"
+endif
+
 syntax enable
 set termguicolors
 set background=dark
-colorscheme night-owl 
+colorscheme night-owl
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -283,7 +292,8 @@ noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
 " => Prettier
 """"""""""""""""""""""""""""""
 let g:prettier#config#bracket_spacing = 'true'
-
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
 """"""""""""""""""""""""""""""
 " => Neosnippets
 """"""""""""""""""""""""""""""
@@ -299,4 +309,6 @@ vmap <c-k> <Plug>(neosnippet_expand_target)
 inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
 vmap <c-u> <Plug>(neosnippet_expand_target)
 let g:neosnippet#enable_completed_snippet=1
-" }}}
+
+" let g:airline_theme='dracula'
+" let g:indentLine_char="⎸"
