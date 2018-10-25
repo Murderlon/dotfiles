@@ -25,7 +25,6 @@ if dein#load_state('/Users/merlin/.config/nvim/dein')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('scrooloose/nerdtree')
-  call dein#add('Yggdroot/indentLine')
   call dein#add('yegappan/mru')
   call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('Shougo/deoplete.nvim')
@@ -105,6 +104,7 @@ syntax enable
 set termguicolors
 set background=dark
 colorscheme night-owl
+" highlight Comment cterm=italic
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -311,4 +311,4 @@ vmap <c-u> <Plug>(neosnippet_expand_target)
 let g:neosnippet#enable_completed_snippet=1
 
 " let g:airline_theme='dracula'
-" let g:indentLine_char="⎸"
+let g:prettier#config#single_quote = 'true'
