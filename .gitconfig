@@ -24,6 +24,8 @@
 	m = merge
 
 	s = status
+  
+  l = log --pretty=oneline --graph --abbrev-commit
 
 [apply]
 
