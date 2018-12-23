@@ -2,6 +2,7 @@ call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-vinegar'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
@@ -11,20 +12,31 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'styled-components/vim-styled-components'
-Plug 'bling/vim-bufferline'
+Plug 'airblade/vim-gitgutter'
+Plug 'justinmk/vim-sneak'
+Plug 'jiangmiao/auto-pairs'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 
 " Colorschemes
 Plug 'icymind/NeoSolarized'
 Plug 'haishanh/night-owl.vim'
 Plug 'mhartington/oceanic-next'
+Plug 'srcery-colors/srcery-vim'
+Plug 'morhetz/gruvbox'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " Relative line numbers
 set number
 set relativenumber
+
+" Highlight the line of the cursor
+set cursorline
 
 " Disable line wrapping 
 set nowrap
@@ -61,6 +73,7 @@ let g:python3_host_prog = '/Users/merlin/.pyenv/versions/3.6.5/bin/python'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 if exists('$TMUX')
   let &t_8f = "<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "<Esc>[48;2;%lu;%lu;%lum"
@@ -69,18 +82,13 @@ endif
 syntax enable
 set termguicolors
 set background=dark
-colorscheme NeoSolarized
+colorscheme gruvbox
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-    set wildignore+=.git\*,.hg\*,.svn\*
-else
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-endif
+
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/node_modules/*,*/build/*,*/dist
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -150,7 +158,10 @@ map 0 ^
 """"""""""""""""""""""""""""""
 " => Plugin settings
 """"""""""""""""""""""""""""""
+let g:netrw_liststyle = 3
+
 let g:ctrlp_user_command = ['.git', 'cd %s; and git ls-files -co --exclude-standard']
+map <C-b> :CtrlPBuffer<cr>
 
 let g:deoplete#enable_at_startup = 1
 
@@ -167,7 +178,8 @@ vmap <c-k> <Plug>(neosnippet_expand_target)
 inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
 vmap <c-u> <Plug>(neosnippet_expand_target)
 
-let g:bufferline_echo = 0
-  autocmd VimEnter *
-    \ let &statusline='%{bufferline#refresh_status()}'
-      \ .bufferline#get_status_string()
+let g:prettier#autoformat = 0
+let g:prettier#exec_cmd_async = 1
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+let g:prettier#config#semi = 'false'
+let g:prettier#config#single_quote = 'true'
