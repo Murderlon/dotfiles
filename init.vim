@@ -2,7 +2,6 @@ call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-vinegar'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
@@ -18,6 +17,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
 " Colorschemes
 Plug 'icymind/NeoSolarized'
@@ -25,6 +25,7 @@ Plug 'haishanh/night-owl.vim'
 Plug 'mhartington/oceanic-next'
 Plug 'srcery-colors/srcery-vim'
 Plug 'morhetz/gruvbox'
+Plug 'kenwheeler/glow-in-the-dark-gucci-shark-bites-vim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -54,6 +55,9 @@ set tabstop=2
 set ai "Auto indent
 set si "Smart indent
 
+" Refresh file on change
+set autoread
+
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 let mapleader = " "
@@ -82,7 +86,7 @@ endif
 syntax enable
 set termguicolors
 set background=dark
-colorscheme gruvbox
+colorscheme OceanicNext
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -158,13 +162,14 @@ map 0 ^
 """"""""""""""""""""""""""""""
 " => Plugin settings
 """"""""""""""""""""""""""""""
-let g:netrw_liststyle = 3
-
+" Ctrlp
 let g:ctrlp_user_command = ['.git', 'cd %s; and git ls-files -co --exclude-standard']
 map <C-b> :CtrlPBuffer<cr>
 
+" Deoplete
 let g:deoplete#enable_at_startup = 1
 
+" Neosnippet
 let g:neosnippet#enable_completed_snippet=1
 let g:neosnippet#snippets_directory='~/.config/nvim/plugged/neosnippet-snippets/neosnippets'
 let g:neosnippet#disable_runtime_snippets = {
@@ -178,8 +183,20 @@ vmap <c-k> <Plug>(neosnippet_expand_target)
 inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
 vmap <c-u> <Plug>(neosnippet_expand_target)
 
+" Prettier
 let g:prettier#autoformat = 0
 let g:prettier#exec_cmd_async = 1
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 let g:prettier#config#semi = 'false'
 let g:prettier#config#single_quote = 'true'
+
+" Nerdtree
+let NERDTreeShowHidden=1
+let g:NERDTreeWinSize=35
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+map <leader>nn :NERDTreeToggle<cr>
+map <leader>nf :NERDTreeFind<cr>
