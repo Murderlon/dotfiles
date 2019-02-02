@@ -18,6 +18,10 @@ Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'itchyny/lightline.vim'
 
 " Colorschemes
 Plug 'icymind/NeoSolarized'
@@ -26,6 +30,9 @@ Plug 'mhartington/oceanic-next'
 Plug 'srcery-colors/srcery-vim'
 Plug 'morhetz/gruvbox'
 Plug 'kenwheeler/glow-in-the-dark-gucci-shark-bites-vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'phanviet/vim-monokai-pro'
+Plug 'patstockwell/vim-monokai-tasty'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -86,7 +93,7 @@ endif
 syntax enable
 set termguicolors
 set background=dark
-colorscheme OceanicNext
+colorscheme monokai_pro
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -200,3 +207,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 map <leader>nn :NERDTreeToggle<cr>
 map <leader>nf :NERDTreeFind<cr>
+
+" Lightline
+let g:lightline = {
+      \ 'colorscheme': 'monokai_tasty',
+      \ }
