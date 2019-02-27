@@ -2,6 +2,7 @@
 
 	name = Murderlon
 	email = merlijn@soverin.net
+  signingkey = 1FF861FF1DDBB953
 
 [alias]
 
@@ -82,8 +83,7 @@
 
 [commit]
 
-	# https://help.github.com/articles/signing-commits-using-gpg/
-	gpgsign = false
+	gpgsign = true
 
 [diff]
 
@@ -111,6 +111,7 @@
 	default = simple
 	# Make `git push` push relevant annotated tags when pushing branches out.
 	followTags = true
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
