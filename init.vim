@@ -2,16 +2,16 @@ call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'styled-components/vim-styled-components'
-Plug 'airblade/vim-gitgutter'
 Plug 'justinmk/vim-sneak'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
@@ -20,7 +20,24 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'HerringtonDarkholme/yats.vim'
-" Plug 'itchyny/lightline.vim'
+Plug 'terryma/vim-expand-region'
+
+" Conquer Of Completion
+function! InstallDeps(info)
+    if a:info.status == 'installed' || a:info.force
+        let extensions = ['coc-html',       \
+                          'coc-css',        \
+                          'coc-vetur',      \
+                          'coc-neosnippet', \
+                          'coc-tsserver',   \
+                          'coc-json'        \
+                          'coc-pairs'       \
+                          ]
+        call coc#util#install()
+        call coc#util#install_extension(extensions)
+    endif
+endfunction
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': function('InstallDeps')}
 
 " Colorschemes
 Plug 'icymind/NeoSolarized'
@@ -31,7 +48,8 @@ Plug 'morhetz/gruvbox'
 Plug 'kenwheeler/glow-in-the-dark-gucci-shark-bites-vim'
 Plug 'cocopon/iceberg.vim'
 Plug 'phanviet/vim-monokai-pro'
-Plug 'patstockwell/vim-monokai-tasty'
+Plug 'joshdick/onedark.vim'
+Plug 'tomasr/molokai'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -92,7 +110,8 @@ endif
 syntax enable
 set termguicolors
 set background=dark
-colorscheme NeoSolarized
+let g:onedark_terminal_italics=1
+colorscheme OceanicNext
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -159,7 +178,7 @@ map <leader>ba :bufdo bd<cr>
 map <leader>l :bnext<cr>
 map <leader>h :bprevious<cr>
 
-" Return to last edit position when opening files (You want this!)
+" Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " Remap VIM 0 to first non-blank character
@@ -222,3 +241,8 @@ map <leader>nf :NERDTreeFind<cr>
 inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 let g:coc_snippet_next = '<TAB>'
 let g:coc_snippet_prev = '<S-TAB>'
+
+" Ack
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
