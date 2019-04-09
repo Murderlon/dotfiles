@@ -17,6 +17,7 @@ Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+" Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'HerringtonDarkholme/yats.vim'
@@ -46,10 +47,11 @@ Plug 'mhartington/oceanic-next'
 Plug 'srcery-colors/srcery-vim'
 Plug 'morhetz/gruvbox'
 Plug 'kenwheeler/glow-in-the-dark-gucci-shark-bites-vim'
-Plug 'cocopon/iceberg.vim'
+Plug 'arcticicestudio/nord-vim'
 Plug 'phanviet/vim-monokai-pro'
 Plug 'joshdick/onedark.vim'
 Plug 'tomasr/molokai'
+Plug 'ayu-theme/ayu-vim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -98,6 +100,10 @@ command W w !sudo tee % > /dev/null
 let g:python_host_prog = '/usr/local/bin/python'
 let g:python3_host_prog = '/Users/merlin/.pyenv/versions/3.6.5/bin/python'
 
+" In CSS, hyphens are part of identifiers (keywords, properties, selectors...). 
+" By adding it to the iskeyword list, vim will consider identifiers as a whole word.
+au! FileType css,scss setl iskeyword+=-
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -111,7 +117,10 @@ syntax enable
 set termguicolors
 set background=dark
 let g:onedark_terminal_italics=1
-colorscheme OceanicNext
+let g:nord_uniform_diff_background = 1
+let g:nord_italic_comments = 1
+let g:nord_italic = 1
+colorscheme nord
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -156,6 +165,11 @@ set novisualbell
 set t_vb=
 set tm=500
 
+" Open new split panes to right and bottom,
+" which feels more natural than Vim’s default
+set splitbelow
+set splitright
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -194,6 +208,18 @@ inoremap ˚ <Esc>:m .-2<CR>==gi
 
 vnoremap ∆ :m '>+1<CR>gv=gv
 vnoremap ˚ :m '<-2<CR>gv=gv
+
+" Move visual block
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Re-select visual block after indenting
+vnoremap < <gv
+vnoremap > >gv
+
+" Keep search matches in the middle of the screen
+nnoremap n nzz
+nnoremap N Nzz
 
 """"""""""""""""""""""""""""""
 " => Plugin settings
