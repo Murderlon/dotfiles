@@ -3,7 +3,11 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tpope/vim-repeat'
+Plug 'svermeulen/vim-easyclip'
+Plug 'wincent/command-t', {
+	\   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
+	\ }
 Plug 'mileszs/ack.vim'
 Plug 'w0rp/ale'
 Plug 'sheerun/vim-polyglot'
@@ -17,7 +21,6 @@ Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-" Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'HerringtonDarkholme/yats.vim'
@@ -120,7 +123,7 @@ let g:onedark_terminal_italics=1
 let g:nord_uniform_diff_background = 1
 let g:nord_italic_comments = 1
 let g:nord_italic = 1
-colorscheme nord
+colorscheme OceanicNext
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -224,10 +227,6 @@ nnoremap N Nzz
 """"""""""""""""""""""""""""""
 " => Plugin settings
 """"""""""""""""""""""""""""""
-" Ctrlp
-let g:ctrlp_user_command = ['.git', 'cd %s; and git ls-files -co --exclude-standard']
-map <C-b> :CtrlPBuffer<cr>
-
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 
