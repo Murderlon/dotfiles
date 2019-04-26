@@ -16,7 +16,7 @@ Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'styled-components/vim-styled-components'
-Plug 'justinmk/vim-sneak'
+Plug 'unblevable/quick-scope'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
@@ -55,6 +55,7 @@ Plug 'phanviet/vim-monokai-pro'
 Plug 'joshdick/onedark.vim'
 Plug 'tomasr/molokai'
 Plug 'ayu-theme/ayu-vim'
+Plug 'connorholyday/vim-snazzy'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -123,13 +124,14 @@ let g:onedark_terminal_italics=1
 let g:nord_uniform_diff_background = 1
 let g:nord_italic_comments = 1
 let g:nord_italic = 1
-colorscheme OceanicNext
+let ayucolor="dark"
+colorscheme ayu
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/node_modules/*,*/build/*,*/dist
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/target/*,*/node_modules/*,*/build/*,*/dist
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -173,6 +175,8 @@ set tm=500
 set splitbelow
 set splitright
 
+set noshowmode
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -205,7 +209,6 @@ map 0 ^
 " https://stackoverflow.com/a/15399297/10798093
 nnoremap ∆ :m .+1<CR>==
 nnoremap ˚ :m .-2<CR>==
-
 inoremap ∆ <Esc>:m .+1<CR>==gi
 inoremap ˚ <Esc>:m .-2<CR>==gi
 
@@ -247,7 +250,7 @@ vmap <c-u> <Plug>(neosnippet_expand_target)
 " Prettier
 let g:prettier#autoformat = 0
 let g:prettier#exec_cmd_async = 1
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+" autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 let g:prettier#config#semi = 'false'
 let g:prettier#config#single_quote = 'true'
 
@@ -271,3 +274,14 @@ let g:coc_snippet_prev = '<S-TAB>'
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
+
+" Easyclip
+let g:EasyClipAutoFormat=1
+
+" Quick scope
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+" Command T
+ let g:CommandTCancelMap=['<ESC>', '<C-c>']
+ nnoremap <silent> <leader>b :CommandTMRU<CR>
+
