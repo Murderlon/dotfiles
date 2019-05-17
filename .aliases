@@ -1,0 +1,6 @@
+alias v="nvim"
+alias g="git"
+alias c="clear"
+alias l="exa --all --long --color=always --group-directories-first"
+alias j="z"
+alias ,="nvim ~/.config/nvim/init.vim"

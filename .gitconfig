@@ -7,25 +7,15 @@
 [alias]
 
 	a = add
-
 	b = branch
-
 	c = commit
-
 	cm = commit -m
-
 	co = checkout
-
 	d = diff
-
 	f = fetch
-
 	i = init
-
 	m = merge
-
 	s = status
-  
   l = log --pretty=oneline --graph --abbrev-commit
 
 [apply]

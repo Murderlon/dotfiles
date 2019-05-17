@@ -29,14 +29,15 @@ Plug 'terryma/vim-expand-region'
 " Conquer Of Completion
 function! InstallDeps(info)
     if a:info.status == 'installed' || a:info.force
-        let extensions = ['coc-html',       \
-                          'coc-css',        \
-                          'coc-vetur',      \
-                          'coc-neosnippet', \
-                          'coc-tsserver',   \
-                          'coc-json'        \
-                          'coc-pairs'       \
-                          ]
+        let extensions = [
+          \'coc-html',
+          \'coc-css',
+          \'coc-vetur',
+          \'coc-neosnippet',
+          \'coc-tsserver',
+          \'coc-json',
+          \'coc-pairs',
+          \]
         call coc#util#install()
         call coc#util#install_extension(extensions)
     endif
@@ -56,6 +57,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'tomasr/molokai'
 Plug 'ayu-theme/ayu-vim'
 Plug 'connorholyday/vim-snazzy'
+Plug 'chriskempson/base16-vim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -101,8 +103,8 @@ nmap <leader>w :w!<cr>
 command W w !sudo tee % > /dev/null
 
 " Python hosts
-let g:python_host_prog = '/usr/local/bin/python'
-let g:python3_host_prog = '/Users/merlin/.pyenv/versions/3.6.5/bin/python'
+let g:python_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 " In CSS, hyphens are part of identifiers (keywords, properties, selectors...). 
 " By adding it to the iskeyword list, vim will consider identifiers as a whole word.
@@ -125,7 +127,7 @@ let g:nord_uniform_diff_background = 1
 let g:nord_italic_comments = 1
 let g:nord_italic = 1
 let ayucolor="dark"
-colorscheme ayu
+colorscheme OceanicNext
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -250,7 +252,7 @@ vmap <c-u> <Plug>(neosnippet_expand_target)
 " Prettier
 let g:prettier#autoformat = 0
 let g:prettier#exec_cmd_async = 1
-" autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 let g:prettier#config#semi = 'false'
 let g:prettier#config#single_quote = 'true'
 

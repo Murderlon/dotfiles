@@ -6,7 +6,9 @@
 - clean: ['~']
 
 - link:
-    ~/.gitconfig: .gitconfig
+    ~/.aliases: .aliases
+    ~/.z: .z
+    ~/.zshrc: .zshrc
     ~/.gitignore: .gitignore
     ~/.macOS.sh: .macOS.sh
     ~/.shell.sh: .shell.sh
