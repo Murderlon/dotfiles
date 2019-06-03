@@ -25,6 +25,8 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'terryma/vim-expand-region'
+Plug 'christoomey/vim-system-copy'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Conquer Of Completion
 function! InstallDeps(info)
@@ -114,11 +116,6 @@ au! FileType css,scss setl iskeyword+=-
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-if exists('$TMUX')
-  let &t_8f = "<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "<Esc>[48;2;%lu;%lu;%lum"
-endif
-
 syntax enable
 set termguicolors
 set background=dark
@@ -127,7 +124,7 @@ let g:nord_uniform_diff_background = 1
 let g:nord_italic_comments = 1
 let g:nord_italic = 1
 let ayucolor="dark"
-colorscheme OceanicNext
+colorscheme onedark
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface

@@ -13,7 +13,7 @@ zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 # Fish-like autosuggestions for zsh 
 zplug 'zsh-users/zsh-autosuggestions'
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-bindkey '^k' autosuggest-execute
+bindkey '^n' autosuggest-execute
 
 # zsh-syntax-highlighting after compinit and sourcing others
 zplug 'zsh-users/zsh-syntax-highlighting', defer:2
