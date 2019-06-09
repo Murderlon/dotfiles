@@ -7,6 +7,8 @@ setopt autocd
 source ~/.zplug/init.zsh
 source ~/.aliases
 
+eval $(thefuck --alias)
+
 # Let zplug self-manage
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
