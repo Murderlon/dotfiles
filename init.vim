@@ -1,50 +1,49 @@
 call plug#begin()
+" Settings
 Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
-Plug 'svermeulen/vim-easyclip'
-Plug 'wincent/command-t', {
-	\   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
-	\ }
-Plug 'mileszs/ack.vim'
-Plug 'w0rp/ale'
-Plug 'sheerun/vim-polyglot'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'styled-components/vim-styled-components'
-Plug 'unblevable/quick-scope'
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+
+" Interface
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'terryma/vim-expand-region'
-Plug 'christoomey/vim-system-copy'
-Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'vim-airline/vim-airline'
 
-" Conquer Of Completion
-function! InstallDeps(info)
-    if a:info.status == 'installed' || a:info.force
-        let extensions = [
-          \'coc-html',
-          \'coc-css',
-          \'coc-vetur',
-          \'coc-neosnippet',
-          \'coc-tsserver',
-          \'coc-json',
-          \'coc-pairs',
-          \]
-        call coc#util#install()
-        call coc#util#install_extension(extensions)
-    endif
-endfunction
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': function('InstallDeps')}
+" Search
+Plug 'mileszs/ack.vim'
+Plug 'wincent/command-t', { 'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make' }
+
+" Completion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'mlaursen/vim-react-snippets'
+
+" Motions
+Plug 'terryma/vim-expand-region'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'christoomey/vim-system-copy'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'svermeulen/vim-easyclip'
+
+" Movement
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'unblevable/quick-scope'
+
+"Syntax
+Plug 'sheerun/vim-polyglot'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'styled-components/vim-styled-components'
+Plug 'prettier/vim-prettier', {
+      \ 'do': 'yarn install',
+      \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+
+" Misc
+Plug 'tpope/vim-fugitive'
+Plug 'w0rp/ale'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Colorschemes
 Plug 'icymind/NeoSolarized'
@@ -124,7 +123,7 @@ let g:nord_uniform_diff_background = 1
 let g:nord_italic_comments = 1
 let g:nord_italic = 1
 let ayucolor="dark"
-colorscheme onedark
+colorscheme nord
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -232,19 +231,10 @@ nnoremap N Nzz
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 
-" Neosnippet
-let g:neosnippet#enable_completed_snippet=1
-let g:neosnippet#snippets_directory='~/.config/nvim/plugged/neosnippet-snippets/neosnippets'
-let g:neosnippet#disable_runtime_snippets = {
-\   '_' : 1,
-\ }
-
-imap <c-k> <Plug>(neosnippet_expand_or_jump)
-smap <c-k> <Plug>(neosnippet_expand_or_jump)
-xmap <c-k> <Plug>(neosnippet_expand_target)
-vmap <c-k> <Plug>(neosnippet_expand_target)
-inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
-vmap <c-u> <Plug>(neosnippet_expand_target)
+" Ultisnips
+let g:UltiSnipsExpandTrigger="<c-k>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
 
 " Prettier
 let g:prettier#autoformat = 0
@@ -283,4 +273,11 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 " Command T
  let g:CommandTCancelMap=['<ESC>', '<C-c>']
  nnoremap <silent> <leader>b :CommandTMRU<CR>
+
+ " Airline
+let g:airline_section_y=''
+let g:airline_section_z=''
+let g:airline_skip_empty_sections = 1
+let g:airline_extensions = []
+let g:airline_powerline_fonts = 1
 
