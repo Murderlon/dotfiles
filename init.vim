@@ -7,6 +7,7 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
+Plug 'majutsushi/tagbar'
 
 " Search
 Plug 'mileszs/ack.vim'
@@ -14,9 +15,9 @@ Plug 'wincent/command-t', { 'do': 'cd ruby/command-t/ext/command-t && ruby extco
 
 " Completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'SirVer/ultisnips'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'honza/vim-snippets'
-Plug 'mlaursen/vim-react-snippets'
 
 " Motions
 Plug 'terryma/vim-expand-region'
@@ -59,6 +60,8 @@ Plug 'tomasr/molokai'
 Plug 'ayu-theme/ayu-vim'
 Plug 'connorholyday/vim-snazzy'
 Plug 'chriskempson/base16-vim'
+Plug 'jacoborus/tender.vim'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -91,6 +94,9 @@ set si "Smart indent
 " Refresh file on change
 set autoread
 
+" Current working directory
+set path=$PWD/**
+
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
 let mapleader = " "
@@ -111,6 +117,11 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 " By adding it to the iskeyword list, vim will consider identifiers as a whole word.
 au! FileType css,scss setl iskeyword+=-
 
+augroup vimrc " Source vim configuration upon save
+  autocmd! BufWritePost $MYVIMRC source % | echom "Reloaded " . $MYVIMRC | redraw
+  autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % | echom "Reloaded " . $MYGVIMRC | endif | redraw
+augroup END
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -123,7 +134,7 @@ let g:nord_uniform_diff_background = 1
 let g:nord_italic_comments = 1
 let g:nord_italic = 1
 let ayucolor="dark"
-colorscheme nord
+colorscheme NeoSolarized
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -231,17 +242,25 @@ nnoremap N Nzz
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 
-" Ultisnips
-let g:UltiSnipsExpandTrigger="<c-k>"
-let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+" Neosnippet
+let g:neosnippet#enable_completed_snippet=1
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#snippets_directory='~/.config/nvim/plugged/vim-snippets/snippets'
+
+imap <c-k> <Plug>(neosnippet_expand_or_jump)
+smap <c-k> <Plug>(neosnippet_expand_or_jump)
+xmap <c-k> <Plug>(neosnippet_expand_target)
+vmap <c-k> <Plug>(neosnippet_expand_target)
+inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
+vmap <c-u> <Plug>(neosnippet_expand_target)
 
 " Prettier
 let g:prettier#autoformat = 0
 let g:prettier#exec_cmd_async = 1
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+" autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.vue,*.yaml,*.html PrettierAsync
 let g:prettier#config#semi = 'false'
 let g:prettier#config#single_quote = 'true'
+nmap <Leader>p <Plug>(Prettier)
 
 " Nerdtree
 let NERDTreeShowHidden=1
@@ -271,13 +290,13 @@ let g:EasyClipAutoFormat=1
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " Command T
- let g:CommandTCancelMap=['<ESC>', '<C-c>']
- nnoremap <silent> <leader>b :CommandTMRU<CR>
+let g:CommandTCancelMap=['<ESC>', '<C-c>']
+nnoremap <silent> <leader>b :CommandTMRU<CR>
 
  " Airline
 let g:airline_section_y=''
 let g:airline_section_z=''
 let g:airline_skip_empty_sections = 1
-let g:airline_extensions = []
+let g:airline_extensions = ['branch']
 let g:airline_powerline_fonts = 1
-
+let g:airline_theme='solarized'
