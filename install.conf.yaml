@@ -7,11 +7,9 @@
 
 - link:
     ~/.aliases: .aliases
-    ~/.z: .z
     ~/.zshrc: .zshrc
     ~/.gitignore: .gitignore
     ~/.macOS.sh: .macOS.sh
-    ~/.shell.sh: .shell.sh
     ~/.config/nvim/init.vim: init.vim
     ~/.tmux.conf: .tmux.conf
     ~/tmux-256color.terminfo: tmux-256color.terminfo
