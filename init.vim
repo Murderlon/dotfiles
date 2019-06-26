@@ -6,45 +6,48 @@ Plug 'tpope/vim-sensible'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-Plug 'vim-airline/vim-airline'
-Plug 'majutsushi/tagbar'
 
 " Search
 Plug 'mileszs/ack.vim'
 Plug 'wincent/command-t', { 'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make' }
-
+ 
 " Completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'honza/vim-snippets'
 
-" Motions
-Plug 'terryma/vim-expand-region'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'christoomey/vim-system-copy'
+" Insertion
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'svermeulen/vim-easyclip'
+Plug 'jiangmiao/auto-pairs'
 
 " Movement
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'unblevable/quick-scope'
 
-"Syntax
-Plug 'sheerun/vim-polyglot'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'styled-components/vim-styled-components'
-Plug 'prettier/vim-prettier', {
-      \ 'do': 'yarn install',
-      \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
-
-" Misc
-Plug 'tpope/vim-fugitive'
-Plug 'w0rp/ale'
-Plug 'jiangmiao/auto-pairs'
+" Utility
+Plug 'christoomey/vim-system-copy'
 Plug 'tmux-plugins/vim-tmux-focus-events'
+
+"Syntax
+Plug 'pangloss/vim-javascript'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'othree/html5.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'MaxMEllon/vim-jsx-pretty'
+Plug 'tpope/vim-git'
+Plug 'elzr/vim-json'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" Git
+Plug 'tpope/vim-fugitive'
+
+" Linting
+Plug 'w0rp/ale'
 
 " Colorschemes
 Plug 'icymind/NeoSolarized'
@@ -61,7 +64,6 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'connorholyday/vim-snazzy'
 Plug 'chriskempson/base16-vim'
 Plug 'jacoborus/tender.vim'
-Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -184,7 +186,7 @@ set tm=500
 set splitbelow
 set splitright
 
-set noshowmode
+" set noshowmode
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -242,6 +244,22 @@ nnoremap N Nzz
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 
+" Multiple cursors
+" https://github.com/terryma/vim-multiple-cursors#q-deoplete-insert-giberrish-how-to-fix-this
+func! Multiple_cursors_before()
+  if deoplete#is_enabled()
+    call deoplete#disable()
+    let g:deoplete_is_enable_before_multi_cursors = 1
+  else
+    let g:deoplete_is_enable_before_multi_cursors = 0
+  endif
+endfunc
+func! Multiple_cursors_after()
+  if g:deoplete_is_enable_before_multi_cursors
+    call deoplete#enable()
+  endif
+endfunc
+
 " Neosnippet
 let g:neosnippet#enable_completed_snippet=1
 let g:neosnippet#enable_snipmate_compatibility = 1
@@ -273,11 +291,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 map <leader>nn :NERDTreeToggle<cr>
 map <leader>nf :NERDTreeFind<cr>
 
-" Conquer of Completion
-inoremap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
-let g:coc_snippet_next = '<TAB>'
-let g:coc_snippet_prev = '<S-TAB>'
-
 " Ack
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
@@ -293,10 +306,6 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:CommandTCancelMap=['<ESC>', '<C-c>']
 nnoremap <silent> <leader>b :CommandTMRU<CR>
 
- " Airline
-let g:airline_section_y=''
-let g:airline_section_z=''
-let g:airline_skip_empty_sections = 1
-let g:airline_extensions = ['branch']
-let g:airline_powerline_fonts = 1
-let g:airline_theme='solarized'
+" Syntax
+let g:vim_jsx_pretty_colorful_config = 1
+let g:javascript_plugin_jsdoc = 1
