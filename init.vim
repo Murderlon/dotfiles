@@ -4,8 +4,6 @@ Plug 'tpope/vim-sensible'
 
 " Interface
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'ryanoasis/vim-devicons'
 
 " Search
 Plug 'mileszs/ack.vim'
@@ -34,13 +32,13 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 
 "Syntax
 Plug 'pangloss/vim-javascript'
-Plug 'HerringtonDarkholme/yats.vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'Quramy/tsuquyomi'
 Plug 'othree/html5.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'tpope/vim-git'
 Plug 'elzr/vim-json'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " Git
@@ -62,8 +60,9 @@ Plug 'joshdick/onedark.vim'
 Plug 'tomasr/molokai'
 Plug 'ayu-theme/ayu-vim'
 Plug 'connorholyday/vim-snazzy'
-Plug 'chriskempson/base16-vim'
 Plug 'jacoborus/tender.vim'
+Plug 'cormacrelf/vim-colors-github'
+Plug 'fenetikm/falcon'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -135,14 +134,17 @@ let g:onedark_terminal_italics=1
 let g:nord_uniform_diff_background = 1
 let g:nord_italic_comments = 1
 let g:nord_italic = 1
+let g:github_colors_soft = 1
 let ayucolor="dark"
 colorscheme NeoSolarized
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" disable bold fonts
+set t_md=
 
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/target/*,*/node_modules/*,*/build/*,*/dist
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/target/*,*/node_modules/*,*/build/*,*/built/*,/dist
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -186,7 +188,9 @@ set tm=500
 set splitbelow
 set splitright
 
-" set noshowmode
+" default value is 'menu,preview'
+" removes menu to disable scratch window
+set completeopt-=preview
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -244,22 +248,6 @@ nnoremap N Nzz
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 
-" Multiple cursors
-" https://github.com/terryma/vim-multiple-cursors#q-deoplete-insert-giberrish-how-to-fix-this
-func! Multiple_cursors_before()
-  if deoplete#is_enabled()
-    call deoplete#disable()
-    let g:deoplete_is_enable_before_multi_cursors = 1
-  else
-    let g:deoplete_is_enable_before_multi_cursors = 0
-  endif
-endfunc
-func! Multiple_cursors_after()
-  if g:deoplete_is_enable_before_multi_cursors
-    call deoplete#enable()
-  endif
-endfunc
-
 " Neosnippet
 let g:neosnippet#enable_completed_snippet=1
 let g:neosnippet#enable_snipmate_compatibility = 1
@@ -283,6 +271,8 @@ nmap <Leader>p <Plug>(Prettier)
 " Nerdtree
 let NERDTreeShowHidden=1
 let g:NERDTreeWinSize=35
+let NERDTreeShowLineNumbers=1
+autocmd FileType nerdtree setlocal relativenumber
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
