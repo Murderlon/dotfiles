@@ -11,9 +11,9 @@ Plug 'wincent/command-t', { 'do': 'cd ruby/command-t/ext/command-t && ruby extco
  
 " Completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'mlaursen/vim-react-snippets'
 
 " Insertion
 Plug 'tpope/vim-surround'
@@ -33,6 +33,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 "Syntax
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
+" Plug 'evanleck/vim-svelte'
 Plug 'Quramy/tsuquyomi'
 Plug 'othree/html5.vim'
 Plug 'rust-lang/rust.vim'
@@ -136,13 +137,11 @@ let g:nord_italic_comments = 1
 let g:nord_italic = 1
 let g:github_colors_soft = 1
 let ayucolor="dark"
-colorscheme NeoSolarized
+colorscheme OceanicNext
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" disable bold fonts
-set t_md=
 
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/target/*,*/node_modules/*,*/build/*,*/built/*,/dist
 
@@ -206,7 +205,7 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " Close the current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
+map <leader>q :bd<cr>
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
@@ -242,23 +241,19 @@ vnoremap > >gv
 nnoremap n nzz
 nnoremap N Nzz
 
+" Don't move to the next intance of a word when highlighting it
+nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
+
 """"""""""""""""""""""""""""""
 " => Plugin settings
 """"""""""""""""""""""""""""""
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 
-" Neosnippet
-let g:neosnippet#enable_completed_snippet=1
-let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#snippets_directory='~/.config/nvim/plugged/vim-snippets/snippets'
-
-imap <c-k> <Plug>(neosnippet_expand_or_jump)
-smap <c-k> <Plug>(neosnippet_expand_or_jump)
-xmap <c-k> <Plug>(neosnippet_expand_target)
-vmap <c-k> <Plug>(neosnippet_expand_target)
-inoremap <silent> <c-u> <c-r>=cm#sources#neosnippet#trigger_or_popup("\<Plug>(neosnippet_expand_or_jump)")<cr>
-vmap <c-u> <Plug>(neosnippet_expand_target)
+" Ultisnips
+let g:UltiSnipsExpandTrigger="<c-k>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
 
 " Prettier
 let g:prettier#autoformat = 0
