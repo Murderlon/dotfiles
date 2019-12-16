@@ -46,3 +46,7 @@ zplug load
 # Set up history-substring-search keybindings
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+export LC_ALL=en_US.UTF-8
+
+# fnm
+eval "$(fnm env --multi)"
