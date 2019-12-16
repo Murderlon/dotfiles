@@ -4,14 +4,15 @@ Plug 'tpope/vim-sensible'
 
 " Interface
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 
 " Search
 Plug 'mileszs/ack.vim'
 Plug 'wincent/command-t', { 'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make' }
+" Plug 'Yggdroot/LeaderF'
  
 " Completion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'mlaursen/vim-react-snippets'
 
@@ -20,7 +21,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'svermeulen/vim-easyclip'
-Plug 'jiangmiao/auto-pairs'
 
 " Movement
 Plug 'christoomey/vim-tmux-navigator'
@@ -32,14 +32,14 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 
 "Syntax
 Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-" Plug 'evanleck/vim-svelte'
-Plug 'Quramy/tsuquyomi'
+Plug 'HerringtonDarkholme/yats.vim'
 Plug 'othree/html5.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'tpope/vim-git'
 Plug 'elzr/vim-json'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " Git
@@ -47,6 +47,9 @@ Plug 'tpope/vim-fugitive'
 
 " Linting
 Plug 'w0rp/ale'
+
+" Conquer Of Completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Colorschemes
 Plug 'icymind/NeoSolarized'
@@ -64,6 +67,10 @@ Plug 'connorholyday/vim-snazzy'
 Plug 'jacoborus/tender.vim'
 Plug 'cormacrelf/vim-colors-github'
 Plug 'fenetikm/falcon'
+Plug 'liuchengxu/space-vim-dark'
+Plug 'KeitaNakamura/neodark.vim'
+Plug 'junegunn/seoul256.vim'
+Plug 'arzg/vim-colors-xcode'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -98,6 +105,21 @@ set autoread
 
 " Current working directory
 set path=$PWD/**
+
+" Some COC servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Better display for messages
+set cmdheight=2
+
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
@@ -137,6 +159,7 @@ let g:nord_italic_comments = 1
 let g:nord_italic = 1
 let g:github_colors_soft = 1
 let ayucolor="dark"
+let g:space_vim_dark_background = 234
 colorscheme OceanicNext
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -247,13 +270,41 @@ nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
 """"""""""""""""""""""""""""""
 " => Plugin settings
 """"""""""""""""""""""""""""""
-" Deoplete
-let g:deoplete#enable_at_startup = 1
+" Conquer Of Completion
+"" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+"" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+"" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
 " Ultisnips
-let g:UltiSnipsExpandTrigger="<c-k>"
-let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+" let g:UltiSnipsExpandTrigger="<c-k>"
+" let g:UltiSnipsJumpForwardTrigger="<c-l>"
+" let g:UltiSnipsJumpBackwardTrigger="<c-h>"
 
 " Prettier
 let g:prettier#autoformat = 0
@@ -283,6 +334,10 @@ endif
 
 " Easyclip
 let g:EasyClipAutoFormat=1
+let g:EasyClipUseSubstituteDefaults=1
+nmap <leader>s <plug>(SubversiveSubstituteRange)
+xmap <leader>s <plug>(SubversiveSubstituteRange)
+nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
 
 " Quick scope
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -294,3 +349,14 @@ nnoremap <silent> <leader>b :CommandTMRU<CR>
 " Syntax
 let g:vim_jsx_pretty_colorful_config = 1
 let g:javascript_plugin_jsdoc = 1
+au! BufNewFile,BufRead *.svelte set ft=html
+
+" Limelight
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
+" Markdown
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_fenced_languages = ['js=javascript']
+let g:vim_markdown_folding_level = 3
+
