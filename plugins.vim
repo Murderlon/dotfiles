@@ -2,9 +2,18 @@ call plug#begin()
   " Settings
   Plug 'tpope/vim-sensible'
 
-  " Files
-  " Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+  " General
   Plug 'tpope/vim-vinegar'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-repeat'
+  Plug 'svermeulen/vim-easyclip'
+  Plug 'unblevable/quick-scope'
+  Plug 'christoomey/vim-system-copy'
+
+  " Tmux <> Vim
+  Plug 'tmux-plugins/vim-tmux-focus-events'
+  Plug 'christoomey/vim-tmux-navigator'
 
   " Search
   "" If fzf has already been installed via Homebrew, use the existing fzf
@@ -16,23 +25,9 @@ call plug#begin()
   endif
   Plug 'junegunn/fzf.vim'
    
-  " Completion
+  " Snippets
   Plug 'honza/vim-snippets'
   Plug 'mlaursen/vim-react-snippets'
-
-  " Insertion
-  Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-commentary'
-  Plug 'tpope/vim-repeat'
-  Plug 'svermeulen/vim-easyclip'
-
-  " Movement
-  Plug 'christoomey/vim-tmux-navigator'
-  Plug 'unblevable/quick-scope'
-
-  " Utility
-  Plug 'christoomey/vim-system-copy'
-  Plug 'tmux-plugins/vim-tmux-focus-events'
 
   " Git
   Plug 'tpope/vim-fugitive'
