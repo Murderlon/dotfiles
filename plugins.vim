@@ -1,4 +1,4 @@
-call plug#begin()
+call plug#begin('~/.config/nvim/plugged')
   " Settings
   Plug 'tpope/vim-sensible'
 
@@ -16,13 +16,6 @@ call plug#begin()
   Plug 'christoomey/vim-tmux-navigator'
 
   " Search
-  "" If fzf has already been installed via Homebrew, use the existing fzf
-  "" Otherwise, install fzf. The `--all` flag makes fzf accessible outside of vim
-  if isdirectory("/usr/local/opt/fzf")
-    Plug '/usr/local/opt/fzf'
-  else
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  endif
   Plug 'junegunn/fzf.vim'
    
   " Snippets
@@ -39,30 +32,50 @@ call plug#begin()
   " Conquer Of Completion
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-  " Syntaxes and colorschemes
-  source ./colors.vim
+   "Syntax
+  Plug 'pangloss/vim-javascript'
+  Plug 'HerringtonDarkholme/yats.vim'
+  Plug 'othree/html5.vim'
+  Plug 'rust-lang/rust.vim'
+  Plug 'MaxMEllon/vim-jsx-pretty'
+  Plug 'tpope/vim-git'
+  Plug 'elzr/vim-json'
+  Plug 'godlygeek/tabular'
+  Plug 'plasticboy/vim-markdown'
+  Plug 'vim-ruby/vim-ruby'
+  Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+  " Colorschemes
+  Plug 'icymind/NeoSolarized'
+  Plug 'haishanh/night-owl.vim'
+  Plug 'mhartington/oceanic-next'
+  Plug 'srcery-colors/srcery-vim'
+  Plug 'morhetz/gruvbox'
+  Plug 'kenwheeler/glow-in-the-dark-gucci-shark-bites-vim'
+  Plug 'arcticicestudio/nord-vim'
+  Plug 'phanviet/vim-monokai-pro'
+  Plug 'joshdick/onedark.vim'
+  Plug 'tomasr/molokai'
+  Plug 'ayu-theme/ayu-vim'
+  Plug 'connorholyday/vim-snazzy'
+  Plug 'jacoborus/tender.vim'
+  Plug 'cormacrelf/vim-colors-github'
+  Plug 'fenetikm/falcon'
+  Plug 'liuchengxu/space-vim-dark'
+  Plug 'KeitaNakamura/neodark.vim'
+  Plug 'junegunn/seoul256.vim'
+  Plug 'arzg/vim-colors-xcode'
+  Plug 'tpope/vim-vividchalk'
+  Plug '~/.config/nvim/plugged/tpope'
+  Plug 'jaredgorski/SpaceCamp'
 call plug#end()
 
-" Conquer Of Completion
-"" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Conquer Of Completion 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 "" Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
-"" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
 
 let g:coc_snippet_next = '<tab>'
 
@@ -74,25 +87,35 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Prettier
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Prettier
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:prettier#autoformat = 0
 let g:prettier#exec_cmd_async = 1
 " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.vue,*.yaml,*.html PrettierAsync
 let g:prettier#config#semi = 'false'
 let g:prettier#config#single_quote = 'true'
-nmap <Leader>p <Plug>(Prettier)
 
-" Easyclip
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Easyclip
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:EasyClipAutoFormat=1
 let g:EasyClipUseSubstituteDefaults=1
-nmap <leader>s <plug>(SubversiveSubstituteRange)
-xmap <leader>s <plug>(SubversiveSubstituteRange)
-nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
 
-" Quick scope
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Quick scope
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
-" FZF
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => FZF
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set rtp+=/usr/local/opt/fzf
+
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 
@@ -101,21 +124,26 @@ command! -bang -nargs=* GGrep
   \   'git grep --line-number '.shellescape(<q-args>), 0,
   \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0], 'options': ['--exact']}), <bang>0)
 
-nnoremap <silent> <leader>t :Files<CR>
-nnoremap <silent> <leader>T :Files!<CR>
-nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>s :GGrep<CR>
 
-" Syntax
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Syntax
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:vim_jsx_pretty_colorful_config = 1
 let g:javascript_plugin_jsdoc = 1
 au! BufNewFile,BufRead *.svelte set ft=html
 
-" Markdown
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Markdown
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_fenced_languages = ['js=javascript']
 let g:vim_markdown_folding_level = 3
 
-" Merge tool
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Merge tool
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let g:mergetool_layout = 'bmr'
 

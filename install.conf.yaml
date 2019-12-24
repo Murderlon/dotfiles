@@ -11,7 +11,7 @@
     ~/.gitignore: .gitignore
     ~/.macOS.sh: .macOS.sh
     ~/.config/nvim/init.vim: init.vim
-    ~/.config/nvim/colors.vim: colors.vim
+    ~/.config/nvim/mappings.vim: mappings.vim
     ~/.config/nvim/plugins.vim: plugins.vim
     ~/.tmux.conf: .tmux.conf
     ~/tmux-256color.terminfo: tmux-256color.terminfo
