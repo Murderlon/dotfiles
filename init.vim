@@ -1,7 +1,13 @@
-" Source all plugins, syntaxes, and colorschemes
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 source ~/.config/nvim/plugins.vim
 
-" Setting up leader and normal, insert, visual mappings.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 source ~/.config/nvim/mappings.vim
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -36,17 +42,10 @@ set autoread
 " Current working directory
 set path=$PWD/**
 
-" Some COC servers have issues with backup files, see #649
-set nobackup
-set nowritebackup
-
 " Better display for messages
 set cmdheight=2
 
 set updatetime=300
-
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
 
 " always show signcolumns
 set signcolumn=yes
@@ -63,7 +62,6 @@ au! FileType css,scss setl iskeyword+=-
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-syntax enable
 set termguicolors
 set background=dark
 let g:onedark_terminal_italics=1
@@ -73,7 +71,7 @@ let g:nord_italic = 1
 let g:github_colors_soft = 1
 let ayucolor="dark"
 let g:space_vim_dark_background = 234
-colorscheme seoul256
+colorscheme night-owl
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -83,10 +81,6 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/target/*,*/node_module
 
 " A buffer becomes hidden when it is abandoned
 set hid
-
-" Configure backspace so it acts as it should act
-set backspace=eol,start,indent
-set whichwrap+=<,>,h,l
 
 " Ignore case when searching
 set ignorecase
@@ -122,8 +116,3 @@ set tm=500
 " which feels more natural than Vim’s default
 set splitbelow
 set splitright
-
-" default value is 'menu,preview'
-" removes menu to disable scratch window
-set completeopt-=preview
-

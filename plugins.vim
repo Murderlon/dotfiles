@@ -7,8 +7,8 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-repeat'
+  Plug 'tmsvg/pear-tree'
   Plug 'svermeulen/vim-easyclip'
-  Plug 'unblevable/quick-scope'
   Plug 'christoomey/vim-system-copy'
 
   " Tmux <> Vim
@@ -19,6 +19,7 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'junegunn/fzf.vim'
    
   " Snippets
+  Plug 'SirVer/ultisnips'
   Plug 'honza/vim-snippets'
   Plug 'mlaursen/vim-react-snippets'
 
@@ -29,8 +30,12 @@ call plug#begin('~/.config/nvim/plugged')
   " Linting
   Plug 'w0rp/ale'
 
-  " Conquer Of Completion
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  " Completion
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
    "Syntax
   Plug 'pangloss/vim-javascript'
@@ -71,23 +76,6 @@ call plug#begin('~/.config/nvim/plugged')
 call plug#end()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Conquer Of Completion 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-let g:coc_snippet_next = '<tab>'
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Prettier
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -105,25 +93,22 @@ let g:EasyClipAutoFormat=1
 let g:EasyClipUseSubstituteDefaults=1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Quick scope
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => FZF
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set rtp+=/usr/local/opt/fzf
 
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
 
-command! -bang -nargs=* GGrep
-  \ call fzf#vim#grep(
-  \   'git grep --line-number '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0], 'options': ['--exact']}), <bang>0)
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
+command! -bang DotFiles call fzf#vim#files('~/dotfiles', <bang>0)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Syntax
@@ -147,3 +132,38 @@ let g:vim_markdown_folding_level = 3
 
 let g:mergetool_layout = 'bmr'
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Ultisnips
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => LanguageClient
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:deoplete#enable_at_startup = 1
+
+let g:LanguageClient_autoStart = 1
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['javascript-typescript-stdio'],
+    \ 'typescript': ['javascript-typescript-stdio'],
+    \ 'typescript.jsx': ['javascript-typescript-stdio'],
+    \ }
+
+let g:LanguageClient_rootMarkers = {
+    \ 'javascript': ['jsconfig.json'],
+    \ 'typescript': ['tsconfig.json'],
+    \ }
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Pear tree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:pear_tree_smart_openers = 1
+let g:pear_tree_smart_closers = 1
+let g:pear_tree_smart_backspace = 1

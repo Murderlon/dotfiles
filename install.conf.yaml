@@ -14,5 +14,6 @@
     ~/.config/nvim/mappings.vim: mappings.vim
     ~/.config/nvim/plugins.vim: plugins.vim
     ~/.tmux.conf: .tmux.conf
+    ~/.ctags: .ctags
     ~/tmux-256color.terminfo: tmux-256color.terminfo
     ~/xterm-256color-italic.terminfo: xterm-256color-italic.terminfo

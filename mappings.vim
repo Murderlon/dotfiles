@@ -40,13 +40,14 @@ map 0 ^
 
 " Moving lines with Alt-j / Alt-k
 " https://stackoverflow.com/a/15399297/10798093
-nnoremap ‚àÜ :m .+1<CR>==
-nnoremap Àö :m .-2<CR>==
-inoremap ‚àÜ <Esc>:m .+1<CR>==gi
-inoremap Àö <Esc>:m .-2<CR>==gi
+nnoremap ∆ :m .+1<CR>==
+nnoremap ˚ :m .-2<CR>==
 
-vnoremap ‚àÜ :m '>+1<CR>gv=gv
-vnoremap Àö :m '<-2<CR>gv=gv
+inoremap ∆ <Esc>:m .+1<CR>==gi
+inoremap ˚ <Esc>:m .-2<CR>==gi
+
+vnoremap ∆ :m '>+1<CR>gv=gv
+vnoremap ˚ :m '<-2<CR>gv=gv
 
 " Move visual block
 vnoremap J :m '>+1<CR>gv=gv
@@ -64,44 +65,10 @@ nnoremap N Nzz
 nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Conquer Of Completion 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-"" Snippet completion
-let g:coc_snippet_next = '<tab>'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Prettier
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 nmap <Leader>p <Plug>(Prettier)
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Easyclip
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-nmap <leader>s <plug>(SubversiveSubstituteRange)
-xmap <leader>s <plug>(SubversiveSubstituteRange)
-nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => FZF
@@ -110,8 +77,4 @@ nmap <leader>ss <plug>(SubversiveSubstituteWordRange)
 nnoremap <silent> <leader>t :Files<CR>
 nnoremap <silent> <leader>T :Files!<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>s :GGrep<CR>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Prettier
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <silent> <leader>s :RG<CR>
