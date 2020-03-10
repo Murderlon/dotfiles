@@ -48,7 +48,7 @@ set cmdheight=2
 set updatetime=300
 
 " always show signcolumns
-set signcolumn=yes
+set signcolumn=no
 
 " Python hosts
 let g:python_host_prog = '/usr/bin/python'
@@ -71,13 +71,14 @@ let g:nord_italic = 1
 let g:github_colors_soft = 1
 let ayucolor="dark"
 let g:space_vim_dark_background = 234
-colorscheme night-owl
+colorscheme bluewery
+let g:lightline = { 'colorscheme': 'bluewery' }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/target/*,*/node_modules/*,*/build/*,*/built/*,/dist
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store/*,*/target/*,*/node_modules/*,*/build/*,*/built/*,*/dist/*
 
 " A buffer becomes hidden when it is abandoned
 set hid

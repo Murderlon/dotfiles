@@ -1,15 +1,14 @@
 call plug#begin('~/.config/nvim/plugged')
-  " Settings
-  Plug 'tpope/vim-sensible'
-
   " General
+  Plug 'tpope/vim-sensible'
   Plug 'tpope/vim-vinegar'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-repeat'
-  Plug 'tmsvg/pear-tree'
+  Plug 'jiangmiao/auto-pairs'
   Plug 'svermeulen/vim-easyclip'
   Plug 'christoomey/vim-system-copy'
+  Plug 'itchyny/lightline.vim'
 
   " Tmux <> Vim
   Plug 'tmux-plugins/vim-tmux-focus-events'
@@ -17,25 +16,21 @@ call plug#begin('~/.config/nvim/plugged')
 
   " Search
   Plug 'junegunn/fzf.vim'
+  Plug 'romainl/vim-cool'
    
   " Snippets
-  Plug 'SirVer/ultisnips'
   Plug 'honza/vim-snippets'
   Plug 'mlaursen/vim-react-snippets'
 
   " Git
   Plug 'tpope/vim-fugitive'
-  Plug 'samoshkin/vim-mergetool'
+  Plug 'christoomey/vim-conflicted'
 
   " Linting
-  Plug 'w0rp/ale'
+  Plug 'desmap/ale-sensible' | Plug 'w0rp/ale'
 
   " Completion
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
    "Syntax
   Plug 'pangloss/vim-javascript'
@@ -45,7 +40,6 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'MaxMEllon/vim-jsx-pretty'
   Plug 'tpope/vim-git'
   Plug 'elzr/vim-json'
-  Plug 'godlygeek/tabular'
   Plug 'plasticboy/vim-markdown'
   Plug 'vim-ruby/vim-ruby'
   Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
@@ -72,7 +66,12 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'arzg/vim-colors-xcode'
   Plug 'tpope/vim-vividchalk'
   Plug '~/.config/nvim/plugged/tpope'
+  Plug 'Rigellute/shades-of-purple.vim'
+  Plug 'gruvbox-material/vim', {'as': 'gruvbox-material'}
+  Plug 'Rigellute/rigel'
+  Plug 'wadackel/vim-dogrun'
   Plug 'jaredgorski/SpaceCamp'
+  Plug 'relastle/bluewery.vim'
 call plug#end()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -124,46 +123,51 @@ au! BufNewFile,BufRead *.svelte set ft=html
 
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_fenced_languages = ['js=javascript']
-let g:vim_markdown_folding_level = 3
+let g:vim_markdown_folding_disabled = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Merge tool
+" => Conquer of Completion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:mergetool_layout = 'bmr'
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Ultisnips
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Better display for messages
+set cmdheight=2
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-p>"
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => LanguageClient
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:deoplete#enable_at_startup = 1
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['javascript-typescript-stdio'],
-    \ 'typescript': ['javascript-typescript-stdio'],
-    \ 'typescript.jsx': ['javascript-typescript-stdio'],
-    \ }
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
-let g:LanguageClient_rootMarkers = {
-    \ 'javascript': ['jsconfig.json'],
-    \ 'typescript': ['tsconfig.json'],
-    \ }
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Pear tree
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
 
-let g:pear_tree_smart_openers = 1
-let g:pear_tree_smart_closers = 1
-let g:pear_tree_smart_backspace = 1
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
