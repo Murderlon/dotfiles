@@ -1,13 +1,15 @@
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-bindkey -v
 setopt autocd
 
 source ~/.zplug/init.zsh
 source ~/.aliases
 
+export PATH=/Applications/MacVim.app/Contents/bin/:$PATH
+
 eval $(thefuck --alias)
+eval "$(fnm env --multi)"
 
 # Let zplug self-manage
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
@@ -15,7 +17,6 @@ zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 # Fish-like autosuggestions for zsh 
 zplug 'zsh-users/zsh-autosuggestions'
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-bindkey '^n' autosuggest-execute
 
 # zsh-syntax-highlighting after compinit and sourcing others
 zplug 'zsh-users/zsh-syntax-highlighting', defer:2
@@ -46,7 +47,5 @@ zplug load
 # Set up history-substring-search keybindings
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-export LC_ALL=en_US.UTF-8
 
-# fnm
-eval "$(fnm env --multi)"
+bindkey '^n' autosuggest-execute
