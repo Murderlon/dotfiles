@@ -13,13 +13,12 @@ call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-repeat'
   Plug 'svermeulen/vim-easyclip'
   Plug 'christoomey/vim-system-copy'
-  " Plug 'mkitt/tabline.vim'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
 
   " Search
-  " The bang version will try to download the prebuilt binary if cargo does not exist.
-  Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
    
   " Snippets
   Plug 'honza/vim-snippets'
@@ -27,9 +26,6 @@ call plug#begin('~/.vim/plugged')
 
   " Git
   Plug 'tpope/vim-fugitive'
-
-  " Linting
-  " Plug 'desmap/ale-sensible' | Plug 'w0rp/ale'
 
   " Completion
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -46,21 +42,22 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-ruby/vim-ruby'
   Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
   Plug 'Glench/Vim-Jinja2-Syntax'
+  Plug 'dag/vim-fish'
+  Plug 'cakebaker/scss-syntax.vim'
 
   " Colorschemes
   Plug 'overcache/NeoSolarized'
   Plug 'mhartington/oceanic-next'
   Plug 'junegunn/seoul256.vim'
+  Plug 'bignimbus/pop-punk.vim'
 call plug#end()
 
 set termguicolors
 set background=dark
-colorscheme seoul256 
-let g:github_colors_soft = 1
-let g:airline_theme='seoul256'
-" remove the filetype part
+colorscheme pop-punk
+
+let g:airline_theme='pop_punk'
 let g:airline_section_y=''
-" remove separators for empty sections
 let g:airline_skip_empty_sections = 1
 
 " MacVim
@@ -151,6 +148,14 @@ set noswapfile
 " Old regexp engine will incur performance issues for yats and old engine is usually turned on by other plugins
 set re=0
 
+" Vim needs a more POSIX compatible shell than fish for certain functionality to work,
+" such as :%!, compressed help pages and many third-party addons.
+" If you use fish as your login shell or launch Vim from fish,
+" you need to set shell to something else in your ~/.vimrc, for example:
+if &shell =~# 'fish$'
+  set shell=sh
+endif
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -225,13 +230,30 @@ au! FileType css,scss setl iskeyword+=-
 " => Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Clap
-let g:clap_theme = 'solarized_light'
-let g:clap_layout = { 'relative': 'editor' }
+" FZF
+let g:fzf_preview_window = ''
 
-nnoremap <silent> <leader>t :Clap files<CR>
-nnoremap <silent> <leader>s :Clap grep<CR>
-nnoremap <silent> <leader>b :Clap buffers<CR>
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--layout=reverse', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+command! -bang Dotfiles call fzf#vim#files('~/dotfiles', <bang>0)
+
+command! -bang -nargs=? -complete=dir Gfiles
+    \ call fzf#vim#gitfiles(<q-args>, {'options': ['--layout=reverse', '--info=inline']}, <bang>0)
+
+command! -bang -nargs=? -complete=dir Buffers
+    \ call fzf#vim#buffers(<q-args>, {'options': ['--layout=reverse', '--info=inline']}, <bang>0)
+
+nnoremap <silent> <leader>t :GFiles<CR>
+nnoremap <silent> <leader>s :RG<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
 
 " Prettier
 let g:prettier#autoformat = 0
@@ -261,35 +283,18 @@ else
   set signcolumn=yes
 endif
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
+ 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+ 
+let g:coc_snippet_next = '<tab>'
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
