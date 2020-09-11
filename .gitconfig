@@ -17,6 +17,7 @@
 	m = merge
 	s = status
   l = log --pretty=oneline --graph --abbrev-commit
+  recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
 
 [apply]
 

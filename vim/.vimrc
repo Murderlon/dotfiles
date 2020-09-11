@@ -27,23 +27,12 @@ call plug#begin('~/.vim/plugged')
   " Git
   Plug 'tpope/vim-fugitive'
 
-  " Completion
+  " Language server
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
   " Syntax
-  Plug 'pangloss/vim-javascript'
-  Plug 'HerringtonDarkholme/yats.vim'
-  Plug 'othree/html5.vim'
-  Plug 'rust-lang/rust.vim'
-  Plug 'MaxMEllon/vim-jsx-pretty'
-  Plug 'tpope/vim-git'
-  Plug 'elzr/vim-json'
-  Plug 'plasticboy/vim-markdown'
-  Plug 'vim-ruby/vim-ruby'
+  Plug 'sheerun/vim-polyglot'
   Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-  Plug 'Glench/Vim-Jinja2-Syntax'
-  Plug 'dag/vim-fish'
-  Plug 'cakebaker/scss-syntax.vim'
 
   " Colorschemes
   Plug 'overcache/NeoSolarized'
@@ -61,9 +50,17 @@ let g:airline_section_y=''
 let g:airline_skip_empty_sections = 1
 
 " MacVim
-set guifont=Iosevka\:h18
-set macligatures
-set guioptions=
+if has("gui_running")
+  set guifont=Iosevka\:h18
+  set macligatures
+  set guioptions=
+endif
+
+" Python hosts
+let g:python_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
+
+let $RC = "$HOME/.vimrc"
 
 set number
 set relativenumber
@@ -232,24 +229,20 @@ au! FileType css,scss setl iskeyword+=-
 
 " FZF
 let g:fzf_preview_window = ''
+let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.7 } }
+let $FZF_DEFAULT_OPTS='--reverse'
 
 function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --no-heading --color=always --smart-case -- %s || true'
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--layout=reverse', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 command! -bang Dotfiles call fzf#vim#files('~/dotfiles', <bang>0)
-
-command! -bang -nargs=? -complete=dir Gfiles
-    \ call fzf#vim#gitfiles(<q-args>, {'options': ['--layout=reverse', '--info=inline']}, <bang>0)
-
-command! -bang -nargs=? -complete=dir Buffers
-    \ call fzf#vim#buffers(<q-args>, {'options': ['--layout=reverse', '--info=inline']}, <bang>0)
 
 nnoremap <silent> <leader>t :GFiles<CR>
 nnoremap <silent> <leader>s :RG<CR>
