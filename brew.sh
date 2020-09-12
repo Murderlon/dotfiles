@@ -25,13 +25,17 @@ brew install gnu-sed --with-default-names
 # Install a modern version of Bash.
 brew install bash
 brew install bash-completion2
+
 # Fish shell
 brew install fish
 
-# Switch to using brew-installed bash as default shell
-if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
-  echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
-  chsh -s "${BREW_PREFIX}/bin/bash";
+# Shell prompt
+brew install starship
+
+# Switch to using brew-installed fish as default shell
+if ! fgrep -q "${BREW_PREFIX}/bin/fish" /etc/shells; then
+  echo "${BREW_PREFIX}/bin/fish" | sudo tee -a /etc/shells;
+  chsh -s "${BREW_PREFIX}/bin/fish";
 fi;
 
 # Install `wget` with IRI support.
@@ -57,9 +61,7 @@ brew install tmux
 brew install tokei
 brew install yarn
 brew install stow
-
-# Shell prompt
-brew install starship
+brew install z
 
 # Remove outdated versions from the cellar.
 brew cleanup
