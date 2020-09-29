@@ -32,7 +32,6 @@ call plug#begin('~/.vim/plugged')
 
   " Syntax
   Plug 'sheerun/vim-polyglot'
-  Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
   " Colorschemes
   Plug 'overcache/NeoSolarized'
@@ -42,10 +41,10 @@ call plug#begin('~/.vim/plugged')
 call plug#end()
 
 set termguicolors
-set background=dark
-colorscheme pop-punk
+set background=light
+colorscheme NeoSolarized
 
-let g:airline_theme='pop_punk'
+let g:airline_theme='solarized'
 let g:airline_section_y=''
 let g:airline_skip_empty_sections = 1
 
@@ -249,8 +248,7 @@ nnoremap <silent> <leader>s :RG<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 
 " Prettier
-let g:prettier#autoformat = 0
-let g:prettier#exec_cmd_async = 1
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 nmap <Leader>p <Plug>(Prettier)
 

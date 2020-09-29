@@ -1,11 +1,9 @@
 [user]
-
-  name = Murderlon
-  email = merlijn@soverin.net
-  signingkey = 1FF861FF1DDBB953
+	name = Murderlon
+	email = merlijn@soverin.net
+	signingkey = 1FF861FF1DDBB953
 
 [alias]
-
 	a = add
 	b = branch
 	c = commit
@@ -16,17 +14,15 @@
 	i = init
 	m = merge
 	s = status
-  l = log --pretty=oneline --graph --abbrev-commit
-  recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+	l = log --pretty=oneline --graph --abbrev-commit
+	recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
 
 [apply]
-
 	# Detect whitespace errors when applying a patch
 	whitespace = fix
 
 [core]
-
-	editor = 'nvim'
+	editor = 'vim'
 
 	# Treat spaces before tabs and all kinds of trailing whitespace as an error
 	# [default] trailing-space: looks for spaces at the end of a line
@@ -45,59 +41,49 @@
 	# https://git-scm.com/docs/git-update-index#_untracked_cache
 	untrackedCache = true
   
-  ignoreCase = false
+	ignoreCase = false
 
 [color]
-
 	# Use colors in Git commands that are capable of colored output when
 	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
 	ui = auto
 
 [color "branch"]
-
 	current = yellow reverse
 	local = yellow
 	remote = green
 
 [color "diff"]
-
 	meta = yellow bold
 	frag = magenta bold # line info
 	old = red # deletions
 	new = green # additions
 
 [color "status"]
-
 	added = yellow
 	changed = green
 	untracked = cyan
 
 [commit]
-
 	gpgsign = true
 
 [diff]
-
 	# Detect copies as well as renames
 	renames = copies
 
 [diff "bin"]
-
 	# Use `hexdump` to diff binary files
 	textconv = hexdump -v -C
 
 [help]
-
 	# Automatically correct and execute mistyped commands
 	autocorrect = 1
 
 [merge]
-
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
 
 [push]
-
 	# https://git-scm.com/docs/git-config#git-config-pushdefault
 	default = current
 	# Make `git push` push relevant annotated tags when pushing branches out.
