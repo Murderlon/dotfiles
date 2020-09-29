@@ -58,7 +58,6 @@ brew install ripgrep
 brew install thefuck
 brew install tmux
 brew install tokei
-brew install yarn
 brew install stow
 brew install z
 

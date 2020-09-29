@@ -18,3 +18,6 @@ set -U Z_DATA "$HOME/.z"
 
 # Use <tab> to complete suggestion
 bind \t accept-autosuggestion
+
+set -gx VOLTA_HOME "$HOME/.volta"
+set -gx PATH "$VOLTA_HOME/bin" $PATH

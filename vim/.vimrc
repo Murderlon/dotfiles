@@ -40,6 +40,9 @@ call plug#begin('~/.vim/plugged')
   Plug 'bignimbus/pop-punk.vim'
 call plug#end()
 
+" CoC extensions
+let g:coc_global_extensions = ['coc-ultisnips', 'coc-tailwindcss', 'coc-snippets', 'coc-scssmodules', 'coc-pairs', 'coc-marketplace', 'coc-eslint', 'coc-tsserver', 'coc-css']
+
 set termguicolors
 set background=light
 colorscheme NeoSolarized
@@ -58,6 +61,11 @@ endif
 " Python hosts
 let g:python_host_prog = '/usr/bin/python'
 let g:python3_host_prog = '/usr/local/bin/python3'
+
+" Node path if volta is used.
+if isdirectory('/Users/merlijn/.volta')
+  let g:coc_node_path = '/Users/merlijn/.volta/bin/node'
+endif
 
 let $RC = "$HOME/.vimrc"
 
@@ -353,4 +361,4 @@ xmap <silent> <C-s> <Plug>(coc-range-select)
 command! -nargs=0 Format :call CocAction('format')
 
 " Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
