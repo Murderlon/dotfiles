@@ -1,1 +1,1 @@
-stow -vt ~ ctags git tmux vim zsh
+stow -vt ~ ctags git tmux nvim zsh
