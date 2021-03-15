@@ -1,5 +1,5 @@
 set termguicolors
-set background=dark
+set background=light
 colorscheme NeoSolarized
 
 set number
@@ -10,6 +10,9 @@ set cursorline
 
 " Disable line wrapping
 set nowrap
+
+" Start scrolling before the end
+set scrolloff=8
 
 " Use spaces instead of tabs
 set expandtab
@@ -87,3 +90,7 @@ set re=0
 
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" Trim whitespace on save in vim and lua files
+autocmd BufWritePre *.vim :%s/\s\+$//e
+autocmd BufWritePre *.lua :%s/\s\+$//e

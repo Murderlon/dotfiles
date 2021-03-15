@@ -1,18 +1,18 @@
-"   __  __ ______ _____  _      _____     _ _   _ _     
-" |  \/  |  ____|  __ \| |    |_   _|   | | \ | ( )    
-" | \  / | |__  | |__) | |      | |     | |  \| |/ ___ 
+"   __  __ ______ _____  _      _____     _ _   _ _
+" |  \/  |  ____|  __ \| |    |_   _|   | | \ | ( )
+" | \  / | |__  | |__) | |      | |     | |  \| |/ ___
 " | |\/| |  __| |  _  /| |      | | _   | | . ` | / __|
 " | |  | | |____| | \ \| |____ _| || |__| | |\  | \__ \
 " |_|  |_|______|_|__\_\______|_____\____/|_| \_| |___/
-" | \ | |  ____/ __ \ \    / /_   _|  \/  |            
-" |  \| | |__ | |  | \ \  / /  | | | \  / |            
-" | . ` |  __|| |  | |\ \/ /   | | | |\/| |            
-" | |\  | |___| |__| | \  /   _| |_| |  | |            
-" |_|_\_|______\____/ __\/__ |_____|_|__|_|            
-"  / ____/ __ \| \ | |  ____|_   _/ ____|              
-" | |   | |  | |  \| | |__    | || |  __               
-" | |   | |  | | . ` |  __|   | || | |_ |              
-" | |___| |__| | |\  | |     _| || |__| |              
+" | \ | |  ____/ __ \ \    / /_   _|  \/  |
+" |  \| | |__ | |  | \ \  / /  | | | \  / |
+" | . ` |  __|| |  | |\ \/ /   | | | |\/| |
+" | |\  | |___| |__| | \  /   _| |_| |  | |
+" |_|_\_|______\____/ __\/__ |_____|_|__|_|
+"  / ____/ __ \| \ | |  ____|_   _/ ____|
+" | |   | |  | |  \| | |__    | || |  __
+" | |   | |  | | . ` |  __|   | || | |_ |
+" | |___| |__| | |\  | |     _| || |__| |
 "  \_____\____/|_| \_|_|    |_____\_____|
 "
 " How this config works:
@@ -28,12 +28,12 @@
 "   This is loaded after everything else has loaded.
 "
 " - The ftdetect folder is used to set a certain syntax for a certain file extension.
-" 
+"
 " More info on vim directories:
 " https://learnvimscriptthehardway.stevelosh.com/chapters/42.html
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
@@ -50,6 +50,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
+  Plug 'kyazdani42/nvim-web-devicons'
 
   " Search
   Plug 'nvim-lua/popup.nvim'
