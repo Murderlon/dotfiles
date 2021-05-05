@@ -1,6 +1,9 @@
 set termguicolors
-set background=light
-colorscheme NeoSolarized
+set background=dark
+
+let g:gruvbox_bold = '0'
+
+colorscheme gruvbox
 
 set number
 set relativenumber
@@ -42,7 +45,7 @@ set cmdheight=2
 set updatetime=300
 
 " always show signcolumns
-set signcolumn=no
+set signcolumn=yes
 
 " A buffer becomes hidden when it is abandoned
 set hid

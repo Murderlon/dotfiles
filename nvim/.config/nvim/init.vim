@@ -48,8 +48,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'svermeulen/vim-easyclip'
   Plug 'christoomey/vim-system-copy'
   Plug 'christoomey/vim-tmux-navigator'
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
+  Plug 'hoob3rt/lualine.nvim'
   Plug 'kyazdani42/nvim-web-devicons'
 
   " Search
@@ -69,16 +68,15 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
   " Syntax
-  Plug 'sheerun/vim-polyglot'
+  " Plug 'sheerun/vim-polyglot'
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
   " Colorschemes
   Plug 'overcache/NeoSolarized'
-  Plug 'mhartington/oceanic-next'
   Plug 'junegunn/seoul256.vim'
   Plug 'bignimbus/pop-punk.vim'
-  Plug 'kyazdani42/blue-moon'
-  Plug 'wadackel/vim-dogrun'
+  Plug 'folke/tokyonight.nvim'
+  Plug 'gruvbox-community/gruvbox'
 call plug#end()
 
 lua require("merlijn")

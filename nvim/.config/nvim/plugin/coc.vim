@@ -1,4 +1,4 @@
-let g:coc_global_extensions = ['coc-ultisnips', 'coc-tailwindcss', 'coc-snippets', 'coc-scssmodules', 'coc-pairs', 'coc-marketplace', 'coc-eslint', 'coc-tsserver', 'coc-css']
+let g:coc_global_extensions = ['coc-ultisnips', 'coc-tailwindcss', 'coc-snippets', 'coc-scssmodules', 'coc-pairs', 'coc-marketplace', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-git']
 
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
