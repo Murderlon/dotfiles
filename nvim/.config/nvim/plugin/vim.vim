@@ -91,6 +91,10 @@ set noswapfile
 " Old regexp engine will incur performance issues for yats and old engine is usually turned on by other plugins
 set re=0
 
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 

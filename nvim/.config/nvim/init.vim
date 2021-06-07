@@ -22,10 +22,7 @@
 " - The lua require loads the lua init.lua file from lua/merlijn/init.lua.
 "   We use the extra folder ("merlijn") to namespace the files to avoid conflicts.
 "
-" - All the *.vim files in /plugin are loaded. These set basic vim settings and add mappings.
-"
-" - The after/plugin folder has *.vim config file for every plugin that needs settings.
-"   This is loaded after everything else has loaded.
+" - All the *.vim files in /plugin are loaded.
 "
 " - The ftdetect folder is used to set a certain syntax for a certain file extension.
 "
@@ -48,7 +45,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'svermeulen/vim-easyclip'
   Plug 'christoomey/vim-system-copy'
   Plug 'christoomey/vim-tmux-navigator'
-  Plug 'hoob3rt/lualine.nvim'
+  " Plug 'hoob3rt/lualine.nvim'
   Plug 'kyazdani42/nvim-web-devicons'
 
   " Search
@@ -68,7 +65,6 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
   " Syntax
-  " Plug 'sheerun/vim-polyglot'
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
   " Colorschemes
