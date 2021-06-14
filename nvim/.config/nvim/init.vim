@@ -45,7 +45,6 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'svermeulen/vim-easyclip'
   Plug 'christoomey/vim-system-copy'
   Plug 'christoomey/vim-tmux-navigator'
-  " Plug 'hoob3rt/lualine.nvim'
   Plug 'kyazdani42/nvim-web-devicons'
 
   " Search

@@ -3,6 +3,9 @@ set background=dark
 
 let g:gruvbox_bold = '0'
 
+let mapleader = " "
+let g:mapleader = " "
+
 colorscheme gruvbox
 
 set number
@@ -98,6 +101,63 @@ set nowritebackup
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" In CSS, hyphens are part of identifiers (keywords, properties, selectors...).
+" By adding it to the iskeyword list, vim will consider identifiers as a whole word.
+au! FileType css,scss setl iskeyword+=-
+
 " Trim whitespace on save in vim and lua files
 autocmd BufWritePre *.vim :%s/\s\+$//e
 autocmd BufWritePre *.lua :%s/\s\+$//e
+
+inoremap jk <esc>
+nnoremap a A
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
+
+" Close the current buffer
+map <leader>q :bd<cr>
+
+" Close all the buffers
+map <leader>ba :bufdo bd<cr>
+
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Remap VIM 0 to first non-blank character
+map 0 ^
+
+" Moving lines with Alt-j / Alt-k
+" https://stackoverflow.com/a/15399297/10798093
+nnoremap ‚àÜ :m .+1<CR>==
+nnoremap Àö :m .-2<CR>==
+
+inoremap ‚àÜ <Esc>:m .+1<CR>==gi
+inoremap Àö <Esc>:m .-2<CR>==gi
+
+vnoremap ‚àÜ :m '>+1<CR>gv=gv
+vnoremap Àö :m '<-2<CR>gv=gv
+
+" Move visual block
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Re-select visual block after indenting
+vnoremap < <gv
+vnoremap > >gv
+
+" Keep search matches in the middle of the screen
+nnoremap n nzz
+nnoremap N Nzz
+
+" Don't move to the next intance of a word when highlighting it
+nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
