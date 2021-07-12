@@ -42,10 +42,12 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-repeat'
-  Plug 'svermeulen/vim-easyclip'
+  Plug 'tpope/vim-obsession'
+  Plug 'svermeulen/vim-cutlass'
   Plug 'christoomey/vim-system-copy'
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'kyazdani42/nvim-web-devicons'
+  Plug 'TamaMcGlinn/quickfixdd'
 
   " Search
   Plug 'nvim-lua/popup.nvim'
@@ -59,18 +61,23 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 
   " Git
   Plug 'tpope/vim-fugitive'
+  Plug 'lewis6991/gitsigns.nvim'
 
   " Language server
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'nvim-lua/completion-nvim'
+  Plug 'glepnir/lspsaga.nvim'
+  Plug 'onsails/lspkind-nvim'
 
   " Syntax
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'folke/lsp-colors.nvim'
 
   " Colorschemes
   Plug 'overcache/NeoSolarized'
   Plug 'junegunn/seoul256.vim'
   Plug 'bignimbus/pop-punk.vim'
-  Plug 'folke/tokyonight.nvim'
+  Plug 'projekt0n/github-nvim-theme'
   Plug 'gruvbox-community/gruvbox'
 call plug#end()
 

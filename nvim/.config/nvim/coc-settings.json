@@ -1,8 +1,0 @@
-{
-  "javascript.suggestionActions.enabled": false,
-  "prettier.singleQuote": true,
-  "prettier.semi": false,
-  "diagnostic.warningSign": ">>",
-  "diagnostic.errorSign": ">>",
-  "diagnostic.hintSign": ">>"
-}
