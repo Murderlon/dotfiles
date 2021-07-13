@@ -1,6 +1,5 @@
 require("merlijn.telescope")
 require("merlijn.treesitter")
-require("merlijn.devicons")
 require("merlijn.lsp")
 
 require('gitsigns').setup()
