@@ -48,6 +48,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'kyazdani42/nvim-web-devicons'
   Plug 'TamaMcGlinn/quickfixdd'
+  Plug 'cohama/lexima.vim'
 
   " Search
   Plug 'nvim-lua/popup.nvim'
@@ -56,6 +57,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
   " Snippets
+  Plug 'SirVer/ultisnips'
   Plug 'honza/vim-snippets'
   Plug 'mlaursen/vim-react-snippets'
 
@@ -66,8 +68,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   " Language server
   Plug 'neovim/nvim-lspconfig'
   Plug 'nvim-lua/completion-nvim'
+  Plug 'nvim-treesitter/completion-treesitter'
   Plug 'glepnir/lspsaga.nvim'
-  Plug 'onsails/lspkind-nvim'
 
   " Syntax
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}

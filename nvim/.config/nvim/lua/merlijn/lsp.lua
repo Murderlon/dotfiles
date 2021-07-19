@@ -14,8 +14,10 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
 end
 
+saga.init_lsp_saga()
+
 lspconfig.tsserver.setup {
-  on_attach = on_attach
+  on_attach = on_attach,
 }
 
 lspconfig.diagnosticls.setup {
@@ -75,30 +77,3 @@ lspconfig.diagnosticls.setup {
     }
   }
 }
-
-saga.init_lsp_saga()
-
-require('lspkind').init({
-  symbol_map = {
-    Text = '',
-    Method = 'ƒ',
-    Function = '',
-    Constructor = '',
-    Variable = '',
-    Class = '',
-    Interface = 'ﰮ',
-    Module = '',
-    Property = '',
-    Unit = '',
-    Value = '',
-    Enum = '了',
-    Keyword = '',
-    Snippet = '﬌',
-    Color = '',
-    File = '',
-    Folder = '',
-    EnumMember = '',
-    Constant = '',
-    Struct = ''
-  },
-})

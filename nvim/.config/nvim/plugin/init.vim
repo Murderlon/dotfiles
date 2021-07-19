@@ -1,7 +1,8 @@
 set termguicolors
 set background=dark
 
-colorscheme NeoSolarized
+colorscheme gruvbox
+
 let g:gruvbox_bold = '0'
 
 let mapleader = " "
