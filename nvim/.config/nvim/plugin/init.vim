@@ -1,12 +1,12 @@
 set termguicolors
 set background=dark
 
-colorscheme gruvbox
-
 let g:gruvbox_bold = '0'
 
 let mapleader = " "
 let g:mapleader = " "
+
+colorscheme gruvbox
 
 set number
 set relativenumber
@@ -161,10 +161,3 @@ nnoremap N Nzz
 
 " Don't move to the next intance of a word when highlighting it
 nnoremap * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>
-
-" Cutting with https://github.com/svermeulen/vim-cutlass
-nnoremap m d
-xnoremap m d
-
-nnoremap mm dd
-nnoremap M D
