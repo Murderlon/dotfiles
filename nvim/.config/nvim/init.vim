@@ -46,6 +46,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'christoomey/vim-system-copy'
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'kyazdani42/nvim-web-devicons'
+  Plug 'lukas-reineke/indent-blankline.nvim'
 
   " Search
   Plug 'nvim-lua/popup.nvim'
@@ -65,6 +66,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 
   " Syntax
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'plasticboy/vim-markdown'
 
   " Colorschemes
   Plug 'overcache/NeoSolarized'

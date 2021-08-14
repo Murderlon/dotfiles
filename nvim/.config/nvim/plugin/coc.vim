@@ -1,4 +1,4 @@
-let g:coc_global_extensions = ['coc-ultisnips', 'coc-tailwindcss', 'coc-snippets', 'coc-scssmodules', 'coc-pairs', 'coc-marketplace', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-git']
+let g:coc_global_extensions = ['coc-ultisnips', 'coc-tailwind-intellisense', 'coc-snippets', 'coc-scssmodules', 'coc-pairs', 'coc-marketplace', 'coc-eslint', 'coc-tsserver', 'coc-css', 'coc-git']
 
 " Node path if volta is used.
 if isdirectory('/Users/merlijn/.volta')
@@ -66,9 +66,9 @@ xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <leader>ca  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
+nmap <leader>cf <Plug>(coc-fix-current)
 
 nnoremap <silent> <space>cu  :<C-u>CocCommand git.chunkUndo<CR>
 
@@ -102,10 +102,10 @@ xmap <silent> <C-s> <Plug>(coc-range-select)
 command! -nargs=0 Format :call CocAction('format')
 
 " Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
