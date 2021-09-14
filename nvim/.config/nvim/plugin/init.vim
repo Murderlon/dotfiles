@@ -1,12 +1,12 @@
 set termguicolors
-set background=dark
+set background=light
 
 let g:gruvbox_bold = '0'
 
 let mapleader = " "
 let g:mapleader = " "
 
-colorscheme gruvbox
+colorscheme NeoSolarized
 
 set number
 set relativenumber
@@ -123,9 +123,6 @@ map <leader>q :bd<cr>
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
-
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
 
 " Smart way to move between windows
 map <C-j> <C-W>j

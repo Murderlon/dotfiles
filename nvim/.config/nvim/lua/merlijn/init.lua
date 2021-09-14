@@ -1,3 +1,6 @@
 require("merlijn.telescope")
 require("merlijn.treesitter")
-require("merlijn.devicons")
+
+require'nvim-web-devicons'.setup {
+  default = true;
+}

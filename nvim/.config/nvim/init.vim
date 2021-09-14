@@ -46,7 +46,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   Plug 'christoomey/vim-system-copy'
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'kyazdani42/nvim-web-devicons'
-  Plug 'lukas-reineke/indent-blankline.nvim'
+  Plug 'ThePrimeagen/harpoon'
 
   " Search
   Plug 'nvim-lua/popup.nvim'
@@ -60,6 +60,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 
   " Git
   Plug 'tpope/vim-fugitive'
+  Plug 'ThePrimeagen/git-worktree.nvim'
 
   " Language server
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -67,12 +68,13 @@ call plug#begin('~/.config/nvim/autoload/plugged')
   " Syntax
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'plasticboy/vim-markdown'
+  Plug 'nikvdp/ejs-syntax'
 
   " Colorschemes
   Plug 'overcache/NeoSolarized'
   Plug 'junegunn/seoul256.vim'
   Plug 'bignimbus/pop-punk.vim'
-  Plug 'folke/tokyonight.nvim'
+  Plug 'EdenEast/nightfox.nvim'
   Plug 'gruvbox-community/gruvbox'
 call plug#end()
 

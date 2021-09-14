@@ -20,3 +20,4 @@ set -gx PATH "/Library/Developer/CommandLineTools/usr/bin/" $PATH
 set -gx VOLTA_HOME "$HOME/.volta"
 set -gx PATH "$VOLTA_HOME/bin" $PATH
 set -gx EDITOR nvim
+fish_add_path /usr/local/opt/llvm/bin
