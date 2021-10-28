@@ -102,6 +102,7 @@ _G.packer_plugins = {
     path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/ejs-syntax"
   },
   ["gitsigns.nvim"] = {
+    config = { "\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0" },
     loaded = true,
     path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/gitsigns.nvim"
   },
@@ -109,14 +110,6 @@ _G.packer_plugins = {
     config = { "\27LJ\2\n6\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\27merlijn.config.harpoon\frequire\0" },
     loaded = true,
     path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/harpoon"
-  },
-  ["lexima.vim"] = {
-    loaded = true,
-    path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/lexima.vim"
-  },
-  ["nightfox.nvim"] = {
-    loaded = true,
-    path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/nightfox.nvim"
   },
   ["nvim-cmp"] = {
     config = { "\27LJ\2\n2\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\23merlijn.config.cmp\frequire\0" },
@@ -175,10 +168,12 @@ _G.packer_plugins = {
     path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/vim-easyclip"
   },
   ["vim-fugitive"] = {
+    config = { "\27LJ\2\n7\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\28merlijn.config.fugitive\frequire\0" },
     loaded = true,
     path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/vim-fugitive"
   },
   ["vim-markdown"] = {
+    config = { "\27LJ\2\n7\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\28merlijn.config.markdown\frequire\0" },
     loaded = true,
     path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/vim-markdown"
   },
@@ -189,10 +184,6 @@ _G.packer_plugins = {
   ["vim-repeat"] = {
     loaded = true,
     path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/vim-repeat"
-  },
-  ["vim-sensible"] = {
-    loaded = true,
-    path = "/Users/merlijn/.local/share/nvim/site/pack/packer/start/vim-sensible"
   },
   ["vim-snippets"] = {
     loaded = true,
@@ -213,6 +204,14 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: gitsigns.nvim
+time([[Config for gitsigns.nvim]], true)
+try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+time([[Config for gitsigns.nvim]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+try_loadstring("\27LJ\2\n8\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\29merlijn.config.telescope\frequire\0", "config", "telescope.nvim")
+time([[Config for telescope.nvim]], false)
 -- Config for: harpoon
 time([[Config for harpoon]], true)
 try_loadstring("\27LJ\2\n6\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\27merlijn.config.harpoon\frequire\0", "config", "harpoon")
@@ -221,18 +220,22 @@ time([[Config for harpoon]], false)
 time([[Config for nvim-lspconfig]], true)
 try_loadstring("\27LJ\2\n2\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\23merlijn.config.lsp\frequire\0", "config", "nvim-lspconfig")
 time([[Config for nvim-lspconfig]], false)
--- Config for: telescope.nvim
-time([[Config for telescope.nvim]], true)
-try_loadstring("\27LJ\2\n8\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\29merlijn.config.telescope\frequire\0", "config", "telescope.nvim")
-time([[Config for telescope.nvim]], false)
--- Config for: nvim-treesitter
-time([[Config for nvim-treesitter]], true)
-try_loadstring("\27LJ\2\n9\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\30merlijn.config.treesitter\frequire\0", "config", "nvim-treesitter")
-time([[Config for nvim-treesitter]], false)
+-- Config for: vim-fugitive
+time([[Config for vim-fugitive]], true)
+try_loadstring("\27LJ\2\n7\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\28merlijn.config.fugitive\frequire\0", "config", "vim-fugitive")
+time([[Config for vim-fugitive]], false)
 -- Config for: nvim-cmp
 time([[Config for nvim-cmp]], true)
 try_loadstring("\27LJ\2\n2\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\23merlijn.config.cmp\frequire\0", "config", "nvim-cmp")
 time([[Config for nvim-cmp]], false)
+-- Config for: vim-markdown
+time([[Config for vim-markdown]], true)
+try_loadstring("\27LJ\2\n7\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\28merlijn.config.markdown\frequire\0", "config", "vim-markdown")
+time([[Config for vim-markdown]], false)
+-- Config for: nvim-treesitter
+time([[Config for nvim-treesitter]], true)
+try_loadstring("\27LJ\2\n9\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\30merlijn.config.treesitter\frequire\0", "config", "nvim-treesitter")
+time([[Config for nvim-treesitter]], false)
 if should_profile then save_profiles() end
 
 end)

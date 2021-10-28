@@ -17,7 +17,8 @@ require'nvim-treesitter.configs'.setup {
     'regex',
     'tsx',
     'vue',
-    'typescript'
+    'typescript',
+    'fish'
   },
   highlight = { enable = true },
   incremental_selection = { enable = true },

@@ -88,7 +88,12 @@ return require('packer').startup(function()
       require 'merlijn.config.treesitter'
     end
   }
-  use 'plasticboy/vim-markdown'
+  use {
+    'plasticboy/vim-markdown',
+    config = function ()
+      require 'merlijn.config.markdown'
+    end
+  }
   use 'nikvdp/ejs-syntax'
 
   -- Colorschemes
