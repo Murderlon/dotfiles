@@ -8,6 +8,7 @@ map('n', '<leader>h1', '<CMD>lua require("harpoon.ui").nav_file(1)<CR>', options
 map('n', '<leader>h2', '<CMD>lua require("harpoon.ui").nav_file(2)<CR>', options)
 map('n', '<leader>h3', '<CMD>lua require("harpoon.ui").nav_file(3)<CR>', options)
 map('n', '<leader>h4', '<CMD>lua require("harpoon.ui").nav_file(4)<CR>', options)
+map('n', '<leader>h5', '<CMD>lua require("harpoon.ui").nav_file(5)<CR>', options)
 
 map('n', '<leader>t1', '<CMD>lua require("harpoon.term").gotoTerminal(1)<CR>', options)
 map('n', '<leader>t2', '<CMD>lua require("harpoon.term").gotoTerminal(2)<CR>', options)
