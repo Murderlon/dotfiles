@@ -16,6 +16,8 @@ thefuck --alias | source
 set -U Z_CMD "j"
 set -U Z_DATA "$HOME/.z"
 
-set -gx PATH "/Library/Developer/CommandLineTools/usr/bin/" $PATH
 set -gx EDITOR nvim
+
+fish_add_path /Library/Developer/CommandLineTools/usr/bin/
 fish_add_path /usr/local/opt/llvm/bin
+fish_add_path /Users/merlijn/go/bin

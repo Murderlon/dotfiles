@@ -6,7 +6,6 @@ local M = {}
 
 require('telescope').setup {
   defaults = {
-    disable_devicons = true,
     file_sorter = require('telescope.sorters').get_fzy_sorter,
     prompt_prefix = '> ',
     selection_caret = '> ',
@@ -24,6 +23,8 @@ require('telescope').setup {
 
 require('telescope').load_extension('fzy_native')
 
+require('telescope').load_extension('neoclip')
+
 map('n', '<leader>ss', '<CMD>lua require("telescope.builtin").live_grep()<CR>', options)
 map('n', '<leader>si', '<CMD>lua require("telescope.builtin").live_grep{ search_dirs = { vim.fn.expand("%:p:h") ..  "/" .. vim.fn.expand("<cword>") } }<CR>', options)
 map('n', '<leader>fg', '<CMD>lua require("telescope.builtin").git_files()<CR>', options)
@@ -34,6 +35,8 @@ map('n', '<leader>fc', '<CMD>lua require("telescope.builtin").command_history()<
 map('n', '<leader>sw', '<CMD>lua require("telescope.builtin").grep_string { search = vim.fn.expand("<cword>") }<CR>', options)
 
 map('n', '<leader>fd', '<CMD>lua require("merlijn.config.telescope").search_dotfiles()<CR>', options)
+
+map('n', '<leader>yy', '<CMD>Telescope neoclip<CR>', options)
 
 M.search_dotfiles = function()
   require("telescope.builtin").git_files({

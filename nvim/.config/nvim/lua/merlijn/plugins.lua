@@ -10,10 +10,30 @@ return require('packer').startup(function()
   -- General
   use 'tpope/vim-vinegar'
   use 'tpope/vim-surround'
-  use 'tpope/vim-commentary'
   use 'tpope/vim-repeat'
-  use 'svermeulen/vim-easyclip'
   use 'christoomey/vim-system-copy'
+  use 'kyazdani42/nvim-web-devicons'
+
+  use {
+    'windwp/nvim-spectre',
+    config = function()
+      require 'merlijn.config.spectre'
+    end,
+  }
+
+  use {
+    'AckslD/nvim-neoclip.lua',
+    config = function()
+      require('neoclip').setup()
+    end,
+  }
+
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+        require('Comment').setup()
+    end
+  }
 
   use {
     'ThePrimeagen/harpoon',
@@ -88,13 +108,6 @@ return require('packer').startup(function()
       require 'merlijn.config.treesitter'
     end
   }
-  use {
-    'plasticboy/vim-markdown',
-    config = function ()
-      require 'merlijn.config.markdown'
-    end
-  }
-  use 'nikvdp/ejs-syntax'
 
   -- Colorschemes
   use 'overcache/NeoSolarized'

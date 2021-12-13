@@ -5,7 +5,7 @@ local eslint_fix = require 'diagnosticls-configs.formatters.eslint_d_fmt'
 local prettier = require 'diagnosticls-configs.formatters.prettier'
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-local servers = { 'tsserver', 'tailwindcss', 'cssls', 'html' }
+local servers = { 'tsserver', 'tailwindcss', 'cssls', 'html', 'gopls' }
 local eslint_and_prettier = {
   linter = eslint_d,
   formatter = { prettier, eslint_fix }
