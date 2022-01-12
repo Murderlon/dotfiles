@@ -18,6 +18,7 @@ set -U Z_DATA "$HOME/.z"
 
 set -gx EDITOR nvim
 
-fish_add_path /Library/Developer/CommandLineTools/usr/bin/
-fish_add_path /usr/local/opt/llvm/bin
+fish_add_path /usr/bin
 fish_add_path /Users/merlijn/go/bin
+
+bind \cp 'bass tmux-sessionizer.sh\n'
