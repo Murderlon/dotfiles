@@ -1,38 +1,43 @@
-local opt = vim.opt
+vim.cmd('colorscheme NeoSolarized')
 
 vim.g.python_host_prog = '/usr/bin/python'
 vim.g.python3_host_prog = '/usr/local/bin/python3'
 
-opt.termguicolors = true
-opt.background = 'dark'
-opt.number = true
-opt.relativenumber = true
-opt.cursorline = true
-opt.wrap = false
-opt.scrolloff = 8
-opt.expandtab = true
-opt.smarttab = true
-opt.shiftwidth = 2
-opt.tabstop = 2
-opt.smartindent = true
-opt.cmdheight = 2
-opt.updatetime = 50
-opt.signcolumn = 'yes'
-opt.hidden = true
-opt.ignorecase = true
-opt.smartcase = true
-opt.hlsearch = true
-opt.incsearch = true
-opt.showmatch = true
-opt.splitbelow = true
-opt.splitright = true
-opt.swapfile = false
-opt.backup = false
-opt.writebackup = false
-opt.belloff = 'all' -- Just turn the dang bell off
-opt.shortmess:append('c') -- Don't pass messages to ins-completion-menu
-opt.wildignore = '.DS_Store'
-opt.formatoptions = opt.formatoptions
+-- Use tree sitter for folds but unfold all on start
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldlevelstart = 99
+
+vim.opt.termguicolors = true
+vim.opt.background = 'light'
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.cursorline = true
+vim.opt.wrap = false
+vim.opt.scrolloff = 8
+vim.opt.expandtab = true
+vim.opt.smarttab = true
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.smartindent = true
+vim.opt.cmdheight = 2
+vim.opt.updatetime = 50
+vim.opt.signcolumn = 'yes'
+vim.opt.hidden = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
+vim.opt.showmatch = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.belloff = 'all'
+vim.opt.shortmess:append('c') -- Don't pass messages to ins-completion-menu
+vim.opt.wildignore = '.DS_Store'
+vim.opt.formatoptions = vim.opt.formatoptions -- see :h fo-table
   - "a" -- Auto formatting is BAD.
   - "t" -- Don't auto format my code. I got linters for that.
   + "c" -- In general, I like it when comments respect textwidth
@@ -41,4 +46,4 @@ opt.formatoptions = opt.formatoptions
   + "r" -- But do continue when pressing enter.
   + "n" -- Indent past the formatlistpat, not underneath it.
   + "j" -- Auto-remove comments if possible.
-  - "2" -- I'm not in gradeschool anymore
+  - "2" -- Use the indent of the second line of a paragraph

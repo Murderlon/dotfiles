@@ -1,19 +1,14 @@
 local nvim_lsp = require 'lspconfig'
-local dlsconfig = require 'diagnosticls-configs'
-local eslint_d = require 'diagnosticls-configs.linters.eslint_d'
-local eslint_fix = require 'diagnosticls-configs.formatters.eslint_d_fmt'
-local prettier = require 'diagnosticls-configs.formatters.prettier'
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 local servers = { 'tsserver', 'tailwindcss', 'cssls', 'html', 'gopls' }
-local eslint_and_prettier = {
-  linter = eslint_d,
-  formatter = { prettier, eslint_fix }
-}
+local runtime_path = vim.split(package.path, ';')
+
+table.insert(runtime_path, "lua/?.lua")
+table.insert(runtime_path, "lua/?/init.lua")
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
   local opts = { noremap=true, silent=true }
 
   buf_set_keymap('n', '<space>pp', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
@@ -32,25 +27,72 @@ end
 
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
-    on_attach = function(client, bufnr)
-      if lsp == 'tsserver' then
-        client.resolved_capabilities.document_formatting = false
-      end
-      on_attach(client, bufnr)
-    end,
+    on_attach = on_attach,
     capabilities = capabilities
   }
 end
 
-dlsconfig.init {
-  on_attach = on_attach,
-  capabilities = capabilities
+nvim_lsp.sumneko_lua.setup {
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+        -- Setup your lua path
+        path = runtime_path,
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
 }
 
-dlsconfig.setup {
-  ['javascript'] = eslint_and_prettier,
-  ['javascriptreact'] = eslint_and_prettier,
-  ['typescript'] = eslint_and_prettier,
-  ['typescriptreact'] = eslint_and_prettier,
-  ['markdown'] = eslint_and_prettier
+nvim_lsp.diagnosticls.setup {
+  on_attach = on_attach,
+  filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'markdown' },
+  init_options = {
+    linters = {
+      eslint = {
+        sourceName = 'eslint_d',
+        command = 'eslint_d',
+        debounce = 100,
+        args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
+        parseJson = {
+          errorsRoot = '[0].messages',
+          line = 'line',
+          column = 'column',
+          endLine = 'endLine',
+          endColumn = 'endColumn',
+          message = '[eslint] ${message} [${ruleId}]',
+          security = 'severity',
+        },
+        securities = { ['1'] = 'warning', ['2'] = 'error' },
+        rootPatterns = {
+          '.eslintrc',
+          '.eslintrc.cjs',
+          '.eslintrc.js',
+          '.eslintrc.json',
+          '.eslintrc.yaml',
+          '.eslintrc.yml',
+        },
+      },
+    },
+    filetypes = {
+      javascript = 'eslint',
+      javascriptreact = 'eslint',
+      typescript = 'eslint',
+      typescriptreact = 'eslint',
+      markdown = 'eslint',
+    },
+  },
 }

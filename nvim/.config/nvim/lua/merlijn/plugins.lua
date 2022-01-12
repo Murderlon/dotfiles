@@ -42,6 +42,13 @@ return require('packer').startup(function()
     end
   }
 
+  use {
+    'sbdchd/neoformat',
+    config = function ()
+      require 'merlijn.config.neoformat'
+    end
+  }
+
   -- Search
   use {
     'nvim-telescope/telescope.nvim',
@@ -78,7 +85,8 @@ return require('packer').startup(function()
   use {
     'neovim/nvim-lspconfig',
     requires = {
-      'creativenull/diagnosticls-configs-nvim'
+      'creativenull/diagnosticls-configs-nvim',
+      'folke/lsp-colors.nvim'
     },
     config = function ()
       require 'merlijn.config.lsp'
@@ -108,9 +116,17 @@ return require('packer').startup(function()
       require 'merlijn.config.treesitter'
     end
   }
+  use {
+    'plasticboy/vim-markdown',
+    config = function ()
+      require 'merlijn.config.markdown'
+    end
+  }
 
   -- Colorschemes
   use 'overcache/NeoSolarized'
   use 'bignimbus/pop-punk.vim'
   use 'folke/tokyonight.nvim'
+  use 'tjdevries/colorbuddy.vim'
+  use 'tjdevries/gruvbuddy.nvim'
 end)
