@@ -1,26 +1,31 @@
-local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-
-if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-end
-
-return require('packer').startup(function()
-  use 'wbthomason/packer.nvim'
+return require('packer').startup(function(use)
   -- General
-  use 'tpope/vim-vinegar'
+  use 'wbthomason/packer.nvim'
   use 'tpope/vim-surround'
   use 'tpope/vim-repeat'
   use 'christoomey/vim-system-copy'
   use 'kyazdani42/nvim-web-devicons'
 
+  -- Colorschemes
+  use 'overcache/NeoSolarized'
+  use 'bignimbus/pop-punk.vim'
+  use 'folke/tokyonight.nvim'
+
+  -- Snippets
+  use 'SirVer/ultisnips'
+  use 'honza/vim-snippets'
+  use 'mlaursen/vim-react-snippets'
+  
+  -- File explorer
   use {
-    'windwp/nvim-spectre',
+    'tamago324/lir.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
     config = function()
-      require 'merlijn.config.spectre'
+      require 'merlijn.config.lir'
     end,
   }
 
+  -- Clipboard history
   use {
     'AckslD/nvim-neoclip.lua',
     config = function()
@@ -28,6 +33,7 @@ return require('packer').startup(function()
     end,
   }
 
+  -- Comment commands
   use {
     'numToStr/Comment.nvim',
     config = function()
@@ -35,6 +41,7 @@ return require('packer').startup(function()
     end
   }
 
+  -- Fast switching between active files
   use {
     'ThePrimeagen/harpoon',
     config = function ()
@@ -42,6 +49,7 @@ return require('packer').startup(function()
     end
   }
 
+  -- Formatting
   use {
     'sbdchd/neoformat',
     config = function ()
@@ -61,11 +69,12 @@ return require('packer').startup(function()
       require 'merlijn.config.telescope'
     end
   }
-
-  -- Snippets
-  use 'SirVer/ultisnips'
-  use 'honza/vim-snippets'
-  use 'mlaursen/vim-react-snippets'
+  use {
+    'windwp/nvim-spectre',
+    config = function()
+      require 'merlijn.config.spectre'
+    end,
+  }
 
   -- Git
   use {
@@ -122,11 +131,4 @@ return require('packer').startup(function()
       require 'merlijn.config.markdown'
     end
   }
-
-  -- Colorschemes
-  use 'overcache/NeoSolarized'
-  use 'bignimbus/pop-punk.vim'
-  use 'folke/tokyonight.nvim'
-  use 'tjdevries/colorbuddy.vim'
-  use 'tjdevries/gruvbuddy.nvim'
 end)

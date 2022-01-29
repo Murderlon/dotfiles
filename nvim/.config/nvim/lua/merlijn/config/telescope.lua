@@ -1,5 +1,3 @@
-local actions = require 'telescope.actions'
-
 local options = { noremap = true }
 local map = vim.api.nvim_set_keymap
 local M = {}
@@ -18,11 +16,17 @@ require('telescope').setup {
       override_generic_sorter = true,
       override_file_sorter = true,
     }
+  },
+  pickers = {
+    git_files = { theme = 'ivy' },
+    find_files = { theme = 'ivy' },
+    live_grep = { theme = 'ivy' },
+    buffers = { theme = 'ivy' },
+    grep_string = { theme = 'ivy' },
   }
 }
 
 require('telescope').load_extension('fzy_native')
-
 require('telescope').load_extension('neoclip')
 
 map('n', '<leader>ss', '<CMD>lua require("telescope.builtin").live_grep()<CR>', options)

@@ -1,4 +1,9 @@
-vim.cmd('colorscheme NeoSolarized')
+vim.cmd[[
+  colorscheme pop-punk
+
+  " Transparent background
+  autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE
+]]
 
 vim.g.python_host_prog = '/usr/bin/python'
 vim.g.python3_host_prog = '/usr/local/bin/python3'
@@ -9,10 +14,9 @@ vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldlevelstart = 99
 
 vim.opt.termguicolors = true
-vim.opt.background = 'light'
+vim.opt.background = 'dark'
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.scrolloff = 8
 vim.opt.expandtab = true
