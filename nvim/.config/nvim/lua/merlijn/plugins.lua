@@ -10,12 +10,23 @@ return require('packer').startup(function(use)
   use 'overcache/NeoSolarized'
   use 'bignimbus/pop-punk.vim'
   use 'folke/tokyonight.nvim'
+  use 'wuelnerdotexe/vim-enfocado'
+
+  use {
+    'folke/trouble.nvim',
+    config = function()
+      require 'config.merlijn.trouble'
+    end,
+  }
 
   -- Snippets
-  use 'SirVer/ultisnips'
-  use 'honza/vim-snippets'
-  use 'mlaursen/vim-react-snippets'
-  
+  use {
+    'L3MON4D3/LuaSnip',
+    config = function()
+      require 'merlijn.config.luasnip'
+    end,
+  }
+
   -- File explorer
   use {
     'tamago324/lir.nvim',
@@ -86,17 +97,14 @@ return require('packer').startup(function(use)
   use {
     'lewis6991/gitsigns.nvim',
     config = function ()
-      require('gitsigns').setup()
+      require 'merlijn.config.gitsigns'
     end
   }
 
   -- Language server
   use {
     'neovim/nvim-lspconfig',
-    requires = {
-      'creativenull/diagnosticls-configs-nvim',
-      'folke/lsp-colors.nvim'
-    },
+    requires = { 'folke/lsp-colors.nvim' },
     config = function ()
       require 'merlijn.config.lsp'
     end
@@ -110,7 +118,7 @@ return require('packer').startup(function(use)
       'hrsh7th/cmp-nvim-lua',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'quangnguyen30192/cmp-nvim-ultisnips'
+      'saadparwaiz1/cmp_luasnip',
     },
     config = function ()
       require 'merlijn.config.cmp'

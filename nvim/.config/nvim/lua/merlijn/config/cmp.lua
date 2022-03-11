@@ -1,8 +1,5 @@
 local cmp = require 'cmp'
-
-local press = function(key)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), 'n', true)
-end
+local ls = require 'luasnip'
 
 cmp.setup({
   mapping = {
@@ -13,8 +10,8 @@ cmp.setup({
     },
     ['<C-l>'] = cmp.mapping(
       function(fallback)
-        if vim.fn['UltiSnips#CanJumpForwards']() == 1 then
-          press('<ESC>:call UltiSnips#JumpForwards()<CR>')
+        if ls.expand_or_jumpable() then
+          ls.expand_or_jump()
         else
           fallback() -- The fallback function is treated as original mapped key.
         end
@@ -23,8 +20,8 @@ cmp.setup({
     ),
     ['<C-j>'] = cmp.mapping(
       function(fallback)
-        if vim.fn['UltiSnips#CanJumpBackwards']() == 1 then
-          press('<ESC>:call UltiSnips#JumpBackwards()<CR>')
+        if ls.jumpable(-1) then
+          ls.jump(-1)
         else
           fallback() -- The fallback function is treated as original mapped key.
         end
@@ -36,15 +33,15 @@ cmp.setup({
   sources = {
     -- The order of the sources matter, it determines priority in what to suggest
     { name = 'nvim_lua' }, -- only enabled in lua files
+    { name = 'luasnip' },
     { name = 'nvim_lsp' },
     { name = 'path' },
-    { name = 'ultisnips' },
     { name = 'buffer', keyword_length = 4 },
   },
   snippet = {
     expand = function(args)
-      vim.fn['UltiSnips#Anon'](args.body)
-    end,
+      ls.lsp_expand(args.body)
+    end
   },
   experimental = {
     ghost_text = true,

@@ -36,6 +36,3 @@ map('v', '>', '>gv', options)
 -- Keep search matches in the middle of the screen
 map('n', 'n', 'nzz', options)
 map('n', 'N', 'Nzz', options)
-
--- Don't move to the next intance of a word when highlighting it
--- map('n', '*', ":let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<C-M>", options)
