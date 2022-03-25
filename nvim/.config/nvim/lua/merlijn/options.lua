@@ -1,14 +1,8 @@
-vim.cmd[[
-  colorscheme pop-punk
-
-  " Transparent background
-  autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE
-]]
+vim.cmd[[colorscheme tokyonight]]
 
 vim.g.python_host_prog = '/usr/bin/python'
 vim.g.python3_host_prog = '/usr/local/bin/python3'
 
--- Use tree sitter for folds but unfold all on start
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldlevelstart = 99

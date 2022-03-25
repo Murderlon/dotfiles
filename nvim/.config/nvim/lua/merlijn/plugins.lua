@@ -11,11 +11,19 @@ return require('packer').startup(function(use)
   use 'bignimbus/pop-punk.vim'
   use 'folke/tokyonight.nvim'
   use 'wuelnerdotexe/vim-enfocado'
+  use {
+    'catppuccin/nvim',
+    as = "catppuccin",
+    branch = 'dev',
+    config = function()
+      require 'merlijn.config.catppuccin'
+    end,
+  }
 
   use {
     'folke/trouble.nvim',
     config = function()
-      require 'config.merlijn.trouble'
+      require 'merlijn.config.trouble'
     end,
   }
 

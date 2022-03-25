@@ -33,9 +33,9 @@ cmp.setup({
   sources = {
     -- The order of the sources matter, it determines priority in what to suggest
     { name = 'nvim_lua' }, -- only enabled in lua files
-    { name = 'luasnip' },
-    { name = 'nvim_lsp' },
     { name = 'path' },
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
     { name = 'buffer', keyword_length = 4 },
   },
   snippet = {
