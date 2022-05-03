@@ -2,8 +2,11 @@ local cmp = require 'cmp'
 local ls = require 'luasnip'
 
 cmp.setup({
-  mapping = {
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-e>'] = cmp.mapping.close(),
+    ['<c-space>'] = cmp.mapping.complete(),
     ['<C-k>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Insert,
       select = true,
@@ -28,16 +31,15 @@ cmp.setup({
       end,
       { 'i', 's' }
     ),
-    ['<c-space>'] = cmp.mapping.complete(),
-  },
-  sources = {
+  }),
+  sources = cmp.config.sources({
     -- The order of the sources matter, it determines priority in what to suggest
     { name = 'nvim_lua' }, -- only enabled in lua files
     { name = 'path' },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'buffer', keyword_length = 4 },
-  },
+  }),
   snippet = {
     expand = function(args)
       ls.lsp_expand(args.body)

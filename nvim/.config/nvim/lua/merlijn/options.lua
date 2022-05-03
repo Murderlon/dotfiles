@@ -34,7 +34,7 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.belloff = 'all'
 vim.opt.shortmess:append('c') -- Don't pass messages to ins-completion-menu
-vim.opt.complete:remove('t')
+vim.opt.completeopt='menu,menuone,noselect'
 vim.opt.wildignore = '.DS_Store'
 vim.opt.formatoptions = vim.opt.formatoptions -- see :h fo-table
   - "a" -- Auto formatting is BAD.
