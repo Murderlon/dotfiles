@@ -36,6 +36,7 @@ map('n', '<leader>ff', '<CMD>lua require("telescope.builtin").find_files()<CR>',
 map('n', '<leader>fi', '<CMD>lua require("telescope.builtin").find_files{ search_dirs = { vim.fn.expand("%:p:h") ..  "/" .. vim.fn.expand("<cword>") } }<CR>', options)
 map('n', '<leader>fb', '<CMD>lua require("telescope.builtin").buffers()<CR>', options)
 map('n', '<leader>fc', '<CMD>lua require("telescope.builtin").command_history()<CR>', options)
+map('n', '<leader>fh', '<CMD>lua require("telescope.builtin").help_tags()<CR>', options)
 map('n', '<leader>sw', '<CMD>lua require("telescope.builtin").grep_string { search = vim.fn.expand("<cword>") }<CR>', options)
 
 map('n', '<leader>fd', '<CMD>lua require("merlijn.config.telescope").search_dotfiles()<CR>', options)

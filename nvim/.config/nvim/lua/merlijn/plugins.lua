@@ -10,6 +10,7 @@ return require('packer').startup(function(use)
   use 'overcache/NeoSolarized'
   use 'bignimbus/pop-punk.vim'
   use 'folke/tokyonight.nvim'
+  use 'ellisonleao/gruvbox.nvim'
   use 'wuelnerdotexe/vim-enfocado'
   use {
     'catppuccin/nvim',
@@ -106,6 +107,13 @@ return require('packer').startup(function(use)
     'lewis6991/gitsigns.nvim',
     config = function ()
       require 'merlijn.config.gitsigns'
+    end
+  }
+  use {
+    'sindrets/diffview.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function ()
+      require'diffview'.setup{}
     end
   }
 
