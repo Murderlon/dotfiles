@@ -17,6 +17,7 @@ set -U Z_CMD "j"
 set -U Z_DATA "$HOME/.z"
 
 set -gx EDITOR nvim
+set -gx TERM screen-256color;
 
 fish_add_path /usr/bin
 fish_add_path /Users/merlijn/go/bin

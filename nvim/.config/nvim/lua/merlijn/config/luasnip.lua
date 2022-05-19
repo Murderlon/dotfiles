@@ -39,6 +39,9 @@ local javascript_snippets = {
   s('beforeEach', "beforeEach(() => {\n\t$0\n})"),
   s('it', "it('${1:should }', () => {\n\t$0\n})"),
   s('eq', "expect($1).toEqual($0)"),
+  -- eslint
+  s('edl', "// eslint-disable-next-line ${0}"),
+  s('edg', "/* eslint-disable ${0} */"),
 }
 
 ls.config.set_config {

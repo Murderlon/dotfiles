@@ -16,6 +16,7 @@
 	s = status
 	l = log --pretty=oneline --graph --abbrev-commit
 	recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+  fixup = "!git log -n 10 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
 
 [apply]
 	# Detect whitespace errors when applying a patch
