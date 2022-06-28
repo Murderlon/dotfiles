@@ -28,10 +28,12 @@ require('telescope').setup {
 
 require('telescope').load_extension('fzy_native')
 require('telescope').load_extension('neoclip')
+require("telescope").load_extension "file_browser"
 
 map('n', '<leader>ss', '<CMD>lua require("telescope.builtin").live_grep()<CR>', options)
 map('n', '<leader>si', '<CMD>lua require("telescope.builtin").live_grep{ search_dirs = { <CMD>call nvim_feedkeys("Y", "n")<CR> } }<CR>', options)
 map('n', '<leader>fg', '<CMD>lua require("telescope.builtin").git_files()<CR>', options)
+map('n', '<leader>fm', '<CMD>Telescope file_browser<CR>', options)
 map('n', '<leader>ff', '<CMD>lua require("telescope.builtin").find_files()<CR>', options)
 map('n', '<leader>fi', '<CMD>lua require("telescope.builtin").find_files{ search_dirs = { vim.fn.expand("%:p:h") ..  "/" .. vim.fn.expand("<cword>") } }<CR>', options)
 map('n', '<leader>fb', '<CMD>lua require("telescope.builtin").buffers()<CR>', options)

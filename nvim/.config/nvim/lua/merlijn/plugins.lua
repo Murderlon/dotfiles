@@ -12,6 +12,7 @@ return require('packer').startup(function(use)
   use 'folke/tokyonight.nvim'
   use 'ellisonleao/gruvbox.nvim'
   use 'wuelnerdotexe/vim-enfocado'
+  use 'ray-x/starry.nvim'
   use {
     'catppuccin/nvim',
     as = "catppuccin",
@@ -83,7 +84,8 @@ return require('packer').startup(function(use)
     requires = {
       'nvim-lua/popup.nvim',
       'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope-fzy-native.nvim'
+      'nvim-telescope/telescope-fzy-native.nvim',
+      'nvim-telescope/telescope-file-browser.nvim',
     },
     config = function ()
       require 'merlijn.config.telescope'

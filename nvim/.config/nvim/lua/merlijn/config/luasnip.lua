@@ -18,8 +18,8 @@ local javascript_snippets = {
   s('fof', "for (const ${1:item} of ${2:array}) {\n\t${0}\n}"),
   s('fin', "for (const ${1:item} in ${2:object}) {\n\t${0}\n}"),
   -- vars
-  s('dob', "const { ${2:propertyName} } = ${1:objectToDestruct}"),
-  s('dar', "const [${2:propertyName}] = ${1:arrayToDestruct}"),
+  s('dob', "const { ${2:propertyName} } = ${1:props}"),
+  s('dar', "const [${2:propertyName}] = ${1:array}"),
   -- functions
   s('fun', "function ${1} (${2}) {\n\t${0}\n}"),
   s('sti', "setInterval(() => {\n\t${2}\n}, ${0:intervalInms})"),
@@ -43,6 +43,16 @@ local javascript_snippets = {
   s('edl', "// eslint-disable-next-line ${0}"),
   s('edg', "/* eslint-disable ${0} */"),
 }
+
+-- local react_snippets = {
+--   s('imr', "import React from 'react'\n"),
+--   s('usee', {
+--     "useEffect(() => {",
+--     "\t$1",
+--     "}, [$0]);"
+--   }),
+--   s('uses', "const [$2, $0] = useState($1)"),
+-- }
 
 ls.config.set_config {
   -- This tells LuaSnip to remember to keep around the last snippet.

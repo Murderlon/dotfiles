@@ -20,6 +20,7 @@ set -gx EDITOR nvim
 set -gx TERM screen-256color;
 
 fish_add_path /usr/bin
+fish_add_path /usr/local/bin
 fish_add_path /Users/merlijn/go/bin
 
 bind \cp 'bass tmux-sessionizer.sh\n'
