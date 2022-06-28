@@ -1,106 +1,106 @@
 [user]
-	name = Murderlon
-	email = merlijn@soverin.net
-	signingkey = 1FF861FF1DDBB953
+  name = Murderlon
+  email = merlijn@soverin.net
+  signingkey = 1FF861FF1DDBB953
 
 [alias]
-	a = add
-	b = branch
-	c = commit
-	cm = commit -m
-	co = checkout
-	d = diff
-	f = fetch
-	i = init
-	m = merge
-	s = status
-	l = log --pretty=oneline --graph --abbrev-commit
-	recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+  a = add
+  b = branch
+  c = commit
+  cm = commit -m
+  co = checkout
+  d = diff
+  f = fetch
+  i = init
+  m = merge
+  s = status
+  l = log --pretty=oneline --graph --abbrev-commit
+  recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
   fixup = "!git log -n 10 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
 
 [apply]
-	# Detect whitespace errors when applying a patch
-	whitespace = fix
+  # Detect whitespace errors when applying a patch
+  whitespace = fix
 
 [core]
-	editor = 'nvim'
+  editor = 'nvim'
 
   # File system monitoring (Git >= 2.37.0) speeds up git status a lot
   fsmonitor = true
 
-	# Treat spaces before tabs and all kinds of trailing whitespace as an error
-	# [default] trailing-space: looks for spaces at the end of a line
-	# [default] space-before-tab: looks for spaces before tabs at the beginning of a line
-	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+  # Treat spaces before tabs and all kinds of trailing whitespace as an error
+  # [default] trailing-space: looks for spaces at the end of a line
+  # [default] space-before-tab: looks for spaces before tabs at the beginning of a line
+  whitespace = space-before-tab,-indent-with-non-tab,trailing-space
 
-	# Make `git rebase` safer on macOS
-	# More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
-	trustctime = false
+  # Make `git rebase` safer on macOS
+  # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+  trustctime = false
 
-	# Prevent showing files whose names contain non-ASCII symbols as unversioned.
-	# http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
-	precomposeunicode = false
+  # Prevent showing files whose names contain non-ASCII symbols as unversioned.
+  # http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
+  precomposeunicode = false
 
-	# Speed up commands involving untracked files such as `git status`.
-	# https://git-scm.com/docs/git-update-index#_untracked_cache
-	untrackedCache = true
+  # Speed up commands involving untracked files such as `git status`.
+  # https://git-scm.com/docs/git-update-index#_untracked_cache
+  untrackedCache = true
   
-	ignoreCase = false
+  ignoreCase = false
 
 [color]
-	# Use colors in Git commands that are capable of colored output when
-	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
-	ui = auto
+  # Use colors in Git commands that are capable of colored output when
+  # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
+  ui = auto
 
 [color "branch"]
-	current = yellow reverse
-	local = yellow
-	remote = green
+  current = yellow reverse
+  local = yellow
+  remote = green
 
 [color "diff"]
-	meta = yellow bold
-	frag = magenta bold # line info
-	old = red # deletions
-	new = green # additions
+  meta = yellow bold
+  frag = magenta bold # line info
+  old = red # deletions
+  new = green # additions
 
 [color "status"]
-	added = yellow
-	changed = green
-	untracked = cyan
+  added = yellow
+  changed = green
+  untracked = cyan
 
 [commit]
-	gpgsign = true
+  gpgsign = true
 
 [diff]
-	# Detect copies as well as renames
-	renames = copies
+  # Detect copies as well as renames
+  renames = copies
 
 [diff "bin"]
-	# Use `hexdump` to diff binary files
-	textconv = hexdump -v -C
+  # Use `hexdump` to diff binary files
+  textconv = hexdump -v -C
 
 [help]
-	# Automatically correct and execute mistyped commands
-	autocorrect = 1
+  # Automatically correct and execute mistyped commands
+  autocorrect = 1
 
 [merge]
-	# Include summaries of merged commits in newly created merge commit messages
-	log = true
+  # Include summaries of merged commits in newly created merge commit messages
+  log = true
 
 [push]
-	# https://git-scm.com/docs/git-config#git-config-pushdefault
-	default = current
-	# Make `git push` push relevant annotated tags when pushing branches out.
-	followTags = true
+  # https://git-scm.com/docs/git-config#git-config-pushdefault
+  default = current
+  # Make `git push` push relevant annotated tags when pushing branches out.
+  followTags = true
 
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 
 [pull]
-	rebase = false
+  rebase = false
 
 [init]
-	defaultBranch = main
+  defaultBranch = main
