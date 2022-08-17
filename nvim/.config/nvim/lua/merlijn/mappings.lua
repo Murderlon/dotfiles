@@ -2,8 +2,6 @@ local nnoremap = require("merlijn.keymap").nnoremap
 local vnoremap = require("merlijn.keymap").vnoremap
 local inoremap = require("merlijn.keymap").inoremap
 
-vim.g.mapleader = " "
-
 nnoremap("<leader>w", "<CMD>w!<CR>")
 nnoremap("<leader><cr>", "<CMD>noh<CR>") -- Disable highlight when <leader><cr> is pressed
 nnoremap("<leader>q", "<CMD>bd<CR>") -- Close buffer
