@@ -1,1 +1,1 @@
-stow -vt ~ ctags git tmux nvim zsh fish
+stow -vt ~ ctags git tmux nvim fish
