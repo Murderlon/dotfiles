@@ -1,38 +1,39 @@
-local options = { noremap = true }
-local map = vim.api.nvim_set_keymap
+local nnoremap = require("merlijn.keymap").nnoremap
+local vnoremap = require("merlijn.keymap").vnoremap
+local inoremap = require("merlijn.keymap").inoremap
 
 vim.g.mapleader = " "
 
-map("n", "<leader>w", "<CMD>w!<CR>", options)
-map("n", "<leader><cr>", "<CMD>noh<CR>", options) -- Disable highlight when <leader><cr> is pressed
-map("n", "<leader>q", "<CMD>bd<CR>", options) -- Close buffer
-map("n", "<leader>ba", "<CMD>bufdo bd<CR>", options) -- Close all buffers
+nnoremap("<leader>w", "<CMD>w!<CR>")
+nnoremap("<leader><cr>", "<CMD>noh<CR>") -- Disable highlight when <leader><cr> is pressed
+nnoremap("<leader>q", "<CMD>bd<CR>") -- Close buffer
+nnoremap("<leader>ba", "<CMD>bufdo bd<CR>") -- Close all buffers
 
 -- Smart way to move between windows
-map("n", "<C-j>", "<C-W>j", options)
-map("n", "<C-k>", "<C-W>k", options)
-map("n", "<C-h>", "<C-W>h", options)
-map("n", "<C-l>", "<C-W>l", options)
+nnoremap("<C-j>", "<C-W>j")
+nnoremap("<C-k>", "<C-W>k")
+nnoremap("<C-h>", "<C-W>h")
+nnoremap("<C-l>", "<C-W>l")
 
 -- Moving lines with Alt-j / Alt-k
 -- https://stackoverflow.com/a/15399297/10798093
-map("n", "∆", ":m .+1<CR>==", options)
-map("n", "˚", ":m .-2<CR>==", options)
+nnoremap("∆", ":m .+1<CR>==")
+nnoremap("˚", ":m .-2<CR>==")
 
-map("i", "∆", "<Esc>:m .+1<CR>==gi", options)
-map("i", "˚", "<Esc>:m .-2<CR>==gi", options)
+inoremap("∆", "<Esc>:m .+1<CR>==gi")
+inoremap("˚", "<Esc>:m .-2<CR>==gi")
 
-map("v", "∆", ":m '>+1<CR>gv=gv", options)
-map("v", "˚", ":m '<-2<CR>gv=gv", options)
+vnoremap("∆", ":m '>+1<CR>gv=gv")
+vnoremap("˚", ":m '<-2<CR>gv=gv")
 
 -- Move visual block
-map("v", "J", ":m '>+1<CR>gv=gv", options)
-map("v", "K", ":m '<-2<CR>gv=gv", options)
+vnoremap("J", ":m '>+1<CR>gv=gv")
+vnoremap("K", ":m '<-2<CR>gv=gv")
 
 -- Re-select visual block after indenting
-map("v", "<", "<gv", options)
-map("v", ">", ">gv", options)
+vnoremap("<", "<gv")
+vnoremap(">", ">gv")
 
 -- Keep search matches in the middle of the screen
-map("n", "n", "nzz", options)
-map("n", "N", "Nzz", options)
+nnoremap("n", "nzz")
+nnoremap("N", "Nzz")
