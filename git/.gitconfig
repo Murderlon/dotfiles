@@ -74,6 +74,7 @@
 [diff]
   # Detect copies as well as renames
   renames = copies
+  external = difft
 
 [diff "bin"]
   # Use `hexdump` to diff binary files
