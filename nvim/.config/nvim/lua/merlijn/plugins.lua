@@ -10,6 +10,7 @@ return require("packer").startup(function(use)
 	use("tpope/vim-repeat")
 	use("christoomey/vim-system-copy")
 	use("kyazdani42/nvim-web-devicons")
+	use("nvim-lualine/lualine.nvim")
 
 	-- Colorschemes
 	use("bignimbus/pop-punk.vim")
@@ -23,10 +24,7 @@ return require("packer").startup(function(use)
 	use("L3MON4D3/LuaSnip")
 
 	-- File explorer
-	use({
-		"tamago324/lir.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
-	})
+	use({ "tamago324/lir.nvim", requires = { "nvim-lua/plenary.nvim" } })
 
 	-- Clipboard history
 	use("AckslD/nvim-neoclip.lua")
@@ -56,24 +54,17 @@ return require("packer").startup(function(use)
 	-- Git
 	use("tpope/vim-fugitive")
 	use("lewis6991/gitsigns.nvim")
-	use({
-		"sindrets/diffview.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("diffview").setup({})
-		end,
-	})
+	use({ "sindrets/diffview.nvim", requires = { "nvim-lua/plenary.nvim" } })
 
 	-- Language server / diagnostics
-	use({
-		"neovim/nvim-lspconfig",
-		requires = { "folke/lsp-colors.nvim" },
-	})
-	use({
-		"fatih/vim-go",
-		run = ":GoUpdateBinaries",
-	})
+	use("neovim/nvim-lspconfig")
+	use({ "jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" } })
 	use("folke/trouble.nvim")
+	use("folke/lsp-colors.nvim")
+	use("onsails/lspkind.nvim")
+	use("j-hui/fidget.nvim")
+	use({ "kosayoda/nvim-lightbulb", requires = "antoinemadec/FixCursorHold.nvim" })
+	use({ "fatih/vim-go", run = ":GoUpdateBinaries" })
 
 	-- Completion
 	use({
@@ -88,9 +79,7 @@ return require("packer").startup(function(use)
 	})
 
 	-- Syntax
-	use({
-		"nvim-treesitter/nvim-treesitter",
-		run = ":TSUpdate",
-	})
+	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+	use("nvim-treesitter/nvim-treesitter-context")
 	use("plasticboy/vim-markdown")
 end)

@@ -1,7 +1,8 @@
 local nvim_lsp = require("lspconfig")
 
 local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
-local servers = { "tsserver", "tailwindcss", "cssls", "html", "gopls", "golangci_lint_ls", "vuels", "jsonls" }
+local servers =
+	{ "tsserver", "tailwindcss", "cssls", "html", "gopls", "golangci_lint_ls", "vuels", "jsonls", "intelephense" }
 local runtime_path = vim.split(package.path, ";")
 
 table.insert(runtime_path, "lua/?.lua")
@@ -109,3 +110,9 @@ nvim_lsp.diagnosticls.setup({
 		},
 	},
 })
+
+-- require("null-ls").setup({
+-- 	sources = {
+-- 		require("null-ls").builtins.diagnostics.xo,
+-- 	},
+-- })

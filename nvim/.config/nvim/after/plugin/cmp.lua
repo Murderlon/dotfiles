@@ -1,5 +1,6 @@
 local cmp = require("cmp")
 local ls = require("luasnip")
+local lspkind = require("lspkind")
 
 cmp.setup({
 	mapping = cmp.mapping.preset.insert({
@@ -38,6 +39,18 @@ cmp.setup({
 		expand = function(args)
 			ls.lsp_expand(args.body)
 		end,
+	},
+	formatting = {
+		format = lspkind.cmp_format({
+			mode = "symbol_text",
+			menu = {
+				buffer = "[Buffer]",
+				nvim_lsp = "[LSP]",
+				luasnip = "[LuaSnip]",
+				nvim_lua = "[Lua]",
+			},
+			maxwidth = 50,
+		}),
 	},
 	experimental = {
 		ghost_text = true,

@@ -11,3 +11,6 @@ nnoremap("<leader>h5", '<CMD>lua require("harpoon.ui").nav_file(5)<CR>')
 nnoremap("<leader>h6", '<CMD>lua require("harpoon.ui").nav_file(6)<CR>')
 nnoremap("<leader>h7", '<CMD>lua require("harpoon.ui").nav_file(7)<CR>')
 nnoremap("<leader>h8", '<CMD>lua require("harpoon.ui").nav_file(8)<CR>')
+
+nnoremap("<leader>t1", '<CMD>lua require("harpoon.term").gotoTerminal(1)<CR>')
+nnoremap("<leader>t2", '<CMD>lua require("harpoon.term").gotoTerminal(2)<CR>')

@@ -34,3 +34,5 @@ require("nvim-treesitter.configs").setup({
 	textobjects = { enable = true },
 	indent = { enable = true },
 })
+
+require("treesitter-context").setup()
