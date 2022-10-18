@@ -1,4 +1,4 @@
-vim.cmd([[colorscheme gruvbox]])
+vim.cmd([[colorscheme catppuccin]])
 
 vim.g.mapleader = " "
 
@@ -12,7 +12,7 @@ vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevelstart = 99
 
 vim.opt.termguicolors = true
-vim.opt.background = "light"
+vim.opt.background = "dark"
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.wrap = false

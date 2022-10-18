@@ -1,24 +1,28 @@
 -- Disable netrw for lir.nvim
--- Needs to live here to prevent startup error
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 return require("packer").startup(function(use)
-	-- General
+	-- Package manager
 	use("wbthomason/packer.nvim")
+
+	-- Motions
 	use("tpope/vim-surround")
 	use("tpope/vim-repeat")
 	use("christoomey/vim-system-copy")
+
+	-- Icons
 	use("kyazdani42/nvim-web-devicons")
+
+	-- Statusline
 	use("nvim-lualine/lualine.nvim")
 
 	-- Colorschemes
-	use("bignimbus/pop-punk.vim")
 	use("folke/tokyonight.nvim")
 	use("ellisonleao/gruvbox.nvim")
 	use("wuelnerdotexe/vim-enfocado")
 	use("ray-x/starry.nvim")
-	use("projekt0n/github-nvim-theme")
+	use({ "catppuccin/nvim", as = "catppuccin" })
 
 	-- Snippets
 	use("L3MON4D3/LuaSnip")
@@ -49,7 +53,7 @@ return require("packer").startup(function(use)
 			"nvim-telescope/telescope-file-browser.nvim",
 		},
 	})
-	use("windwp/nvim-spectre")
+	use("nvim-pack/nvim-spectre")
 
 	-- Git
 	use("tpope/vim-fugitive")
@@ -63,8 +67,8 @@ return require("packer").startup(function(use)
 	use("folke/lsp-colors.nvim")
 	use("onsails/lspkind.nvim")
 	use("j-hui/fidget.nvim")
+	-- use({ "ray-x/go.nvim", requires = { "ray-x/guihua.lua" }, run = ":GoInstallBinaries" })
 	use({ "kosayoda/nvim-lightbulb", requires = "antoinemadec/FixCursorHold.nvim" })
-	use({ "fatih/vim-go", run = ":GoUpdateBinaries" })
 
 	-- Completion
 	use({
@@ -81,5 +85,4 @@ return require("packer").startup(function(use)
 	-- Syntax
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/nvim-treesitter-context")
-	use("plasticboy/vim-markdown")
 end)

@@ -19,7 +19,7 @@ local config = {
 		-- Disable sections and component separators
 		component_separators = "",
 		section_separators = "",
-		theme = "gruvbox_light",
+		theme = "catpuccin",
 	},
 	sections = {
 		-- these are to remove the defaults
