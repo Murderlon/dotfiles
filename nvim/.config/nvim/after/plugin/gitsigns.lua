@@ -1,21 +1,21 @@
+local nnoremap = require("merlijn.keymap").nnoremap
+local vnoremap = require("merlijn.keymap").vnoremap
+
 require("gitsigns").setup({
 	on_attach = function(bufnr)
 		local gs = package.loaded.gitsigns
+		local opts = { buffer = bufnr }
 
-		local function map(mode, l, r, opts)
-			opts = opts or {}
-			opts.buffer = bufnr
-			vim.keymap.set(mode, l, r, opts)
-		end
+		nnoremap("]c", "&diff ? ']c' : '<CMD>Gitsigns next_hunk<CR>'", { expr = true, buffer = bufnr })
+		nnoremap("[c", "&diff ? '[c' : '<CMD>Gitsigns prev_hunk<CR>'", { expr = true, buffer = bufnr })
 
-		-- Navigation
-		map("n", "]c", "&diff ? ']c' : '<CMD>Gitsigns next_hunk<CR>'", { expr = true })
-		map("n", "[c", "&diff ? '[c' : '<CMD>Gitsigns prev_hunk<CR>'", { expr = true })
+		nnoremap("<leader>gsh", "<CMD>Gitsigns stage_hunk<CR>", opts)
+		vnoremap("<leader>gsh", "<CMD>Gitsigns stage_hunk<CR>", opts)
 
-		-- Actions
-		map({ "n", "v" }, "<leader>gsh", "<CMD>Gitsigns stage_hunk<CR>")
-		map({ "n", "v" }, "<leader>grh", "<CMD>Gitsigns reset_hunk<CR>")
-		map("n", "<leader>hR", gs.reset_buffer)
-		map("n", "<leader>hp", gs.preview_hunk)
+		nnoremap("<leader>grh", "<CMD>Gitsigns reset_hunk<CR>", opts)
+		vnoremap("<leader>grh", "<CMD>Gitsigns reset_hunk<CR>", opts)
+
+		nnoremap("<leader>hR", gs.reset_buffer, opts)
+		nnoremap("<leader>hp", gs.preview_hunk, opts)
 	end,
 })

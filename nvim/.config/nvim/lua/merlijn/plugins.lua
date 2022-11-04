@@ -1,7 +1,3 @@
--- Disable netrw for lir.nvim
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 return require("packer").startup(function(use)
 	-- Package manager
 	use("wbthomason/packer.nvim")
@@ -28,7 +24,7 @@ return require("packer").startup(function(use)
 	use("L3MON4D3/LuaSnip")
 
 	-- File explorer
-	use({ "tamago324/lir.nvim", requires = { "nvim-lua/plenary.nvim" } })
+	use("tpope/vim-vinegar")
 
 	-- Clipboard history
 	use("AckslD/nvim-neoclip.lua")
@@ -57,6 +53,7 @@ return require("packer").startup(function(use)
 
 	-- Git
 	use("tpope/vim-fugitive")
+	use("tpope/vim-rhubarb")
 	use("lewis6991/gitsigns.nvim")
 	use({ "sindrets/diffview.nvim", requires = { "nvim-lua/plenary.nvim" } })
 
