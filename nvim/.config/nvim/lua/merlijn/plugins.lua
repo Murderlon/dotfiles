@@ -1,4 +1,4 @@
-return require("packer").startup(function(use)
+require("packer").startup(function(use)
 	-- Package manager
 	use("wbthomason/packer.nvim")
 
@@ -18,6 +18,7 @@ return require("packer").startup(function(use)
 	use("ellisonleao/gruvbox.nvim")
 	use("wuelnerdotexe/vim-enfocado")
 	use("ray-x/starry.nvim")
+	use("ishan9299/nvim-solarized-lua")
 	use({ "catppuccin/nvim", as = "catppuccin" })
 
 	-- Snippets
@@ -25,9 +26,6 @@ return require("packer").startup(function(use)
 
 	-- File explorer
 	use("tpope/vim-vinegar")
-
-	-- Clipboard history
-	use("AckslD/nvim-neoclip.lua")
 
 	-- Comment commands
 	use("numToStr/Comment.nvim")
@@ -37,6 +35,7 @@ return require("packer").startup(function(use)
 
 	-- Formatting
 	use("sbdchd/neoformat")
+	use("gpanders/editorconfig.nvim")
 
 	-- Search
 	use({
@@ -83,3 +82,11 @@ return require("packer").startup(function(use)
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/nvim-treesitter-context")
 end)
+
+-- Automatically source and re-compile packer whenever you save this init.lua
+local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
+vim.api.nvim_create_autocmd('BufWritePost', {
+  command = 'source <afile> | PackerCompile',
+  group = packer_group,
+  pattern = vim.fn.expand '$MYVIMRC',
+})

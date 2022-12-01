@@ -1,4 +1,4 @@
-vim.cmd([[colorscheme gruvbox]])
+vim.cmd.colorscheme "gruvbox"
 
 vim.g.mapleader = " "
 
@@ -46,7 +46,6 @@ vim.opt.formatoptions = vim.opt.formatoptions -- see :h fo-table
 	+ "c" -- In general, I like it when comments respect textwidth
 	+ "q" -- Allow formatting comments w/ gq
 	- "o" -- O and o, don't continue comments
-	+ "r" -- But do continue when pressing enter.
 	+ "n" -- Indent past the formatlistpat, not underneath it.
 	+ "j" -- Auto-remove comments if possible.
 	- "2" -- Use the indent of the second line of a paragraph

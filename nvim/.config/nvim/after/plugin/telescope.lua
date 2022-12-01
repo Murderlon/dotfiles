@@ -25,21 +25,21 @@ require("telescope").setup({
 		git_files = { theme = "ivy" },
 		find_files = { theme = "ivy" },
 		live_grep = { theme = "ivy" },
-		buffers = { theme = "ivy" },
+		old_files = { theme = "ivy" },
 		grep_string = { theme = "ivy" },
+		help_tags = { theme = "ivy" },
 	},
 })
 require("telescope").load_extension("fzy_native")
-require("telescope").load_extension("neoclip")
-require("telescope").load_extension("file_browser")
 
-nnoremap("<leader>ss", '<CMD>lua require("telescope.builtin").live_grep()<CR>')
-nnoremap("<leader>fg", '<CMD>lua require("telescope.builtin").git_files()<CR>')
-nnoremap("<leader>fm", "<CMD>Telescope file_browser<CR>")
-nnoremap("<leader>ff", '<CMD>lua require("telescope.builtin").find_files()<CR>')
-nnoremap("<leader>fb", '<CMD>lua require("telescope.builtin").buffers()<CR>')
-nnoremap("<leader>fc", '<CMD>lua require("telescope.builtin").command_history()<CR>')
-nnoremap("<leader>fh", '<CMD>lua require("telescope.builtin").help_tags()<CR>')
-nnoremap("<leader>sw", '<CMD>lua require("telescope.builtin").grep_string { search = vim.fn.expand("<cword>") }<CR>')
-nnoremap("<leader>fd", search_dotfiles)
-nnoremap("<leader>yy", "<CMD>Telescope neoclip<CR>")
+nnoremap("<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
+nnoremap("<leader>sf", function()
+  -- `find_files` also supports a `hidden` option, but that would also show the `.git` folder.
+  -- Instead we override the command to use `--hidden` and ignore the `.git` folder.
+	require("telescope.builtin").find_files({ find_command = { "rg", "--files", "--hidden", "-g", "!.git" } })
+end, { desc = "[S]earch [F]iles" })
+nnoremap("<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
+nnoremap("<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
+nnoremap("<leader>sw", require("telescope.builtin").grep_string, { desc = "[S]earch current [W]ord" })
+nnoremap("<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
+nnoremap("<leader>sc", search_dotfiles, { desc = "[S]earch dotfiles [C]onfig" })

@@ -1,16 +1,19 @@
 local nnoremap = require("merlijn.keymap").nnoremap
 
-nnoremap("<leader>ha", '<CMD>lua require("harpoon.mark").add_file()<CR>')
-nnoremap("<leader>hq", '<CMD>lua require("harpoon.ui").toggle_quick_menu()<CR>')
+local function nav_file (n)
+  return function ()
+    require("harpoon.ui").nav_file(n)
+  end
+end
 
-nnoremap("<leader>h1", '<CMD>lua require("harpoon.ui").nav_file(1)<CR>')
-nnoremap("<leader>h2", '<CMD>lua require("harpoon.ui").nav_file(2)<CR>')
-nnoremap("<leader>h3", '<CMD>lua require("harpoon.ui").nav_file(3)<CR>')
-nnoremap("<leader>h4", '<CMD>lua require("harpoon.ui").nav_file(4)<CR>')
-nnoremap("<leader>h5", '<CMD>lua require("harpoon.ui").nav_file(5)<CR>')
-nnoremap("<leader>h6", '<CMD>lua require("harpoon.ui").nav_file(6)<CR>')
-nnoremap("<leader>h7", '<CMD>lua require("harpoon.ui").nav_file(7)<CR>')
-nnoremap("<leader>h8", '<CMD>lua require("harpoon.ui").nav_file(8)<CR>')
+nnoremap("<leader>ha", require("harpoon.mark").add_file)
+nnoremap("<leader>hq", require("harpoon.ui").toggle_quick_menu)
 
-nnoremap("<leader>t1", '<CMD>lua require("harpoon.term").gotoTerminal(1)<CR>')
-nnoremap("<leader>t2", '<CMD>lua require("harpoon.term").gotoTerminal(2)<CR>')
+nnoremap("<leader>h1", nav_file(1))
+nnoremap("<leader>h2", nav_file(2))
+nnoremap("<leader>h3", nav_file(3))
+nnoremap("<leader>h4", nav_file(4))
+nnoremap("<leader>h5", nav_file(5))
+nnoremap("<leader>h6", nav_file(6))
+nnoremap("<leader>h7", nav_file(7))
+nnoremap("<leader>h8", nav_file(8))
