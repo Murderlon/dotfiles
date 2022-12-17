@@ -1,11 +1,11 @@
 local nvim_lsp = require("lspconfig")
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-local servers = { "tsserver", "tailwindcss", "cssls", "html", "gopls", "golangci_lint_ls", "vuels", "jsonls" }
+local servers = { "tsserver", "eslint", "tailwindcss", "cssls", "html", "gopls", "golangci_lint_ls", "vuels", "jsonls" }
 
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>dl', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 
 local on_attach = function(_, bufnr)
 	local nmap = function(keys, func, desc)
@@ -26,7 +26,7 @@ local on_attach = function(_, bufnr)
 	nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
 	nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+	-- nmap("K>", vim.lsp.buf.signature_help, "Signature Documentation")
 
 	-- Lesser used LSP functionality
 	nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
@@ -51,78 +51,8 @@ nvim_lsp.stylelint_lsp.setup({
 	capabilities = capabilities,
 })
 
-nvim_lsp.remark_ls.setup({
-	filetypes = { "markdown", "mdx" },
-	on_attach = on_attach,
-	capabilities = capabilities,
-})
-
-
--- Make runtime files discoverable to the server
-local runtime_path = vim.split(package.path, ";")
-table.insert(runtime_path, "lua/?.lua")
-table.insert(runtime_path, "lua/?/init.lua")
-nvim_lsp.sumneko_lua.setup({
-	settings = {
-		Lua = {
-			runtime = {
-				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-				version = "LuaJIT",
-				-- Setup your lua path
-				path = runtime_path,
-			},
-			diagnostics = {
-				-- Get the language server to recognize the `vim` global
-				globals = { "vim" },
-			},
-			workspace = {
-				-- Make the server aware of Neovim runtime files
-				library = vim.api.nvim_get_runtime_file("", true),
-			},
-			-- Do not send telemetry data containing a randomized but unique identifier
-			telemetry = {
-				enable = false,
-			},
-		},
-	},
-})
-
-nvim_lsp.diagnosticls.setup({
-	on_attach = on_attach,
-	filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "markdown" },
-	init_options = {
-		linters = {
-			eslint = {
-				sourceName = "eslint_d",
-				command = "eslint_d",
-				debounce = 100,
-				args = { "--stdin", "--stdin-filename", "%filepath", "--format", "json" },
-				parseJson = {
-					errorsRoot = "[0].messages",
-					line = "line",
-					column = "column",
-					endLine = "endLine",
-					endColumn = "endColumn",
-					message = "[eslint] ${message} [${ruleId}]",
-					security = "severity",
-				},
-				securities = { ["1"] = "warning", ["2"] = "error" },
-				rootPatterns = {
-					".eslintrc",
-					".eslintrc.cjs",
-					".eslintrc.js",
-					".eslintrc.json",
-					".eslintrc.yaml",
-					".eslintrc.yml",
-				},
-			},
-		},
-		filetypes = {
-			javascript = "eslint",
-			javascriptreact = "eslint",
-			typescript = "eslint",
-			typescriptreact = "eslint",
-			markdown = "eslint",
-		},
-	},
-})
+-- nvim_lsp.remark_ls.setup({
+-- 	filetypes = { "markdown", "mdx" },
+-- 	on_attach = on_attach,
+-- 	capabilities = capabilities,
+-- })

@@ -1,13 +1,15 @@
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
 local nnoremap = require("merlijn.keymap").nnoremap
 
 local function nav_file (n)
   return function ()
-    require("harpoon.ui").nav_file(n)
+    ui.nav_file(n)
   end
 end
 
-nnoremap("<leader>ha", require("harpoon.mark").add_file)
-nnoremap("<leader>hq", require("harpoon.ui").toggle_quick_menu)
+nnoremap("<leader>ha", mark.add_file)
+nnoremap("<leader>hq", ui.toggle_quick_menu)
 
 nnoremap("<leader>h1", nav_file(1))
 nnoremap("<leader>h2", nav_file(2))

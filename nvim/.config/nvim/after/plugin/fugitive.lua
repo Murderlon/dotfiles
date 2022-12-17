@@ -1,6 +1,6 @@
 local nnoremap = require("merlijn.keymap").nnoremap
 
-nnoremap("<leader>gg", "<CMD>Git<CR>")
-nnoremap("<leader>gc", "<CMD>Git commit<CR>")
-nnoremap("<leader>gp", "<CMD>Git push<CR>")
-nnoremap("<leader>gb", "<CMD>Git blame<CR>")
+nnoremap("<leader>gg", vim.cmd.Git)
+nnoremap("<leader>gc", ":Git commit<CR>")
+nnoremap("<leader>gp", ":Git push<CR>")
+nnoremap("<leader>gb", ":Git blame<CR>")

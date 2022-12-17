@@ -6,14 +6,14 @@ require("gitsigns").setup({
 		local gs = package.loaded.gitsigns
 		local opts = { buffer = bufnr }
 
-		nnoremap("]c", "&diff ? ']c' : '<CMD>Gitsigns next_hunk<CR>'", { expr = true, buffer = bufnr })
-		nnoremap("[c", "&diff ? '[c' : '<CMD>Gitsigns prev_hunk<CR>'", { expr = true, buffer = bufnr })
+		nnoremap("]c", "&diff ? ']c' : ':Gitsigns next_hunk<CR>'", { expr = true, buffer = bufnr })
+		nnoremap("[c", "&diff ? '[c' : ':Gitsigns prev_hunk<CR>'", { expr = true, buffer = bufnr })
 
-		nnoremap("<leader>gsh", "<CMD>Gitsigns stage_hunk<CR>", opts)
-		vnoremap("<leader>gsh", "<CMD>Gitsigns stage_hunk<CR>", opts)
+		nnoremap("<leader>gsh", ":Gitsigns stage_hunk<CR>", opts)
+		vnoremap("<leader>gsh", ":Gitsigns stage_hunk<CR>", opts)
 
-		nnoremap("<leader>grh", "<CMD>Gitsigns reset_hunk<CR>", opts)
-		vnoremap("<leader>grh", "<CMD>Gitsigns reset_hunk<CR>", opts)
+		nnoremap("<leader>grh", ":Gitsigns reset_hunk<CR>", opts)
+		vnoremap("<leader>grh", ":Gitsigns reset_hunk<CR>", opts)
 
 		nnoremap("<leader>hR", gs.reset_buffer, opts)
 		nnoremap("<leader>hp", gs.preview_hunk, opts)

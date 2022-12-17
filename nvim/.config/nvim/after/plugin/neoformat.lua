@@ -4,6 +4,6 @@ vim.g.neoformat_enabled_javascript = { "prettierd", "eslint_d" }
 vim.g.neoformat_enabled_typescript = { "prettierd", "eslint_d" }
 vim.g.neoformat_enabled_markdown = { "remark" }
 
-nnoremap("<leader>pp", "<CMD>Neoformat prettierd<CR>")
-nnoremap("<leader>pe", "<CMD>Neoformat eslint_d<CR>")
-nnoremap("<leader>pg", "<CMD>Neoformat<CR>")
+nnoremap("<leader>fp", ":Neoformat prettierd<CR>")
+nnoremap("<leader>fe", ":Neoformat eslint_d<CR>")
+nnoremap("<leader>fg", ":Neoformat<CR>")

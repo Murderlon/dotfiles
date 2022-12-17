@@ -5,7 +5,9 @@ require("packer").startup(function(use)
 	-- Motions
 	use("tpope/vim-surround")
 	use("tpope/vim-repeat")
-	use("christoomey/vim-system-copy")
+
+	-- Undo tree
+	use("mbbill/undotree")
 
 	-- Icons
 	use("kyazdani42/nvim-web-devicons")
@@ -19,6 +21,7 @@ require("packer").startup(function(use)
 	use("wuelnerdotexe/vim-enfocado")
 	use("ray-x/starry.nvim")
 	use("ishan9299/nvim-solarized-lua")
+	use({ "rose-pine/neovim", as = "rose-pine" })
 	use({ "catppuccin/nvim", as = "catppuccin" })
 
 	-- Snippets
@@ -82,11 +85,3 @@ require("packer").startup(function(use)
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/nvim-treesitter-context")
 end)
-
--- Automatically source and re-compile packer whenever you save this init.lua
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  command = 'source <afile> | PackerCompile',
-  group = packer_group,
-  pattern = vim.fn.expand '$MYVIMRC',
-})
