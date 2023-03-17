@@ -24,27 +24,23 @@ require("telescope").setup({
 			override_generic_sorter = true,
 			override_file_sorter = true,
 		},
-	},
-	pickers = {
-		git_files = { theme = "ivy" },
-		find_files = { theme = "ivy" },
-		live_grep = { theme = "ivy" },
-		old_files = { theme = "ivy" },
-		grep_string = { theme = "ivy" },
-		help_tags = { theme = "ivy" },
-		lsp_references = { theme = "ivy" },
+		luasnip = {},
 	},
 })
 require("telescope").load_extension("fzy_native")
+require("telescope").load_extension("luasnip")
 
 nnoremap("<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
 nnoremap("<leader>sf", function()
-  -- `find_files` also supports a `hidden` option, but that would also show the `.git` folder.
-  -- Instead we override the command to use `--hidden` and ignore the `.git` folder.
+	-- `find_files` also supports a `hidden` option, but that would also show the `.git` folder.
+	-- Instead we override the command to use `--hidden` and ignore the `.git` folder.
 	builtin.find_files({ find_command = { "rg", "--files", "--hidden", "-g", "!.git" } })
 end, { desc = "[S]earch [F]iles" })
 nnoremap("<leader>?", builtin.oldfiles, { desc = "[?] Find recently opened files" })
 nnoremap("<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
 nnoremap("<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
 nnoremap("<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
+nnoremap("<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
+nnoremap("<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
+nnoremap("<leader>ss", ":Telescope luasnip theme=dropdown<CR>", { desc = "[S]earch [S]nippets" })
 nnoremap("<leader>sc", search_dotfiles, { desc = "[S]earch dotfiles [C]onfig" })

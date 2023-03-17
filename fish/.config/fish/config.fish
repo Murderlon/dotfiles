@@ -23,5 +23,6 @@ fish_add_path /usr/bin
 fish_add_path /usr/local/bin
 fish_add_path /Users/merlijn/go/bin
 fish_add_path /Users/merlijn/.cargo/bin
+fish_add_path /usr/local/opt/gnu-sed/libexec/gnubin
 
 bind \cp 'bass tmux-sessionizer.sh\n'

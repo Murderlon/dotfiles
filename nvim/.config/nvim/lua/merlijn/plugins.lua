@@ -23,9 +23,14 @@ require("packer").startup(function(use)
 	use("ishan9299/nvim-solarized-lua")
 	use({ "rose-pine/neovim", as = "rose-pine" })
 	use({ "catppuccin/nvim", as = "catppuccin" })
+	use({
+		"uloco/bluloco.nvim",
+		requires = { "rktjmp/lush.nvim" },
+	})
 
 	-- Snippets
 	use("L3MON4D3/LuaSnip")
+	use("rafamadriz/friendly-snippets")
 
 	-- File explorer
 	use("tpope/vim-vinegar")
@@ -51,6 +56,7 @@ require("packer").startup(function(use)
 			"nvim-telescope/telescope-file-browser.nvim",
 		},
 	})
+	use("benfowler/telescope-luasnip.nvim")
 	use("nvim-pack/nvim-spectre")
 
 	-- Git
@@ -58,15 +64,20 @@ require("packer").startup(function(use)
 	use("tpope/vim-rhubarb")
 	use("lewis6991/gitsigns.nvim")
 	use({ "sindrets/diffview.nvim", requires = { "nvim-lua/plenary.nvim" } })
+	use({
+		"akinsho/git-conflict.nvim",
+		tag = "*",
+		config = function()
+			require("git-conflict").setup()
+		end,
+	})
 
 	-- Language server / diagnostics
 	use("neovim/nvim-lspconfig")
-	use({ "jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" } })
 	use("folke/trouble.nvim")
 	use("folke/lsp-colors.nvim")
 	use("onsails/lspkind.nvim")
 	use("j-hui/fidget.nvim")
-	-- use({ "ray-x/go.nvim", requires = { "ray-x/guihua.lua" }, run = ":GoInstallBinaries" })
 	use({ "kosayoda/nvim-lightbulb", requires = "antoinemadec/FixCursorHold.nvim" })
 
 	-- Completion
@@ -79,6 +90,21 @@ require("packer").startup(function(use)
 			"hrsh7th/cmp-path",
 			"saadparwaiz1/cmp_luasnip",
 		},
+	})
+	use({
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup()
+		end,
+	})
+	use({
+		"zbirenbaum/copilot-cmp",
+		after = { "copilot.lua" },
+		config = function()
+			require("copilot_cmp").setup()
+		end,
 	})
 
 	-- Syntax

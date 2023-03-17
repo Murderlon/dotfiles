@@ -1,8 +1,8 @@
 vim.g.mapleader = " "
 
-vim.cmd.colorscheme "rose-pine"
-vim.opt.termguicolors = true
+vim.cmd.colorscheme("bluloco")
 vim.opt.background = "dark"
+vim.opt.termguicolors = true
 vim.opt.guicursor = ""
 
 vim.g.python_host_prog = "/usr/bin/python"

@@ -30,7 +30,7 @@ vnoremap("<", "<gv")
 vnoremap(">", ">gv")
 
 -- Keep cursor in the right place
-nnoremap("J", "mzJ`z")
+-- nnoremap("J", "mzJ`z")
 nnoremap("<C-d>", "<C-d>zz")
 nnoremap("<C-u>", "<C-u>zz")
 nnoremap("n", "nzzzv")

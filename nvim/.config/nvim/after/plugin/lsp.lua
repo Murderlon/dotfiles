@@ -1,11 +1,12 @@
 local nvim_lsp = require("lspconfig")
+local util = require("lspconfig.util")
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-local servers = { "tsserver", "eslint", "tailwindcss", "cssls", "html", "gopls", "golangci_lint_ls", "vuels", "jsonls" }
+local servers = { "tsserver", "eslint", "tailwindcss", "cssls", "html", "gopls", "vuels", "jsonls" }
 
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 
 local on_attach = function(_, bufnr)
 	local nmap = function(keys, func, desc)
@@ -45,14 +46,20 @@ for _, lsp in ipairs(servers) do
 	})
 end
 
-nvim_lsp.stylelint_lsp.setup({
-	filetypes = { "css", "scss", "less" },
+nvim_lsp.remark_ls.setup({
+	default_settings = {
+		filetypes = { "markdown", "mdx" },
+		root_dir = util.root_pattern(
+			".remarkrc",
+      ".remarkrc.json",
+			".remarkrc.js",
+			".remarkrc.cjs",
+			".remarkrc.mjs",
+			".remarkrc.yml",
+			".remarkrc.yaml",
+			".remarkignore"
+		),
+	},
 	on_attach = on_attach,
 	capabilities = capabilities,
 })
-
--- nvim_lsp.remark_ls.setup({
--- 	filetypes = { "markdown", "mdx" },
--- 	on_attach = on_attach,
--- 	capabilities = capabilities,
--- })
