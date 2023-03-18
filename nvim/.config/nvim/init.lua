@@ -1,3 +1,2 @@
-require("merlijn.plugins")
-require("merlijn.options")
-require("merlijn.mappings")
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")
