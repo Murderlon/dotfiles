@@ -1,10 +1,13 @@
 return {
   -- Disable plugins
   { "echasnovski/mini.indentscope", enabled = false },
+  { "echasnovski/mini.pairs", enabled = false },
+  { "echasnovski/mini.surround", enabled = false },
   { "nvim-neo-tree/neo-tree.nvim", enabled = false },
   { "folke/noice.nvim", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
-  { "rcarriga/nvim-notify", enabled = false },
+  { "lukas-reineke/indent-blankline.nvim", enabled = false },
+  { "RRethy/vim-illuminate", enabled = false },
   -- Colorschemes
   {
     "uloco/bluloco.nvim",
@@ -18,6 +21,8 @@ return {
   },
 
   { "tpope/vim-vinegar" },
+  { "tpope/vim-rhubarb" },
+  { "tpope/vim-surround" },
   {
     "ThePrimeagen/harpoon",
     config = function()
@@ -47,10 +52,8 @@ return {
 
   {
     "hrsh7th/nvim-cmp",
-    dependencies = { "onsails/lspkind.nvim" },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
-      local lspkind = require("lspkind")
       local cmp = require("cmp")
       local confirm = opts.mapping["<CR>"]
       local confirm_copilot = cmp.mapping.confirm({
@@ -67,22 +70,22 @@ return {
           return confirm(...)
         end,
       })
-      opts.formatting = {
-        format = lspkind.cmp_format({
-          mode = "symbol_text",
-          menu = {
-            buffer = "[Buffer]",
-            nvim_lsp = "[LSP]",
-            luasnip = "[LuaSnip]",
-            nvim_lua = "[Lua]",
-            copilot = "[Copilot]",
-          },
-          maxwidth = 50,
-        }),
-      }
-      vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
-      lspkind.init({ symbol_map = { Copilot = "" } })
     end,
+  },
+
+  {
+    "TimUntersberger/neogit",
+    cmd = "Neogit",
+    dependencies = "nvim-lua/plenary.nvim",
+    keys = {
+      {
+        "<leader>gg",
+        function()
+          require("neogit").open()
+        end,
+      },
+      desc = "Neogit",
+    },
   },
 
   {
@@ -111,9 +114,103 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    opts = function(_, opts)
-      opts.sections.lualine_a = {} -- Remove vim mode section
-      opts.sections.lualine_z = {} -- Remove time section
+    opts = function()
+      local icons = require("lazyvim.config").icons
+
+      local conditions = {
+        buffer_not_empty = function()
+          return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
+        end,
+        hide_in_width = function()
+          return vim.fn.winwidth(0) > 80
+        end,
+        check_git_workspace = function()
+          local filepath = vim.fn.expand("%:p:h")
+          local gitdir = vim.fn.finddir(".git", filepath .. ";")
+          return gitdir and #gitdir > 0 and #gitdir < #filepath
+        end,
+      }
+
+      local config = {
+        options = {
+          -- Disable sections and component separators
+          component_separators = "",
+          section_separators = "",
+          theme = "auto",
+        },
+        sections = {
+          -- these are to remove the defaults
+          lualine_a = {},
+          lualine_b = {},
+          lualine_y = {},
+          lualine_z = {},
+          -- These will be filled later
+          lualine_c = {},
+          lualine_x = {},
+        },
+        inactive_sections = {
+          -- these are to remove the defaults
+          lualine_a = {},
+          lualine_b = {},
+          lualine_y = {},
+          lualine_z = {},
+          lualine_c = {},
+          lualine_x = {},
+        },
+      }
+
+      -- Inserts a component in lualine_c at left section
+      local function ins_left(component)
+        table.insert(config.sections.lualine_c, component)
+      end
+
+      -- Inserts a component in lualine_x ot right section
+      local function ins_right(component)
+        table.insert(config.sections.lualine_x, component)
+      end
+
+      ins_left({
+        "filename",
+        path = 1,
+        cond = conditions.buffer_not_empty,
+        color = { gui = "bold" },
+      })
+
+      ins_left({ "location" })
+
+      ins_left({
+        "diagnostics",
+        sources = { "nvim_diagnostic" },
+        symbols = {
+          error = icons.diagnostics.Error,
+          warn = icons.diagnostics.Warn,
+          info = icons.diagnostics.Info,
+          hint = icons.diagnostics.Hint,
+        },
+      })
+
+      ins_left({
+        function()
+          return "%="
+        end,
+      })
+
+      ins_right({
+        "branch",
+        icon = "",
+      })
+
+      ins_right({
+        "diff",
+        symbols = {
+          added = icons.git.added,
+          modified = icons.git.modified,
+          removed = icons.git.removed,
+        },
+        cond = conditions.hide_in_width,
+      })
+
+      return config
     end,
   },
 
