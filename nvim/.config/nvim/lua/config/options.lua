@@ -4,3 +4,7 @@
 
 vim.opt.clipboard = "" -- Do not sync clipboard with system clipboard
 vim.opt.list = false -- Do not show invisible characters
+-- Don't need swap files
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.writebackup = false

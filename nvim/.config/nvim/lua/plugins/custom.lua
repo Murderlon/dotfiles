@@ -1,3 +1,5 @@
+local Util = require("lazyvim.util")
+
 return {
   -- Disable plugins
   { "echasnovski/mini.indentscope", enabled = false },
@@ -13,6 +15,7 @@ return {
     "uloco/bluloco.nvim",
     dependencies = { "rktjmp/lush.nvim" },
   },
+  { "ellisonleao/gruvbox.nvim" },
   {
     "LazyVim/LazyVim",
     opts = {
@@ -21,6 +24,16 @@ return {
   },
 
   { "tpope/vim-vinegar" },
+  {
+    "tpope/vim-fugitive",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>gg", ":Git<CR>", desc = "Fugitive" },
+      { "<leader>gb", ":Git blame<CR>", desc = "Git blame" },
+      { "<leader>gc", ":Git commit<CR>", desc = "Git commit" },
+    },
+  },
+
   { "tpope/vim-rhubarb" },
   { "tpope/vim-surround" },
   {
@@ -55,37 +68,44 @@ return {
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local cmp = require("cmp")
-      local confirm = opts.mapping["<CR>"]
+      local ls = require("luasnip")
+      local confirm = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true,
+      })
       local confirm_copilot = cmp.mapping.confirm({
         select = true,
         behavior = cmp.ConfirmBehavior.Replace,
       })
 
-      opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<C-k>"] = function(...)
+      opts.mapping = cmp.mapping.preset.insert({
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-e>"] = cmp.mapping.close(),
+        ["<c-space>"] = cmp.mapping.complete(),
+        ["<C-l>"] = cmp.mapping(function(fallback)
+          if ls.expand_or_jumpable() then
+            ls.expand_or_jump()
+          else
+            fallback() -- The fallback function is treated as original mapped key.
+          end
+        end, { "i", "s" }),
+        ["<C-j>"] = cmp.mapping(function(fallback)
+          if ls.jumpable(-1) then
+            ls.jump(-1)
+          else
+            fallback() -- The fallback function is treated as original mapped key.
+          end
+        end, { "i", "s" }),
+        ["<C-k>"] = cmp.mapping(function(...)
           local entry = cmp.get_selected_entry()
           if entry and entry.source.name == "copilot" then
             return confirm_copilot(...)
           end
           return confirm(...)
-        end,
+        end, { "i", "s" }),
       })
     end,
-  },
-
-  {
-    "TimUntersberger/neogit",
-    cmd = "Neogit",
-    dependencies = "nvim-lua/plenary.nvim",
-    keys = {
-      {
-        "<leader>gg",
-        function()
-          require("neogit").open()
-        end,
-      },
-      desc = "Neogit",
-    },
   },
 
   {
@@ -103,11 +123,13 @@ return {
     keys = {
       {
         "<leader>fd",
-        function()
-          require("telescope.builtin").git_files({ cwd = "$HOME/Dotfiles", prompt_title = "Dotfiles" })
-        end,
+        Util.telescope("git_files", { cwd = "$HOME/Dotfiles" }),
         desc = "[F]ind [D]otfiles",
       },
+      { "<leader><space>", Util.telescope("files", { cwd = false }), desc = "Find Files (root dir)" },
+      { "<leader>ff", Util.telescope("files", { cwd = false }), desc = "Find Files (root dir)" },
+      { "<leader>sg", Util.telescope("live_grep", { cwd = false }), desc = "Grep (root dir)" },
+      { "<leader>sw", Util.telescope("grep_string", { cwd = false }), desc = "Word (root dir)" },
     },
   },
 
@@ -133,7 +155,6 @@ return {
 
       local config = {
         options = {
-          -- Disable sections and component separators
           component_separators = "",
           section_separators = "",
           theme = "auto",
@@ -145,15 +166,6 @@ return {
           lualine_y = {},
           lualine_z = {},
           -- These will be filled later
-          lualine_c = {},
-          lualine_x = {},
-        },
-        inactive_sections = {
-          -- these are to remove the defaults
-          lualine_a = {},
-          lualine_b = {},
-          lualine_y = {},
-          lualine_z = {},
           lualine_c = {},
           lualine_x = {},
         },
