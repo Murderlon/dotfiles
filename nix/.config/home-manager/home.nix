@@ -12,8 +12,12 @@
     pkgs.exa
     pkgs.fd
     pkgs.fzf
+    pkgs.git
+    pkgs.git-lfs
+    pkgs.go
     pkgs.jq
     pkgs.neovim
+    pkgs.newt
     pkgs.nodejs
     pkgs.redis
     pkgs.ripgrep
@@ -49,10 +53,14 @@
     autocd = true;
 
     shellAliases = {
+      vim = "nvim";
       ls = "exa";
       yarn = "corepack yarn";
       pnpm = "corepack pnpm";
       j = "z";
+      hms = "home-manager switch";
+      hme = "home-manager edit";
+      tks = "tmux kill-server";
     };
 
     initExtra = ''
