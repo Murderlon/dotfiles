@@ -12,8 +12,10 @@
     pkgs.exa
     pkgs.fd
     pkgs.fzf
+    pkgs.gh
     pkgs.git
     pkgs.git-lfs
+    pkgs.gnused
     pkgs.go
     pkgs.jq
     pkgs.neovim
@@ -25,6 +27,7 @@
     pkgs.sqlite
     pkgs.starship
     pkgs.stow
+    pkgs.terraform
     pkgs.thefuck
     pkgs.tmate
     pkgs.tmux
@@ -38,6 +41,7 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    SHELL = "zsh";
     TERM = "xterm-kitty";
     ZSH_AUTOSUGGEST_USE_ASYNC = 1;
   };
@@ -64,8 +68,10 @@
     };
 
     initExtra = ''
-      #TODO: eval $(thefuck --alias --enable-experimental-instant-mode)
+      eval $(thefuck --alias)
       bindkey -s '^p' 'tmux-sessionizer.sh\n'
+      bindkey -v
+      bindkey '^R' history-incremental-search-backward
     '';
 
     historySubstringSearch = {
@@ -84,83 +90,25 @@
         };
       }
       {
-        name = "fast-syntax-highlighting";
-        src = pkgs.fetchFromGitHub {
-          owner = "zdharma-continuum";
-          repo = "fast-syntax-highlighting";
-          rev = "7c390ee3bfa8069b8519582399e0a67444e6ea61";
-          sha256 = "sha256-wLpgkX53wzomHMEpymvWE86EJfxlIb3S8TPy74WOBD4=";
-        };
-      }
-      {
-        name = "zephyr/directory";
-        file = "plugins/directory/directory.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "mattmc3";
-          repo = "zephyr";
-          rev = "9e94963fc0934ab87a65d1b60de0fe628748b535";
-          sha256 = "sha256-EfM5tKg/Tb9ID/B4q4j8yEjUbId5QLPfy0TxVK7Bx5Q=";
-        };
-      }
-      {
-        name = "zephyr/environment";
-        file = "plugins/environment/environment.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "mattmc3";
-          repo = "zephyr";
-          rev = "9e94963fc0934ab87a65d1b60de0fe628748b535";
-          sha256 = "sha256-EfM5tKg/Tb9ID/B4q4j8yEjUbId5QLPfy0TxVK7Bx5Q=";
-        };
-      }
-      {
-        name = "zephyr/history";
-        file = "plugins/history/history.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "mattmc3";
-          repo = "zephyr";
-          rev = "9e94963fc0934ab87a65d1b60de0fe628748b535";
-          sha256 = "sha256-EfM5tKg/Tb9ID/B4q4j8yEjUbId5QLPfy0TxVK7Bx5Q=";
-        };
-      }
-      {
-        name = "zephyr/utility";
-        file = "plugins/utility/utility.plugin.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "mattmc3";
-          repo = "zephyr";
-          rev = "9e94963fc0934ab87a65d1b60de0fe628748b535";
-          sha256 = "sha256-EfM5tKg/Tb9ID/B4q4j8yEjUbId5QLPfy0TxVK7Bx5Q=";
-        };
-      }
-      {
         name = "zephyr/completion";
         file = "plugins/completion/completion.plugin.zsh";
         src = pkgs.fetchFromGitHub {
           owner = "mattmc3";
           repo = "zephyr";
-          rev = "9e94963fc0934ab87a65d1b60de0fe628748b535";
-          sha256 = "sha256-EfM5tKg/Tb9ID/B4q4j8yEjUbId5QLPfy0TxVK7Bx5Q=";
+          rev = "97723431a92e5b3cc035557365c0e206e580e149";
+          sha256 = "sha256-p3In190ff1YypN+P9uTPjZuHnIyp9B/l0JJPcRkbIcY=";
         };
       }
       {
-        name = "prezto/git";
-        file = "modules/git/alias.zsh";
-        src = pkgs.fetchFromGitHub {
-          owner = "sorin-ionescu";
-          repo = "prezto";
-          rev = "fc444f57e11131b2cad68f474bcf1201cba062a4";
-          sha256 = "sha256-oEpbcCKzRtqqAKghYsQGf8s2eatcCpQTP1jPDxfNJ/M=";
-        };
+        name = "fast-syntax-highlighting";
+        file = "share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh";
+        src = pkgs.zsh-fast-syntax-highlighting;
       }
+
       {
-        name = "zsh-safe-rm";
-        src = pkgs.fetchFromGitHub {
-          owner = "mattmc3";
-          repo = "zsh-safe-rm";
-          rev = "9463e7def5932e8c1958f8c023621bbddcfa2a58";
-          sha256 = "sha256-dIAt1HYOY5MF5hCRm4YW2VXr/a2g3GEFq/Xa/IpPqgU=";
-          fetchSubmodules = true;
-        };
+        name = "prezto";
+        file = "share/zsh-prezto/modules/git/alias.zsh";
+        src = pkgs.zsh-prezto;
       }
     ];
   };

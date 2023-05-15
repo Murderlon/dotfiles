@@ -11,6 +11,8 @@ local inoremap = require("merlijn.keymap").inoremap
 nnoremap("<leader>w", ":w!<CR>")
 nnoremap("<leader>wx", "<cmd>!chmod +x %<CR>", { silent = true }) -- as executable
 
+nnoremap("<leader>cp", ":let @+ = expand('%')<CR>", { silent = true, desc = "Copy file path" })
+
 -- Moving lines with Alt-j / Alt-k
 -- https://stackoverflow.com/a/15399297/10798093
 nnoremap("∆", ":m .+1<CR>==")

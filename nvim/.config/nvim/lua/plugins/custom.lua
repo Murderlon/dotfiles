@@ -13,13 +13,16 @@ return {
   -- Colorschemes
   {
     "uloco/bluloco.nvim",
+    lazy = false,
+    priority = 1000,
     dependencies = { "rktjmp/lush.nvim" },
   },
   { "ellisonleao/gruvbox.nvim" },
+  { "catppuccin/nvim", name = "catppuccin" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "bluloco",
+      colorscheme = "tokyonight",
     },
   },
 
@@ -109,7 +112,7 @@ return {
   },
 
   {
-    "telescope.nvim",
+    "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-telescope/telescope-fzf-native.nvim",
       build = "make",
@@ -169,6 +172,16 @@ return {
           lualine_c = {},
           lualine_x = {},
         },
+        inactive_sections = {
+          lualine_c = {
+            {
+              "filename",
+              path = 1,
+              cond = conditions.buffer_not_empty,
+              color = { gui = "bold" },
+            },
+          },
+        },
       }
 
       -- Inserts a component in lualine_c at left section
@@ -226,6 +239,8 @@ return {
     end,
   },
 
+  { "nvim-pack/nvim-spectre", opts = { replace_engine = { sed = { cmd = "sed" } } } },
+
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -263,4 +278,7 @@ return {
       },
     },
   },
+  { "nvim-treesitter/nvim-treesitter-context", config = true },
+
+  { "windwp/nvim-ts-autotag", config = true },
 }
