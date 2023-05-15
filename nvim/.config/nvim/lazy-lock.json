@@ -1,6 +1,6 @@
 {
   "LazyVim": { "branch": "main", "commit": "9f2010a8b9fa88ef77d1acf362bab59db4baaef9" },
-  "LuaSnip": { "branch": "master", "commit": "e77fa9ad0b1f4fc6cddf54e51047e17e90c7d7ed" },
+  "LuaSnip": { "branch": "master", "commit": "b4bc24c4925aeb05fd47d2ee9b24b7f73f5d7e32" },
   "SchemaStore.nvim": { "branch": "main", "commit": "301471a8611494ceb7255003bc9d3c6fb8584009" },
   "alpha-nvim": { "branch": "main", "commit": "1838ae926e8d49fe5330d1498ee8289ae2c340bc" },
   "bluloco.nvim": { "branch": "main", "commit": "79cbf51bc702519c0ca3832a7e0aa83c087169c1" },
@@ -27,7 +27,7 @@
   "mini.bufremove": { "branch": "main", "commit": "14805473144fffbd019d07e51bed2d176e065ee9" },
   "mini.comment": { "branch": "main", "commit": "6fbcd1294fa516dafc97e25e2f316de851f680d3" },
   "neoconf.nvim": { "branch": "main", "commit": "4b82da74f904de5aed43ee4320f0f89a703128ec" },
-  "neodev.nvim": { "branch": "main", "commit": "5e7e613950df5e2be27534ab5c55fd21af1b2ad3" },
+  "neodev.nvim": { "branch": "main", "commit": "0c5d6c2ac2fadebedf08282d9403ef6c3dc31896" },
   "nui.nvim": { "branch": "main", "commit": "698e75814cd7c56b0dd8af4936bcef2d13807f3c" },
   "null-ls.nvim": { "branch": "main", "commit": "08bb00c7c2cd58c72e02cf54e4b9cbfe14b03e09" },
   "nvim-cmp": { "branch": "main", "commit": "d153771162bd9795d9f7142df5c674b61066a585" },
