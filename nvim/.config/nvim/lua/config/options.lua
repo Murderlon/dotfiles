@@ -8,4 +8,3 @@ vim.opt.list = false -- Do not show invisible characters
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.writebackup = false
-vim.opt.shell = "/Users/merlijn/.nix-profile/bin/zsh"

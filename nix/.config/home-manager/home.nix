@@ -7,6 +7,8 @@
   home.stateVersion = "22.11";
 
   home.packages = [
+    pkgs.awscli2
+    pkgs.bash
     pkgs.curl
     pkgs.difftastic
     pkgs.exa
@@ -69,7 +71,7 @@
 
     initExtra = ''
       eval $(thefuck --alias)
-      bindkey -s '^p' 'tmux-sessionizer.sh\n'
+      bindkey -s '^p' 'tmux-sessionizer\n'
       bindkey -v
       bindkey '^R' history-incremental-search-backward
     '';

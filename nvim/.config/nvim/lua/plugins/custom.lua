@@ -19,10 +19,11 @@ return {
   },
   { "ellisonleao/gruvbox.nvim" },
   { "catppuccin/nvim", name = "catppuccin" },
+  { "projekt0n/github-nvim-theme" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "tokyonight",
+      colorscheme = "gruvbox",
     },
   },
 
@@ -72,14 +73,6 @@ return {
     opts = function(_, opts)
       local cmp = require("cmp")
       local ls = require("luasnip")
-      local confirm = cmp.mapping.confirm({
-        behavior = cmp.ConfirmBehavior.Insert,
-        select = true,
-      })
-      local confirm_copilot = cmp.mapping.confirm({
-        select = true,
-        behavior = cmp.ConfirmBehavior.Replace,
-      })
 
       opts.mapping = cmp.mapping.preset.insert({
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -100,33 +93,27 @@ return {
             fallback() -- The fallback function is treated as original mapped key.
           end
         end, { "i", "s" }),
-        ["<C-k>"] = cmp.mapping(function(...)
-          local entry = cmp.get_selected_entry()
-          if entry and entry.source.name == "copilot" then
-            return confirm_copilot(...)
-          end
-          return confirm(...)
-        end, { "i", "s" }),
+        ["<C-k>"] = cmp.mapping.confirm({
+          behavior = cmp.ConfirmBehavior.Insert,
+          select = true,
+        }),
       })
     end,
   },
 
   {
-    "nvim-telescope/telescope.nvim",
-    dependencies = {
-      "nvim-telescope/telescope-fzf-native.nvim",
-      build = "make",
-      config = function()
-        require("telescope").load_extension("fzf")
-      end,
-    },
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "arch -arm64 make",
+    config = function()
+      require("telescope").load_extension("fzf")
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
     keys = {
       {
         "<leader>fd",
-        Util.telescope("git_files", { cwd = "$HOME/Dotfiles" }),
+        Util.telescope("git_files", { cwd = "$HOME/code/dotfiles" }),
         desc = "[F]ind [D]otfiles",
       },
       { "<leader><space>", Util.telescope("files", { cwd = false }), desc = "Find Files (root dir)" },
@@ -198,7 +185,6 @@ return {
         "filename",
         path = 1,
         cond = conditions.buffer_not_empty,
-        color = { gui = "bold" },
       })
 
       ins_left({ "location" })

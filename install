@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+stow -vt ~ git tmux nvim nix kitty
+
+sudo ln -s ~/code/dotfiles/scripts/tmux-sessionizer /usr/local/bin/tmux-sessionizer
