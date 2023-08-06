@@ -1,12 +1,14 @@
-local Util = require("lazyvim.util")
+-- Don't use the 'magical' root finding util
+-- It messes up <leader><space> in monorepos.
+require("lazyvim.util").get_root = vim.loop.cwd
 
 return {
   -- Disable plugins
   { "echasnovski/mini.indentscope", enabled = false },
+  { "folke/noice.nvim", enabled = false },
   { "echasnovski/mini.pairs", enabled = false },
   { "echasnovski/mini.surround", enabled = false },
   { "nvim-neo-tree/neo-tree.nvim", enabled = false },
-  { "folke/noice.nvim", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
   { "lukas-reineke/indent-blankline.nvim", enabled = false },
   { "RRethy/vim-illuminate", enabled = false },
@@ -18,34 +20,27 @@ return {
     dependencies = { "rktjmp/lush.nvim" },
   },
   { "ellisonleao/gruvbox.nvim" },
-  { "catppuccin/nvim", name = "catppuccin" },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "dasupradyumna/midnight.nvim", priority = 1000 },
   { "projekt0n/github-nvim-theme" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "midnight",
     },
   },
+
+  { "shortcuts/no-neck-pain.nvim", version = "*" },
 
   { "tpope/vim-vinegar" },
-  {
-    "tpope/vim-fugitive",
-    event = "VeryLazy",
-    keys = {
-      { "<leader>gg", ":Git<CR>", desc = "Fugitive" },
-      { "<leader>gb", ":Git blame<CR>", desc = "Git blame" },
-      { "<leader>gc", ":Git commit<CR>", desc = "Git commit" },
-    },
-  },
-
-  { "tpope/vim-rhubarb" },
+  { "akinsho/git-conflict.nvim", version = "*", config = { default_mappings = false } },
+  { "ruifm/gitlinker.nvim", config = true },
   { "tpope/vim-surround" },
   {
     "ThePrimeagen/harpoon",
-    config = function()
+    keys = function()
       local mark = require("harpoon.mark")
       local ui = require("harpoon.ui")
-      local nnoremap = require("merlijn.keymap").nnoremap
 
       local function nav_file(n)
         return function()
@@ -53,17 +48,18 @@ return {
         end
       end
 
-      nnoremap("<leader>ha", mark.add_file)
-      nnoremap("<leader>hq", ui.toggle_quick_menu)
-
-      nnoremap("<leader>h1", nav_file(1))
-      nnoremap("<leader>h2", nav_file(2))
-      nnoremap("<leader>h3", nav_file(3))
-      nnoremap("<leader>h4", nav_file(4))
-      nnoremap("<leader>h5", nav_file(5))
-      nnoremap("<leader>h6", nav_file(6))
-      nnoremap("<leader>h7", nav_file(7))
-      nnoremap("<leader>h8", nav_file(8))
+      return {
+        { "<leader>ha", mark.add_file, desc = "Add file to harpoon" },
+        { "<leader>hq", ui.toggle_quick_menu, desc = "Harpoon quick menu" },
+        { "<leader>h1", nav_file(1), desc = "Harpoon file 1" },
+        { "<leader>h2", nav_file(2), desc = "Harpoon file 2" },
+        { "<leader>h3", nav_file(3), desc = "Harpoon file 3" },
+        { "<leader>h4", nav_file(4), desc = "Harpoon file 4" },
+        { "<leader>h5", nav_file(5), desc = "Harpoon file 5" },
+        { "<leader>h6", nav_file(6), desc = "Harpoon file 6" },
+        { "<leader>h7", nav_file(7), desc = "Harpoon file 7" },
+        { "<leader>h8", nav_file(8), desc = "Harpoon file 8" },
+      }
     end,
   },
 
@@ -72,31 +68,24 @@ return {
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local cmp = require("cmp")
-      local ls = require("luasnip")
 
+      -- opts.sources = {
+      --   {
+      --     name = "buffer",
+      --     option = {
+      --       get_bufnrs = function()
+      --         -- Get buffer completions from all open buffers
+      --         return vim.api.nvim_list_bufs()
+      --       end,
+      --     },
+      --   },
+      -- }
       opts.mapping = cmp.mapping.preset.insert({
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-e>"] = cmp.mapping.close(),
-        ["<c-space>"] = cmp.mapping.complete(),
-        ["<C-l>"] = cmp.mapping(function(fallback)
-          if ls.expand_or_jumpable() then
-            ls.expand_or_jump()
-          else
-            fallback() -- The fallback function is treated as original mapped key.
-          end
-        end, { "i", "s" }),
-        ["<C-j>"] = cmp.mapping(function(fallback)
-          if ls.jumpable(-1) then
-            ls.jump(-1)
-          else
-            fallback() -- The fallback function is treated as original mapped key.
-          end
-        end, { "i", "s" }),
-        ["<C-k>"] = cmp.mapping.confirm({
-          behavior = cmp.ConfirmBehavior.Insert,
-          select = true,
-        }),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<C-k>"] = cmp.mapping.confirm({ select = true }),
       })
     end,
   },
@@ -113,13 +102,9 @@ return {
     keys = {
       {
         "<leader>fd",
-        Util.telescope("git_files", { cwd = "$HOME/code/dotfiles" }),
+        require("lazyvim.util").telescope("git_files", { cwd = "$HOME/code/dotfiles" }),
         desc = "[F]ind [D]otfiles",
       },
-      { "<leader><space>", Util.telescope("files", { cwd = false }), desc = "Find Files (root dir)" },
-      { "<leader>ff", Util.telescope("files", { cwd = false }), desc = "Find Files (root dir)" },
-      { "<leader>sg", Util.telescope("live_grep", { cwd = false }), desc = "Grep (root dir)" },
-      { "<leader>sw", Util.telescope("grep_string", { cwd = false }), desc = "Word (root dir)" },
     },
   },
 
@@ -143,87 +128,115 @@ return {
         end,
       }
 
-      local config = {
+      return {
         options = {
           component_separators = "",
           section_separators = "",
           theme = "auto",
         },
         sections = {
-          -- these are to remove the defaults
           lualine_a = {},
           lualine_b = {},
           lualine_y = {},
           lualine_z = {},
-          -- These will be filled later
-          lualine_c = {},
-          lualine_x = {},
-        },
-        inactive_sections = {
           lualine_c = {
             {
               "filename",
               path = 1,
               cond = conditions.buffer_not_empty,
-              color = { gui = "bold" },
+            },
+            { "location" },
+            {
+              "diagnostics",
+              sources = { "nvim_diagnostic" },
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+            },
+            {
+              function()
+                return "%="
+              end,
+            },
+          },
+          lualine_x = {
+            {
+              "branch",
+              icon = "",
+            },
+
+            {
+              "diff",
+              symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+              },
+              cond = conditions.hide_in_width,
+            },
+          },
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_y = {},
+          lualine_z = {},
+          lualine_x = {},
+          lualine_c = {
+            {
+              "filename",
+              path = 1,
+              cond = conditions.buffer_not_empty,
+            },
+            { "location" },
+            {
+              "diagnostics",
+              sources = { "nvim_diagnostic" },
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
             },
           },
         },
       }
-
-      -- Inserts a component in lualine_c at left section
-      local function ins_left(component)
-        table.insert(config.sections.lualine_c, component)
-      end
-
-      -- Inserts a component in lualine_x ot right section
-      local function ins_right(component)
-        table.insert(config.sections.lualine_x, component)
-      end
-
-      ins_left({
-        "filename",
-        path = 1,
-        cond = conditions.buffer_not_empty,
-      })
-
-      ins_left({ "location" })
-
-      ins_left({
-        "diagnostics",
-        sources = { "nvim_diagnostic" },
-        symbols = {
-          error = icons.diagnostics.Error,
-          warn = icons.diagnostics.Warn,
-          info = icons.diagnostics.Info,
-          hint = icons.diagnostics.Hint,
-        },
-      })
-
-      ins_left({
-        function()
-          return "%="
-        end,
-      })
-
-      ins_right({
-        "branch",
-        icon = "",
-      })
-
-      ins_right({
-        "diff",
-        symbols = {
-          added = icons.git.added,
-          modified = icons.git.modified,
-          removed = icons.git.removed,
-        },
-        cond = conditions.hide_in_width,
-      })
-
-      return config
     end,
   },
+
+  -- {
+  --   "jose-elias-alvarez/null-ls.nvim",
+  --   opts = function(_, opts)
+  --     local nls = require("null-ls")
+  --     local h = require("null-ls.helpers")
+  --     local u = require("null-ls.utils")
+  --
+  --     table.insert(
+  --       opts.sources,
+  --       nls.builtins.formatting.prettierd.with({
+  --         cwd = h.cache.by_bufnr(function(params)
+  --           return u.root_pattern(
+  --             -- https://prettier.io/docs/en/configuration.html
+  --             ".prettierrc",
+  --             ".prettierrc.json",
+  --             ".prettierrc.yml",
+  --             ".prettierrc.yaml",
+  --             ".prettierrc.json5",
+  --             ".prettierrc.js",
+  --             ".prettierrc.cjs",
+  --             ".prettierrc.toml",
+  --             "prettier.config.js",
+  --             "prettier.config.cjs",
+  --           )(params.bufname)
+  --         end),
+  --       })
+  --     )
+  --   end,
+  -- },
 
   { "nvim-pack/nvim-spectre", opts = { replace_engine = { sed = { cmd = "sed" } } } },
 

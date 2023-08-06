@@ -1,7 +1,7 @@
 # vim:fileencoding=utf-8:ft=conf:foldmethod=marker
 
-font_family      Berkeley Mono
-font_size        20.0
+font_family      JetBrains Mono
+font_size        22.0
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
@@ -59,6 +59,6 @@ symbol_map U+e000-U+e00d,U+e0a0-U+e0a2,U+e0b0-U+e0b3,U+e0a3-U+e0a3,U+e0b4-U+e0c8
 # symbol_map U+2714,U+276f,U+21e3 Symbols Nerd Font
 
 # BEGIN_KITTY_THEME
-# Bluloco Dark
+# Gruvbox Light
 include current-theme.conf
 # END_KITTY_THEME

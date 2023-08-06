@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  home.username = "merlijn";
+  home.username = "merlijnvos";
   home.homeDirectory = "/Users/merlijnvos";
 
   home.stateVersion = "22.11";
@@ -18,6 +18,7 @@
     pkgs.git
     pkgs.git-lfs
     pkgs.gnused
+    pkgs.lazygit
     pkgs.go
     pkgs.jq
     pkgs.neovim
@@ -70,7 +71,11 @@
     };
 
     initExtra = ''
+      source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh                                                         ~ 
+      source /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+
       eval $(thefuck --alias)
+
       bindkey -s '^p' 'tmux-sessionizer\n'
       bindkey -v
       bindkey '^R' history-incremental-search-backward

@@ -35,7 +35,7 @@ vnoremap("<leader>y", [["+y]])
 nnoremap("<leader>Y", [["+Y]])
 
 -- Open tmux sessionizer then close the window when done
-nnoremap("<C-p>", ":silent !tmux neww tmux-sessionizer.sh<CR>")
+nnoremap("<C-p>", ":silent !tmux neww tmux-sessionizer<CR>")
 
 -- Quickfix list navigation
 nnoremap("<C-W>k", "<cmd>cnext<CR>zz")
