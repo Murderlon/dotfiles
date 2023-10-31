@@ -1,51 +1,56 @@
 { config, lib, pkgs, ... }:
-
+let
+  unstable = import <nixpkgs-unstable> {};
+in
 {
   home.username = "merlijnvos";
   home.homeDirectory = "/Users/merlijnvos";
 
   home.stateVersion = "22.11";
 
-  home.packages = [
-    pkgs.awscli2
-    pkgs.bash
-    pkgs.curl
-    pkgs.difftastic
-    pkgs.exa
-    pkgs.fd
-    pkgs.fzf
-    pkgs.gh
-    pkgs.git
-    pkgs.git-lfs
-    pkgs.gnused
-    pkgs.lazygit
-    pkgs.go
-    pkgs.jq
-    pkgs.neovim
-    pkgs.newt
-    pkgs.nodejs
-    pkgs.redis
-    pkgs.ripgrep
-    pkgs.rustup
-    pkgs.sqlite
-    pkgs.starship
-    pkgs.stow
-    pkgs.terraform
-    pkgs.thefuck
-    pkgs.tmate
-    pkgs.tmux
-    pkgs.tokei
-    pkgs.tree-sitter
-    pkgs.wget
-    pkgs.z-lua
+  home.packages = with pkgs; [
+    bash
+    curl
+    deno
+    difftastic
+    eza
+    fd
+    fzf
+    gh
+    git
+    git-lfs
+    gnused
+    lazygit
+    go
+    jq
+    neovim
+    newt
+    # Let's not wait on Nix to catch up on latest LTS
+    unstable.nodejs_20
+    redis
+    ripgrep
+    rustup
+    sqlite
+    starship
+    stow
+    thefuck
+    tmate
+    tmux
+    tokei
+    tree-sitter
+    wget
+    z-lua
 
-    (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+    # Fonts
+    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+    # pkgs.jetbrains-mono
+    # pkgs.iosevka
   ];
 
   home.sessionVariables = {
     EDITOR = "nvim";
     SHELL = "zsh";
-    TERM = "xterm-kitty";
+    # TERM = "xterm-kitty";
     ZSH_AUTOSUGGEST_USE_ASYNC = 1;
   };
 
@@ -117,6 +122,12 @@
         file = "share/zsh-prezto/modules/git/alias.zsh";
         src = pkgs.zsh-prezto;
       }
+
+      # {
+      #   name = "zsh-you-should-use";
+      #   file = "you-should-use.plugin.zsh";
+      #   src = pkgs.zsh-you-should-use;
+      # }
     ];
   };
 

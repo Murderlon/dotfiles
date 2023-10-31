@@ -14,3 +14,5 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 
 vim.opt.showmode = false -- Show when we enter a recording
+
+vim.g.root_spec = { "cwd" }

@@ -1,7 +1,3 @@
--- Don't use the 'magical' root finding util
--- It messes up <leader><space> in monorepos.
-require("lazyvim.util").get_root = vim.loop.cwd
-
 return {
   -- Disable plugins
   { "echasnovski/mini.indentscope", enabled = false },
@@ -13,29 +9,27 @@ return {
   { "lukas-reineke/indent-blankline.nvim", enabled = false },
   { "RRethy/vim-illuminate", enabled = false },
   -- Colorschemes
-  {
-    "uloco/bluloco.nvim",
-    lazy = false,
-    priority = 1000,
-    dependencies = { "rktjmp/lush.nvim" },
-  },
-  { "ellisonleao/gruvbox.nvim" },
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  { "dasupradyumna/midnight.nvim", priority = 1000 },
-  { "projekt0n/github-nvim-theme" },
+  -- {
+  --   "uloco/bluloco.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   dependencies = { "rktjmp/lush.nvim" },
+  -- },
+  -- { "ellisonleao/gruvbox.nvim" },
+  -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  -- { "dasupradyumna/midnight.nvim", priority = 1000 },
+  -- { "projekt0n/github-nvim-theme" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "midnight",
+      colorscheme = "tokyonight",
     },
   },
 
-  { "shortcuts/no-neck-pain.nvim", version = "*" },
-
   { "tpope/vim-vinegar" },
+  { "tpope/vim-surround" },
   { "akinsho/git-conflict.nvim", version = "*", config = { default_mappings = false } },
   { "ruifm/gitlinker.nvim", config = true },
-  { "tpope/vim-surround" },
   {
     "ThePrimeagen/harpoon",
     keys = function()
@@ -64,22 +58,19 @@ return {
   },
 
   {
+    "sourcegraph/sg.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      { "<leader>cc", "<CMD>CodyToggle<CR>", desc = "[C]ody" },
+    },
+  },
+
+  {
     "hrsh7th/nvim-cmp",
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local cmp = require("cmp")
 
-      -- opts.sources = {
-      --   {
-      --     name = "buffer",
-      --     option = {
-      --       get_bufnrs = function()
-      --         -- Get buffer completions from all open buffers
-      --         return vim.api.nvim_list_bufs()
-      --       end,
-      --     },
-      --   },
-      -- }
       opts.mapping = cmp.mapping.preset.insert({
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -208,36 +199,6 @@ return {
     end,
   },
 
-  -- {
-  --   "jose-elias-alvarez/null-ls.nvim",
-  --   opts = function(_, opts)
-  --     local nls = require("null-ls")
-  --     local h = require("null-ls.helpers")
-  --     local u = require("null-ls.utils")
-  --
-  --     table.insert(
-  --       opts.sources,
-  --       nls.builtins.formatting.prettierd.with({
-  --         cwd = h.cache.by_bufnr(function(params)
-  --           return u.root_pattern(
-  --             -- https://prettier.io/docs/en/configuration.html
-  --             ".prettierrc",
-  --             ".prettierrc.json",
-  --             ".prettierrc.yml",
-  --             ".prettierrc.yaml",
-  --             ".prettierrc.json5",
-  --             ".prettierrc.js",
-  --             ".prettierrc.cjs",
-  --             ".prettierrc.toml",
-  --             "prettier.config.js",
-  --             "prettier.config.cjs",
-  --           )(params.bufname)
-  --         end),
-  --       })
-  --     )
-  --   end,
-  -- },
-
   { "nvim-pack/nvim-spectre", opts = { replace_engine = { sed = { cmd = "sed" } } } },
 
   {
@@ -277,7 +238,4 @@ return {
       },
     },
   },
-  { "nvim-treesitter/nvim-treesitter-context", config = true },
-
-  { "windwp/nvim-ts-autotag", config = true },
 }

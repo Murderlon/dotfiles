@@ -1,62 +1,15 @@
 # vim:fileencoding=utf-8:ft=conf:foldmethod=marker
 
-font_family      JetBrains Mono
-font_size        22.0
+font_family      Berkeley Mono
+font_size        21.0
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
-
+# Enable Nerd font glyphs without patching fonts
+symbol_map U+23FB-U+23FE,U+2665,U+26A1,U+2B58,U+E000-U+E00A,U+E0A0-U+E0A3,U+E0B0-U+E0D4,U+E200-U+E2A9,U+E300-U+E3E3,U+E5FA-U+E6AA,U+E700-U+E7C5,U+EA60-U+EBEB,U+F000-U+F2E0,U+F300-U+F32F,U+F400-U+F4A9,U+F500-U+F8FF,U+F0001-U+F1AF0 Symbols Nerd Font Mono
 disable_ligatures always
 
 window_margin_width 0 10
-
-###########################################################
-# Symbols Nerd Font complete symbol_map
-# easily troubleshoot missing/incorrect characters with:
-#   kitty --debug-font-fallback
-###########################################################
-
-# Nerd Fonts - Pomicons
-symbol_map U+e000-U+e00d Symbols Nerd Font
-
-# Nerd Fonts - Powerline
-symbol_map U+e0a0-U+e0a2,U+e0b0-U+e0b3 Symbols Nerd Font
-
-# Nerd Fonts - Powerline Extra
-symbol_map U+e0a3-U+e0a3,U+e0b4-U+e0c8,U+e0cc-U+e0d2,U+e0d4-U+e0d4 Symbols Nerd Font
-
-# Nerd Fonts - Symbols original
-symbol_map U+e5fa-U+e62b Symbols Nerd Font
-
-# Nerd Fonts - Devicons
-symbol_map U+e700-U+e7c5 Symbols Nerd Font
-
-# Nerd Fonts - Font awesome
-symbol_map U+f000-U+f2e0 Symbols Nerd Font
-
-# Nerd Fonts - Font awesome extension
-symbol_map U+e200-U+e2a9 Symbols Nerd Font
-
-# Nerd Fonts - Octicons
-symbol_map U+f400-U+f4a8,U+2665-U+2665,U+26A1-U+26A1,U+f27c-U+f27c Symbols Nerd Font
-
-# Nerd Fonts - Font Logos
-symbol_map U+f300-U+f313 Symbols Nerd Font
-
-# Nerd Fonts - Font Power Symbols
-symbol_map U+23fb-U+23fe,U+2b58-U+2b58 Symbols Nerd Font
-
-# Nerd Fonts - Material Design Icons
-symbol_map U+f500-U+fd46 Symbols Nerd Font
-
-# Nerd Fonts - Weather Icons
-symbol_map U+e300-U+e3eb Symbols Nerd Font
-
-# Nerd Fonts - All
-symbol_map U+e000-U+e00d,U+e0a0-U+e0a2,U+e0b0-U+e0b3,U+e0a3-U+e0a3,U+e0b4-U+e0c8,U+e0cc-U+e0d2,U+e0d4-U+e0d4,U+e5fa-U+e62b,U+e700-U+e7c5,U+f000-U+f2e0,U+e200-U+e2a9,U+f400-U+f4a8,U+2665-U+2665,U+26A1-U+26A1,U+f27c-U+f27c,U+f300-U+f313,U+23fb-U+23fe,U+2b58-U+2b58,U+f500-U+fd46,U+e300-U+e3eb Symbols Nerd Font
-
-# DOH
-# symbol_map U+2714,U+276f,U+21e3 Symbols Nerd Font
 
 # BEGIN_KITTY_THEME
 # Gruvbox Light
