@@ -11,6 +11,7 @@ in
   home.packages = with pkgs; [
     bash
     curl
+    caddy
     deno
     difftastic
     eza
@@ -21,6 +22,7 @@ in
     git-lfs
     gnused
     lazygit
+    luajit
     go
     jq
     neovim
