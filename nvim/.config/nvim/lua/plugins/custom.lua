@@ -6,29 +6,43 @@ return {
   { "echasnovski/mini.surround", enabled = false },
   { "nvim-neo-tree/neo-tree.nvim", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
-  { "lukas-reineke/indent-blankline.nvim", enabled = false },
+  -- { "lukas-reineke/indent-blankline.nvim", enabled = false },
   { "RRethy/vim-illuminate", enabled = false },
   -- Colorschemes
+  { "ellisonleao/gruvbox.nvim", lazy = false },
   -- {
-  --   "uloco/bluloco.nvim",
+  --   "craftzdog/solarized-osaka.nvim",
   --   lazy = false,
   --   priority = 1000,
-  --   dependencies = { "rktjmp/lush.nvim" },
+  --   opts = {},
+  --   config = function()
+  --     require("solarized-osaka").setup({
+  --       on_highlights = function(hl, c)
+  --         hl["@parameter"] = { fg = c.base0 }
+  --         hl["@property"] = { fg = c.base0 }
+  --         hl["@keyword.function"] = { fg = c.blue500 }
+  --       end,
+  --       styles = {
+  --         floats = "normal",
+  --         sidebars = "normal",
+  --       },
+  --     })
+  --   end,
   -- },
-  { "ellisonleao/gruvbox.nvim" },
   -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   -- { "dasupradyumna/midnight.nvim", priority = 1000 },
   -- { "projekt0n/github-nvim-theme" },
+  { "aktersnurra/no-clown-fiesta.nvim" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "tokyonight",
+      colorscheme = "gruvbox",
     },
   },
 
   { "tpope/vim-vinegar" },
   { "tpope/vim-surround" },
-  { "akinsho/git-conflict.nvim", version = "*", config = { default_mappings = false } },
+  { "akinsho/git-conflict.nvim", version = "*", opts = { default_mappings = false } },
   { "ruifm/gitlinker.nvim", config = true },
   {
     "ThePrimeagen/harpoon",
@@ -83,7 +97,6 @@ return {
 
   {
     "nvim-telescope/telescope-fzf-native.nvim",
-    build = "arch -arm64 make",
     config = function()
       require("telescope").load_extension("fzf")
     end,
