@@ -1,7 +1,4 @@
 { config, lib, pkgs, ... }:
-let
-  unstable = import <nixpkgs-unstable> {};
-in
 {
   home.username = "merlijnvos";
   home.homeDirectory = "/Users/merlijnvos";
@@ -9,6 +6,7 @@ in
   home.stateVersion = "22.11";
 
   home.packages = with pkgs; [
+    awscli2
     bash
     curl
     caddy
@@ -27,8 +25,7 @@ in
     jq
     neovim
     newt
-    # Let's not wait on Nix to catch up on latest LTS
-    unstable.nodejs_20
+    nodejs_20
     redis
     ripgrep
     rustup
@@ -82,6 +79,9 @@ in
       source /nix/var/nix/profiles/default/etc/profile.d/nix.sh
 
       eval $(thefuck --alias)
+      eval "$(rbenv init - zsh)"
+
+      export PATH=$PATH:/Users/merlijnvos/go/bin
 
       bindkey -s '^p' 'tmux-sessionizer\n'
       bindkey -v

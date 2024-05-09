@@ -16,7 +16,8 @@
   s = status
   l = log --pretty=oneline --graph --abbrev-commit
   recent = "!git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short)' | fzf | xargs git checkout"
-  fixup = "!git log -n 10 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
+  fixup = "!git log -n 20 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
+  unreleased = "!git log --pretty=oneline --graph --abbrev-commit $(git describe --tags --abbrev=0 @^)..@"
 
 [apply]
   # Detect whitespace errors when applying a patch
@@ -105,3 +106,6 @@
 
 [init]
   defaultBranch = main
+
+[rerere]
+  enabled = true

@@ -17,4 +17,8 @@ vim.opt.showmode = false -- Show when we enter a recording
 
 vim.opt.conceallevel = 0
 
+vim.opt.list = false
+
 vim.g.root_spec = { "cwd" }
+
+vim.filetype.add({ extension = { templ = "templ" } })

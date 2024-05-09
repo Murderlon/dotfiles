@@ -1,83 +1,182 @@
 return {
   -- Disable plugins
   { "echasnovski/mini.indentscope", enabled = false },
-  -- { "folke/noice.nvim", enabled = false },
   { "echasnovski/mini.pairs", enabled = false },
   { "echasnovski/mini.surround", enabled = false },
-  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
-  -- { "lukas-reineke/indent-blankline.nvim", enabled = false },
   { "RRethy/vim-illuminate", enabled = false },
+  { "lukas-reineke/indent-blankline.nvim", enabled = false },
+  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
+  { "folke/flash.nvim", enabled = false },
+
   -- Colorschemes
-  { "ellisonleao/gruvbox.nvim", lazy = false },
+  { "ellisonleao/gruvbox.nvim", enabled = true, opts = { bold = false } },
+  { "dasupradyumna/midnight.nvim", enabled = true },
+  { "projekt0n/github-nvim-theme", enabled = false },
+  { "aktersnurra/no-clown-fiesta.nvim", enabled = false },
+  { "ishan9299/nvim-solarized-lua", enabled = false },
+  { "rose-pine/neovim", name = "rose-pine", opts = { styles = { italic = false } } },
+  { "ramojus/mellifluous.nvim", enabled = true },
+  { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "mocha" }, enabled = false },
   -- {
-  --   "craftzdog/solarized-osaka.nvim",
+  --   "uloco/bluloco.nvim",
   --   lazy = false,
   --   priority = 1000,
-  --   opts = {},
-  --   config = function()
-  --     require("solarized-osaka").setup({
-  --       on_highlights = function(hl, c)
-  --         hl["@parameter"] = { fg = c.base0 }
-  --         hl["@property"] = { fg = c.base0 }
-  --         hl["@keyword.function"] = { fg = c.blue500 }
-  --       end,
-  --       styles = {
-  --         floats = "normal",
-  --         sidebars = "normal",
-  --       },
-  --     })
-  --   end,
+  --   dependencies = { "rktjmp/lush.nvim" },
+  --   config = true,
   -- },
-  -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  -- { "dasupradyumna/midnight.nvim", priority = 1000 },
-  -- { "projekt0n/github-nvim-theme" },
-  { "aktersnurra/no-clown-fiesta.nvim" },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "midnight",
     },
   },
 
+  { "tpope/vim-sleuth" },
   { "tpope/vim-vinegar" },
   { "tpope/vim-surround" },
+  {
+    "shortcuts/no-neck-pain.nvim",
+    opts = {
+      buffers = {
+        right = {
+          enabled = false,
+        },
+      },
+    },
+    keys = {
+      {
+        "<leader>np",
+        ":NoNeckPain<CR>",
+        desc = "[N]o neck [p]ain",
+      },
+    },
+  },
   { "akinsho/git-conflict.nvim", version = "*", opts = { default_mappings = false } },
   { "ruifm/gitlinker.nvim", config = true },
+  { "tpope/vim-fugitive", cmd = "Git" },
+  {
+    "sourcegraph/sg.nvim",
+    config = true,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
+
   {
     "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    config = true,
     keys = function()
-      local mark = require("harpoon.mark")
-      local ui = require("harpoon.ui")
-
-      local function nav_file(n)
-        return function()
-          ui.nav_file(n)
-        end
-      end
+      local harpoon = require("harpoon")
 
       return {
-        { "<leader>ha", mark.add_file, desc = "Add file to harpoon" },
-        { "<leader>hq", ui.toggle_quick_menu, desc = "Harpoon quick menu" },
-        { "<leader>h1", nav_file(1), desc = "Harpoon file 1" },
-        { "<leader>h2", nav_file(2), desc = "Harpoon file 2" },
-        { "<leader>h3", nav_file(3), desc = "Harpoon file 3" },
-        { "<leader>h4", nav_file(4), desc = "Harpoon file 4" },
-        { "<leader>h5", nav_file(5), desc = "Harpoon file 5" },
-        { "<leader>h6", nav_file(6), desc = "Harpoon file 6" },
-        { "<leader>h7", nav_file(7), desc = "Harpoon file 7" },
-        { "<leader>h8", nav_file(8), desc = "Harpoon file 8" },
+        {
+          "<leader>ha",
+          function()
+            harpoon:list():add()
+          end,
+          desc = "Add file to harpoon",
+        },
+        {
+          "<leader>hq",
+          function()
+            harpoon.ui:toggle_quick_menu(harpoon:list())
+          end,
+          desc = "Harpoon quick menu",
+        },
+        {
+          "<leader>h1",
+          function()
+            harpoon:list():select(1)
+          end,
+          desc = "Harpoon file 1",
+        },
+        {
+          "<leader>h2",
+          function()
+            harpoon:list():select(2)
+          end,
+          desc = "Harpoon file 2",
+        },
+        {
+          "<leader>h3",
+          function()
+            harpoon:list():select(3)
+          end,
+          desc = "Harpoon file 3",
+        },
+        {
+          "<leader>h4",
+          function()
+            harpoon:list():select(4)
+          end,
+          desc = "Harpoon file 4",
+        },
+        {
+          "<leader>h5",
+          function()
+            harpoon:list():select(5)
+          end,
+          desc = "Harpoon file 5",
+        },
+        {
+          "<leader>h6",
+          function()
+            harpoon:list():select(6)
+          end,
+          desc = "Harpoon file 6",
+        },
+        {
+          "<leader>h7",
+          function()
+            harpoon:list():select(7)
+          end,
+          desc = "Harpoon file 7",
+        },
+        {
+          "<leader>h8",
+          function()
+            harpoon:list():select(8)
+          end,
+          desc = "Harpoon file 8",
+        },
       }
     end,
   },
 
-  {
-    "sourcegraph/sg.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    keys = {
-      { "<leader>cc", "<CMD>CodyToggle<CR>", desc = "[C]ody" },
-    },
-  },
+  -- {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   opts = {
+  --     window = {
+  --       position = "current",
+  --       mappings = {
+  --         -- Mimick vim-vinegar "-" keybinding
+  --         ["-"] = function(state)
+  --           require("neo-tree.ui.renderer").focus_node(state, state.tree:get_node():get_parent_id())
+  --         end,
+  --       },
+  --     },
+  --     filesystem = {
+  --       filtered_items = {
+  --         visible = true,
+  --         hide_dotfiles = false,
+  --         hide_gitignored = false,
+  --       },
+  --     },
+  --   },
+  --   keys = {
+  --     {
+  --       "-",
+  --       function()
+  --         if vim.bo.filetype ~= "neo-tree" then
+  --           vim.cmd.Neotree({ "position=current", "reveal" })
+  --         end
+  --       end,
+  --       desc = "NeoTree (current file)",
+  --     },
+  --   },
+  -- },
 
   {
     "hrsh7th/nvim-cmp",
@@ -272,7 +371,24 @@ return {
     end,
   },
 
-  { "nvim-pack/nvim-spectre", opts = { replace_engine = { sed = { cmd = "sed" } } } },
+  { "nvim-pack/nvim-spectre", lazy = true, opts = { replace_engine = { sed = { cmd = "sed" } } } },
+
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        tailwindcss = {
+          filetypes_include = { "templ" },
+        },
+        -- htmx = {
+        --   filetypes_include = { "templ" },
+        -- },
+        html = {
+          filetypes_include = { "templ", "erb" },
+        },
+      },
+    },
+  },
 
   {
     "nvim-treesitter/nvim-treesitter",
@@ -302,6 +418,7 @@ return {
         "regex",
         "scss",
         "svelte",
+        "templ",
         "toml",
         "tsx",
         "typescript",
