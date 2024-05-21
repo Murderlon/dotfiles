@@ -12,6 +12,6 @@ disable_ligatures always
 window_margin_width 0 10
 
 # BEGIN_KITTY_THEME
-# Tokyo Night Storm
+# Neovim
 include current-theme.conf
 # END_KITTY_THEME

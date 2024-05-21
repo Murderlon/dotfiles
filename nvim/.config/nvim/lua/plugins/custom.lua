@@ -10,14 +10,15 @@ return {
   { "folke/flash.nvim", enabled = false },
 
   -- Colorschemes
-  { "ellisonleao/gruvbox.nvim", enabled = true, opts = { bold = false } },
-  { "dasupradyumna/midnight.nvim", enabled = true },
-  { "projekt0n/github-nvim-theme", enabled = false },
-  { "aktersnurra/no-clown-fiesta.nvim", enabled = false },
-  { "ishan9299/nvim-solarized-lua", enabled = false },
-  { "rose-pine/neovim", name = "rose-pine", opts = { styles = { italic = false } } },
-  { "ramojus/mellifluous.nvim", enabled = true },
-  { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "mocha" }, enabled = false },
+  -- { "ellisonleao/gruvbox.nvim", opts = { bold = false } },
+  -- { "dasupradyumna/midnight.nvim" },
+  -- { "projekt0n/github-nvim-theme" },
+  -- { "aktersnurra/no-clown-fiesta.nvim" },
+  -- { "ishan9299/nvim-solarized-lua" },
+  -- { "rose-pine/neovim", name = "rose-pine", opts = { styles = { italic = false } } },
+  -- { "ramojus/mellifluous.nvim" },
+  -- { "EdenEast/nightfox.nvim" },
+  -- { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "mocha" } },
   -- {
   --   "uloco/bluloco.nvim",
   --   lazy = false,
@@ -28,7 +29,24 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "midnight",
+      colorscheme = "default",
+    },
+  },
+
+  {
+    "stevearc/oil.nvim",
+    priority = 1000,
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      default_file_explorer = true,
+      skip_confirm_for_simple_edits = true,
+      view_options = {
+        show_hidden = true,
+      },
+    },
+    keys = {
+      { "-", "<CMD>Oil<CR>", { desc = "Open parent directory" } },
+      -- { "-", require("oil").toggle_float, { desc = "Open parent directory in floating window" } },
     },
   },
 
@@ -62,121 +80,6 @@ return {
       "nvim-lua/plenary.nvim",
     },
   },
-
-  {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    config = true,
-    keys = function()
-      local harpoon = require("harpoon")
-
-      return {
-        {
-          "<leader>ha",
-          function()
-            harpoon:list():add()
-          end,
-          desc = "Add file to harpoon",
-        },
-        {
-          "<leader>hq",
-          function()
-            harpoon.ui:toggle_quick_menu(harpoon:list())
-          end,
-          desc = "Harpoon quick menu",
-        },
-        {
-          "<leader>h1",
-          function()
-            harpoon:list():select(1)
-          end,
-          desc = "Harpoon file 1",
-        },
-        {
-          "<leader>h2",
-          function()
-            harpoon:list():select(2)
-          end,
-          desc = "Harpoon file 2",
-        },
-        {
-          "<leader>h3",
-          function()
-            harpoon:list():select(3)
-          end,
-          desc = "Harpoon file 3",
-        },
-        {
-          "<leader>h4",
-          function()
-            harpoon:list():select(4)
-          end,
-          desc = "Harpoon file 4",
-        },
-        {
-          "<leader>h5",
-          function()
-            harpoon:list():select(5)
-          end,
-          desc = "Harpoon file 5",
-        },
-        {
-          "<leader>h6",
-          function()
-            harpoon:list():select(6)
-          end,
-          desc = "Harpoon file 6",
-        },
-        {
-          "<leader>h7",
-          function()
-            harpoon:list():select(7)
-          end,
-          desc = "Harpoon file 7",
-        },
-        {
-          "<leader>h8",
-          function()
-            harpoon:list():select(8)
-          end,
-          desc = "Harpoon file 8",
-        },
-      }
-    end,
-  },
-
-  -- {
-  --   "nvim-neo-tree/neo-tree.nvim",
-  --   opts = {
-  --     window = {
-  --       position = "current",
-  --       mappings = {
-  --         -- Mimick vim-vinegar "-" keybinding
-  --         ["-"] = function(state)
-  --           require("neo-tree.ui.renderer").focus_node(state, state.tree:get_node():get_parent_id())
-  --         end,
-  --       },
-  --     },
-  --     filesystem = {
-  --       filtered_items = {
-  --         visible = true,
-  --         hide_dotfiles = false,
-  --         hide_gitignored = false,
-  --       },
-  --     },
-  --   },
-  --   keys = {
-  --     {
-  --       "-",
-  --       function()
-  --         if vim.bo.filetype ~= "neo-tree" then
-  --           vim.cmd.Neotree({ "position=current", "reveal" })
-  --         end
-  --       end,
-  --       desc = "NeoTree (current file)",
-  --     },
-  --   },
-  -- },
 
   {
     "hrsh7th/nvim-cmp",
@@ -287,17 +190,44 @@ return {
         end,
       })
 
-      return {
+      -- Function to get the color of a highlight group
+      local function get_color(hlgroup, attr)
+        local color = vim.api.nvim_get_hl_by_name(hlgroup, true)[attr]
+        if color then
+          return string.format("#%06x", color)
+        else
+          return nil
+        end
+      end
+
+      -- Get the colors from the current theme
+      local black = get_color("Normal", "background")
+      local white = get_color("Normal", "foreground")
+      local gray = get_color("Comment", "foreground")
+
+      local colors = {
+        black = black,
+        white = white,
+        gray = gray,
+      }
+
+      local theme = {
+        normal = {
+          a = { bg = colors.black, fg = colors.white },
+          b = { bg = colors.black, fg = colors.white },
+          c = { bg = colors.black, fg = colors.white },
+        },
+      }
+
+      local config = {
         options = {
           component_separators = "",
           section_separators = "",
-          theme = "auto",
+          theme = theme,
         },
         sections = {
           lualine_a = {},
           lualine_b = {},
-          lualine_y = {},
-          lualine_z = {},
           lualine_c = {
             {
               "filename",
@@ -330,7 +260,6 @@ return {
               "branch",
               icon = "",
             },
-
             {
               "diff",
               symbols = {
@@ -341,13 +270,12 @@ return {
               cond = conditions.hide_in_width,
             },
           },
+          lualine_y = {},
+          lualine_z = {},
         },
         inactive_sections = {
           lualine_a = {},
           lualine_b = {},
-          lualine_y = {},
-          lualine_z = {},
-          lualine_x = {},
           lualine_c = {
             {
               "filename",
@@ -366,8 +294,13 @@ return {
               },
             },
           },
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {},
         },
       }
+
+      return config
     end,
   },
 
