@@ -25,7 +25,7 @@
     jq
     neovim
     newt
-    nodejs_20
+    nodejs_22
     redis
     ripgrep
     rustup
@@ -79,7 +79,6 @@
       source /nix/var/nix/profiles/default/etc/profile.d/nix.sh
 
       eval $(thefuck --alias)
-      eval "$(rbenv init - zsh)"
 
       export PATH=$PATH:/Users/merlijnvos/go/bin
 

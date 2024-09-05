@@ -4,7 +4,6 @@ return {
   { "echasnovski/mini.pairs", enabled = false },
   { "echasnovski/mini.surround", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
-  { "RRethy/vim-illuminate", enabled = false },
   { "lukas-reineke/indent-blankline.nvim", enabled = false },
   { "nvim-neo-tree/neo-tree.nvim", enabled = false },
   { "folke/flash.nvim", enabled = false },
@@ -18,7 +17,7 @@ return {
   -- { "rose-pine/neovim", name = "rose-pine", opts = { styles = { italic = false } } },
   -- { "ramojus/mellifluous.nvim" },
   -- { "EdenEast/nightfox.nvim" },
-  -- { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "mocha" } },
+  -- { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "macchiato" } },
   -- {
   --   "uloco/bluloco.nvim",
   --   lazy = false,
@@ -26,27 +25,34 @@ return {
   --   dependencies = { "rktjmp/lush.nvim" },
   --   config = true,
   -- },
+  -- {
+  --   "slugbyte/lackluster.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  -- },
+  -- {
+  --   "ishan9299/nvim-solarized-lua",
+  --   lazy = false,
+  --   priority = 1000,
+  -- },
+  -- {
+  --   "AlexvZyl/nordic.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     require("nordic").load()
+  --   end,
+  -- },
+  -- {
+  --   "phha/zenburn.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = true,
+  -- },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "default",
-    },
-  },
-
-  {
-    "stevearc/oil.nvim",
-    priority = 1000,
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      default_file_explorer = true,
-      skip_confirm_for_simple_edits = true,
-      view_options = {
-        show_hidden = true,
-      },
-    },
-    keys = {
-      { "-", "<CMD>Oil<CR>", { desc = "Open parent directory" } },
-      -- { "-", require("oil").toggle_float, { desc = "Open parent directory in floating window" } },
+      colorscheme = "tokyonight",
     },
   },
 
@@ -73,13 +79,59 @@ return {
   { "akinsho/git-conflict.nvim", version = "*", opts = { default_mappings = false } },
   { "ruifm/gitlinker.nvim", config = true },
   { "tpope/vim-fugitive", cmd = "Git" },
-  {
-    "sourcegraph/sg.nvim",
-    config = true,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-  },
+
+  -- {
+  --   "tamago324/lir.nvim",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "kyazdani42/nvim-web-devicons",
+  --   },
+  --   config = function()
+  --     local actions = require("lir.actions")
+  --     local mark_actions = require("lir.mark.actions")
+  --     local clipboard_actions = require("lir.clipboard.actions")
+  --
+  --     ---@diagnostic disable-next-line: missing-fields
+  --     require("lir").setup({
+  --       show_hidden_files = true,
+  --       ignore = { ".DS_Store" },
+  --       devicons = {
+  --         enable = true,
+  --         highlight_dirname = false,
+  --       },
+  --       mappings = {
+  --         ["<CR>"] = actions.edit,
+  --         ["<C-s>"] = actions.split,
+  --         ["<C-v>"] = actions.vsplit,
+  --         ["<C-t>"] = actions.tabedit,
+  --
+  --         ["h"] = actions.up,
+  --         ["q"] = actions.quit,
+  --
+  --         ["d"] = actions.mkdir,
+  --         ["n"] = actions.newfile,
+  --         ["r"] = actions.rename,
+  --         ["@"] = actions.cd,
+  --         ["y"] = actions.yank_path,
+  --         ["."] = actions.toggle_show_hidden,
+  --         ["D"] = actions.delete,
+  --
+  --         ["C"] = clipboard_actions.copy,
+  --         ["X"] = clipboard_actions.cut,
+  --         ["P"] = clipboard_actions.paste,
+  --       },
+  --       ---@diagnostic disable-next-line: missing-fields
+  --       float = {
+  --         winblend = 0,
+  --         curdir_window = {
+  --           enable = false,
+  --           highlight_dirname = false,
+  --         },
+  --       },
+  --       hide_cursor = true,
+  --     })
+  --   end,
+  -- },
 
   {
     "hrsh7th/nvim-cmp",
@@ -94,15 +146,41 @@ return {
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<C-k>"] = cmp.mapping.confirm({ select = true }),
       })
+      return opts
     end,
   },
 
   {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    config = function()
-      require("telescope").load_extension("fzf")
-    end,
+    "echasnovski/mini.files",
+    opts = {
+      windows = {
+        preview = false,
+      },
+    },
   },
+
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        typescript = function(bufnr)
+          if require("conform").get_formatter_info("biome", bufnr).available then
+            return { "biome", lsp_format = "never" }
+          else
+            return { "vtsls", "prettier" }
+          end
+        end,
+      },
+    },
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      inlay_hints = { enabled = false },
+    },
+  },
+
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
@@ -119,7 +197,9 @@ return {
     keys = {
       {
         "<leader>fd",
-        require("lazyvim.util").telescope("git_files", { cwd = "$HOME/code/dotfiles" }),
+        function()
+          require("telescope.builtin").git_files({ cwd = "$HOME/code/dotfiles" })
+        end,
         desc = "[F]ind [D]otfiles",
       },
       {
