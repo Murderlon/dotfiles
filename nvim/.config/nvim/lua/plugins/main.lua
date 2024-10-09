@@ -3,9 +3,18 @@ return {
   { import = "lazyvim.plugins.extras.ui.treesitter-context" },
 
   { import = "lazyvim.plugins.extras.editor.harpoon2" },
+  { import = "lazyvim.plugins.extras.editor.mini-files" },
+  {
+    "echasnovski/mini.files",
+    lazy = false,
+    opts = {
+      options = {
+        use_as_default_explorer = true,
+      },
+    },
+  },
 
   { import = "lazyvim.plugins.extras.coding.luasnip" },
-  { import = "lazyvim.plugins.extras.coding.copilot" },
   { import = "lazyvim.plugins.extras.coding.mini-comment" },
   { import = "lazyvim.plugins.extras.coding.mini-surround" },
 
@@ -16,6 +25,7 @@ return {
   { import = "lazyvim.plugins.extras.lang.go" },
   { import = "lazyvim.plugins.extras.lang.tailwind" },
   { import = "lazyvim.plugins.extras.lang.yaml" },
+  -- { import = "lazyvim.plugins.extras.lang.json" },
 
   -- Disable plugins
   { "echasnovski/mini.indentscope", enabled = false },
@@ -25,31 +35,16 @@ return {
   { "nvim-neo-tree/neo-tree.nvim", enabled = false },
   { "folke/flash.nvim", enabled = false },
 
-  -- tpope
-  { "tpope/vim-sleuth" },
-  { "tpope/vim-vinegar" },
+  {
+    "dmmulroy/tsc.nvim",
+    opts = {
+      use_trouble_qflist = true,
+      bin_path = "node_modules/.bin/tsc",
+    },
+  },
 
   -- Git
   { "akinsho/git-conflict.nvim", version = "*", opts = { default_mappings = false } },
-  { "ruifm/gitlinker.nvim", config = true },
-  { "tpope/vim-fugitive", cmd = "Git" },
-
-  {
-    "hrsh7th/nvim-cmp",
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      local cmp = require("cmp")
-
-      opts.mapping = {
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-e>"] = cmp.mapping.close(),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-k>"] = cmp.mapping.confirm({ select = true }),
-      }
-      return opts
-    end,
-  },
 
   {
     "neovim/nvim-lspconfig",
@@ -61,6 +56,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
+      -- Install missing grammar when opening a file
       auto_install = true,
     },
   },

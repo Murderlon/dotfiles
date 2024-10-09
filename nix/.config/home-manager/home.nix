@@ -36,14 +36,15 @@
     tmate
     tmux
     tokei
+    tree
     tree-sitter
     wget
     z-lua
 
     # Fonts
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
-    # pkgs.jetbrains-mono
-    # pkgs.iosevka
+    # jetbrains-mono
+    # iosevka
   ];
 
   home.sessionVariables = {
@@ -81,6 +82,8 @@
       eval $(thefuck --alias)
 
       export PATH=$PATH:/Users/merlijnvos/go/bin
+      export BUN_INSTALL="$HOME/.bun" 
+      export PATH="$BUN_INSTALL/bin:$PATH"
 
       bindkey -s '^p' 'tmux-sessionizer\n'
       bindkey -v

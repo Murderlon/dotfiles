@@ -2,10 +2,18 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local nnoremap = require("merlijn.keymap").nnoremap
-local vnoremap = require("merlijn.keymap").vnoremap
-local xnoremap = require("merlijn.keymap").xnoremap
-local inoremap = require("merlijn.keymap").inoremap
+local function bind(op, outer_opts)
+  outer_opts = outer_opts or { noremap = true }
+  return function(lhs, rhs, opts)
+    opts = vim.tbl_extend("force", outer_opts, opts or {})
+    vim.keymap.set(op, lhs, rhs, opts)
+  end
+end
+
+local nnoremap = bind("n")
+local vnoremap = bind("v")
+local xnoremap = bind("x")
+local inoremap = bind("i")
 
 -- Save files
 nnoremap("<leader>w", ":w!<CR>")

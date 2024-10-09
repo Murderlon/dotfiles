@@ -1,12 +1,15 @@
+vim.opt.background = "dark"
+
 return {
   -- { "ellisonleao/gruvbox.nvim", opts = { bold = false } },
   -- { "dasupradyumna/midnight.nvim" },
   -- { "projekt0n/github-nvim-theme" },
   -- { "aktersnurra/no-clown-fiesta.nvim" },
-  -- { "ishan9299/nvim-solarized-lua" },
+  { "ishan9299/nvim-solarized-lua" },
   -- { "rose-pine/neovim", name = "rose-pine", opts = { styles = { italic = false } } },
   -- { "ramojus/mellifluous.nvim" },
   -- { "EdenEast/nightfox.nvim" },
+  -- { "bettervim/yugen.nvim" },
   -- { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "macchiato" } },
   -- {
   --   "uloco/bluloco.nvim",
@@ -17,11 +20,6 @@ return {
   -- },
   -- {
   --   "slugbyte/lackluster.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  -- },
-  -- {
-  --   "ishan9299/nvim-solarized-lua",
   --   lazy = false,
   --   priority = 1000,
   -- },
@@ -42,7 +40,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "tokyonight",
+      colorscheme = "solarized",
     },
   },
 }
