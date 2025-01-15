@@ -97,8 +97,8 @@
 [push]
   # https://git-scm.com/docs/git-config#git-config-pushdefault
   default = current
-  # Make `git push` push relevant annotated tags when pushing branches out.
-  followTags = true
+  # Do not push tags on push without explicit --tags
+  followTags = false
 
 [filter "lfs"]
   clean = git-lfs clean -- %f

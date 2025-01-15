@@ -25,5 +25,7 @@ vim.opt.conceallevel = 0
 vim.opt.list = false
 
 vim.g.root_spec = { "cwd" }
+vim.g.snacks_animate = false
+vim.g.lazyvim_picker = "telescope"
 
 vim.filetype.add({ extension = { templ = "templ" } })
