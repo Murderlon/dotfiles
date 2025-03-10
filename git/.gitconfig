@@ -14,6 +14,7 @@
   i = init
   m = merge
   s = status
+  p = push
   l = log --pretty=oneline --graph --abbrev-commit
   # Show most recently worked on branches
   recent = "!git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short)' | fzf | xargs git checkout"
@@ -114,3 +115,5 @@
 
 [rerere]
   enabled = true
+[branch]
+	sort = -committerdate

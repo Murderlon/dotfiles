@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-stow -vt ~ git tmux nvim kitty zsh starship
+stow -vt ~ git tmux nvim kitty zsh fish starship
 
-sudo ln -sf ~/code/dotfiles/scripts/tmux-sessionizer /usr/local/bin/tmux-sessionizer
+if [ ! -L "/usr/local/bin/tmux-sessionizer" ]; then
+  sudo ln -sf ~/code/dotfiles/scripts/tmux-sessionizer /usr/local/bin/tmux-sessionizer
+fi

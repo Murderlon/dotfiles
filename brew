@@ -1,37 +1,38 @@
 #!/usr/bin/env bash
 
-brew install \ 
-awscli \
-bash \
-caddy \
-carapace \
-curl \
-deno \
-difftastic 
-eza \
-fd \
-fzf \
-gh \
-git \
-git-lfs \
-gnu-sed \
-go \
-jq \
-lazygit \
-luajit \
-neovim \
-newt \
-node \
-nushell \
-ripgrep \
-rustup \
-sqlite \
-starship \
-stow \
-thefuck \
-tmate \
-tmux \
-tokei \
-tree \
-tree-sitter \
-wget
+brew install \
+  awscli \
+  bash \
+  caddy \
+  carapace \
+  curl \
+  deno \
+  difftastic \
+  eza \
+  fd \
+  fish \
+  fzf \
+  gh \
+  git \
+  git-lfs \
+  gnu-sed \
+  go \
+  jq \
+  lazygit \
+  luajit \
+  neovim \
+  newt \
+  node \
+  nushell \
+  ripgrep \
+  rustup \
+  sqlite \
+  starship \
+  stow \
+  thefuck \
+  tmate \
+  tmux \
+  tokei \
+  tree \
+  tree-sitter \
+  wget

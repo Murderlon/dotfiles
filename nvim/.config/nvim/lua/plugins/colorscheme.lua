@@ -1,10 +1,10 @@
-vim.opt.background = "light"
+vim.opt.background = "dark"
 
 return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "tokyonight",
     },
   },
   { "rose-pine/neovim", name = "rose-pine", opts = { styles = { italic = false } } },
@@ -16,14 +16,9 @@ return {
   -- { "EdenEast/nightfox.nvim" },
   -- { "bettervim/yugen.nvim" },
   -- { "catppuccin/nvim", name = "catppuccin", opts = { flavour = "macchiato" } },
-  -- {
-  --   "AlexvZyl/nordic.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     require("nordic").load()
-  --   end,
-  -- },
+  { "AlexvZyl/nordic.nvim", config = true },
+  { "Mofiqul/vscode.nvim", config = true },
+  { "loctvl842/monokai-pro.nvim", config = true },
   -- {
   --   "scottmckendry/cyberdream.nvim",
   --   lazy = false,

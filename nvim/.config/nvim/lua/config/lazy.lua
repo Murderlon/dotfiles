@@ -9,6 +9,34 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
   spec = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+
+    -- Disable plugins
+    { "echasnovski/mini.pairs", enabled = false },
+    { "akinsho/bufferline.nvim", enabled = false },
+    { "nvim-neo-tree/neo-tree.nvim", enabled = false },
+    { "folke/flash.nvim", enabled = false },
+
+    -- Extras
+    { import = "lazyvim.plugins.extras.editor.harpoon2" },
+
+    { import = "lazyvim.plugins.extras.coding.luasnip" },
+    { import = "lazyvim.plugins.extras.coding.mini-comment" },
+    { import = "lazyvim.plugins.extras.coding.mini-surround" },
+
+    { import = "lazyvim.plugins.extras.ui.treesitter-context" },
+
+    { import = "lazyvim.plugins.extras.ai.copilot" },
+
+    { import = "lazyvim.plugins.extras.linting.eslint" },
+    { import = "lazyvim.plugins.extras.formatting.prettier" },
+    { import = "lazyvim.plugins.extras.formatting.biome" },
+
+    { import = "lazyvim.plugins.extras.lang.typescript" },
+    { import = "lazyvim.plugins.extras.lang.go" },
+    { import = "lazyvim.plugins.extras.lang.rust" },
+    { import = "lazyvim.plugins.extras.lang.tailwind" },
+    { import = "lazyvim.plugins.extras.lang.json" },
+    { import = "lazyvim.plugins.extras.lang.php" },
     -- import/override with your plugins
     { import = "plugins" },
   },
