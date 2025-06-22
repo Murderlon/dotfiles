@@ -25,6 +25,10 @@ alias ls="eza"
 alias j="z"
 alias g="g"
 alias tks="tmux kill-server"
-alias c="open $1 -a \"Cursor\""
+alias cursor="open $1 -a \"Cursor\""
 
 bind \cp tmux-sessionizer
+
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init2.fish 2>/dev/null || :

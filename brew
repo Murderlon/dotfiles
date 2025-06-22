@@ -35,4 +35,5 @@ brew install \
   tokei \
   tree \
   tree-sitter \
-  wget
+  wget \
+  zsh-syntax-highlighting

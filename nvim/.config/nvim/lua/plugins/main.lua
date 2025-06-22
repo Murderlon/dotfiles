@@ -29,7 +29,7 @@ return {
       use_trouble_qflist = true,
       auto_focus_qflist = true,
       auto_start_watch_mode = true,
-      bin_path = "node_modules/.bin/tsc",
+      -- bin_path = "node_modules/.bin/tsc",
     },
   },
 

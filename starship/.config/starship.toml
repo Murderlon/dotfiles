@@ -1,5 +1,16 @@
-[aws]
-disabled = true
+format = "$character"
+command_timeout = 2000
+right_format = """$git_branch$git_commit$git_state$git_status$directory$hostname$line_break$status"""
 
-[bun]
-disabled = true
+[character]
+success_symbol = "[λ](bold green)"
+error_symbol = "[λ](bold red)"
+
+[directory]
+truncation_length = 2
+style = "fg:242"
+
+[git_branch]
+format = "[$symbol$branch]($style) "
+symbol = " "
+style = "green"
