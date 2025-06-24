@@ -31,61 +31,35 @@
 
 [core]
   editor = 'nvim'
-
-  # File system monitoring (Git >= 2.37.0) speeds up git status a lot
-  fsmonitor = true
-
-  # Treat spaces before tabs and all kinds of trailing whitespace as an error
-  # [default] trailing-space: looks for spaces at the end of a line
-  # [default] space-before-tab: looks for spaces before tabs at the beginning of a line
-  whitespace = space-before-tab,-indent-with-non-tab,trailing-space
-
-  # Make `git rebase` safer on macOS
-  # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
-  trustctime = false
-
-  # Prevent showing files whose names contain non-ASCII symbols as unversioned.
-  # http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
-  precomposeunicode = false
-
-  # Speed up commands involving untracked files such as `git status`.
-  # https://git-scm.com/docs/git-update-index#_untracked_cache
-  untrackedCache = true
-  
+  autocrlf = input  # keep newlines as in input
+  compression = 9  # trade cpu for network
+  fsync = none
+  whitespace = error  # threat incorrect whitespace as errors
+  preloadindex = true  # preload index for faster status
 	ignorecase = false
 
-[color]
-  # Use colors in Git commands that are capable of colored output when
-  # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
-  ui = auto
+[advice]  # disable advices
+  addEmptyPathspec = false
+  pushNonFastForward = false
+  statusHints = false
 
-[color "branch"]
-  current = yellow reverse
-  local = yellow
-  remote = green
+[blame]
+  coloring = highlightRecent
+  date = relative
 
-[color "diff"]
-  meta = yellow bold
-  frag = magenta bold # line info
-  old = red # deletions
-  new = green # additions
-
-[color "status"]
-  added = yellow
-  changed = green
-  untracked = cyan
+[status]
+  branch = true
+  short = true
+  showStash = true
+  showUntrackedFiles = all  # show individual untracked files
 
 [commit]
   gpgsign = true
 
 [diff]
-  # Detect copies as well as renames
-  renames = copies
-  external = difft
-
-[diff "bin"]
-  # Use `hexdump` to diff binary files
-  textconv = hexdump -v -C
+  context = 3  # less context in diffs
+  renames = copies  # detect copies as renames in diffs
+  interHunkContext = 10  # merge near hunks in diffs
 
 [help]
   # Automatically correct and execute mistyped commands
@@ -101,12 +75,6 @@
   # Do not push tags on push without explicit --tags
   followTags = false
 
-[filter "lfs"]
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
-  required = true
-
 [pull]
   rebase = true
 
@@ -121,3 +89,25 @@
 
 [rebase]
 	updateRefs = true
+  autoSquash = true
+
+[log]
+  abbrevCommit = true  # short commits
+  graphColors = blue,yellow,cyan,magenta,green,red
+
+# Colors
+[color "blame"]
+  highlightRecent = black bold,1 year ago,white,1 month ago,default,7 days ago,blue
+
+[color "branch"]
+  current  = magenta
+  local    = default
+  remote   = yellow
+  upstream = green
+  plain    = blue
+
+[color.decorate]
+  HEAD = red
+  branch = blue
+  tag = yellow
+  remoteBranch = magenta
