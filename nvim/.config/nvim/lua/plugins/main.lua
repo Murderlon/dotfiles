@@ -1,4 +1,5 @@
 return {
+  { "akinsho/bufferline.nvim", opts = { options = { mode = "tabs" } } },
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",

@@ -26,4 +26,6 @@ vim.opt.list = false
 
 vim.g.root_spec = { "cwd" }
 vim.g.snacks_animate = false
--- vim.g.lazyvim_picker = "telescope"
+vim.g.lazyvim_picker = "telescope"
+vim.g.lazyvim_ruby_lsp = "ruby_lsp"
+vim.g.lazyvim_ruby_formatter = "rubocop"

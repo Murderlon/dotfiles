@@ -4,18 +4,6 @@
   signingkey = 1FF861FF1DDBB953
 
 [alias]
-  a = add
-  b = branch
-  c = commit
-  cm = commit -m
-  co = checkout
-  d = diff
-  f = fetch
-  i = init
-  m = merge
-  s = status
-  p = push
-  l = log --pretty=oneline --graph --abbrev-commit
   # Show most recently worked on branches
   recent = "!git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short)' | fzf | xargs git checkout"
   # Create a fixup commit linked to another commit
@@ -32,8 +20,6 @@
 [core]
   editor = 'nvim'
   autocrlf = input  # keep newlines as in input
-  compression = 9  # trade cpu for network
-  fsync = none
   whitespace = error  # threat incorrect whitespace as errors
   preloadindex = true  # preload index for faster status
 	ignorecase = false
@@ -105,6 +91,12 @@
   remote   = yellow
   upstream = green
   plain    = blue
+
+[color "status"]
+  added = green
+  changed = yellow
+  untracked = blue
+  unmerged = red
 
 [color.decorate]
   HEAD = red

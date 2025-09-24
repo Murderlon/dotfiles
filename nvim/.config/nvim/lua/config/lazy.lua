@@ -12,7 +12,6 @@ require("lazy").setup({
 
     -- Disable plugins
     { "echasnovski/mini.pairs", enabled = false },
-    { "akinsho/bufferline.nvim", enabled = false },
     { "nvim-neo-tree/neo-tree.nvim", enabled = false },
     { "folke/flash.nvim", enabled = false },
     { "stevearc/dressing.nvim", enabled = false },
@@ -26,7 +25,8 @@ require("lazy").setup({
 
     { import = "lazyvim.plugins.extras.ui.treesitter-context" },
 
-    { import = "lazyvim.plugins.extras.ai.copilot" },
+    -- { import = "lazyvim.plugins.extras.ai.copilot" },
+    { import = "lazyvim.plugins.extras.ai.supermaven" },
 
     { import = "lazyvim.plugins.extras.linting.eslint" },
     { import = "lazyvim.plugins.extras.formatting.prettier" },
@@ -35,6 +35,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.go" },
     { import = "lazyvim.plugins.extras.lang.rust" },
+    { import = "lazyvim.plugins.extras.lang.ruby" },
     { import = "lazyvim.plugins.extras.lang.tailwind" },
     { import = "lazyvim.plugins.extras.lang.json" },
     -- import/override with your plugins
