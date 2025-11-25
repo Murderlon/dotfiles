@@ -51,7 +51,7 @@ return {
         end,
       },
     },
-    dependencies = { "echasnovski/mini.icons" },
+    dependencies = { "nvim-mini/mini.icons" },
     keys = {
       {
         "-",

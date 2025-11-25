@@ -11,10 +11,15 @@ require("lazy").setup({
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
     -- Disable plugins
-    { "echasnovski/mini.pairs", enabled = false },
     { "nvim-neo-tree/neo-tree.nvim", enabled = false },
     { "folke/flash.nvim", enabled = false },
     { "stevearc/dressing.nvim", enabled = false },
+    {
+      "snacks.nvim",
+      opts = {
+        indent = { enabled = false },
+      },
+    },
 
     -- Extras
     { import = "lazyvim.plugins.extras.editor.harpoon2" },
@@ -25,8 +30,8 @@ require("lazy").setup({
 
     { import = "lazyvim.plugins.extras.ui.treesitter-context" },
 
-    -- { import = "lazyvim.plugins.extras.ai.copilot" },
-    { import = "lazyvim.plugins.extras.ai.supermaven" },
+    { import = "lazyvim.plugins.extras.ai.copilot" },
+    -- { import = "lazyvim.plugins.extras.ai.copilot-native" },
 
     { import = "lazyvim.plugins.extras.linting.eslint" },
     { import = "lazyvim.plugins.extras.formatting.prettier" },

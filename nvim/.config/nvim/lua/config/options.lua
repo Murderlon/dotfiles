@@ -4,6 +4,8 @@
 
 vim.opt.clipboard = "" -- Do not sync clipboard with system clipboard
 
+vim.opt.wrap = true
+
 vim.opt.list = true -- Do not show invisible characters
 
 vim.g.lazyvim_prettier_needs_config = true
