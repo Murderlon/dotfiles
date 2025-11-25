@@ -2,6 +2,7 @@
 
 stow -vt ~ git tmux nvim kitty zsh fish starship
 
-if [ ! -L "/usr/local/bin/tmux-sessionizer" ]; then
-  sudo ln -sf ~/code/dotfiles/scripts/tmux-sessionizer /usr/local/bin/tmux-sessionizer
-fi
+for script in scripts/*; do
+  [ -f "$script" ] || continue
+  sudo ln -sf "$PWD/$script" "/usr/local/bin/$(basename "$script")"
+done
