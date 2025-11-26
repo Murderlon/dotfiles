@@ -5,8 +5,11 @@ setopt prompt_subst
 # this is default, but set for share_history
 setopt append_history
 setopt share_history
-# save each command's beginning timestamp and the duration to the history file
-setopt extended_history
+# save timestamp/duration and keep history clean/usable
+setopt extended_history inc_append_history_time hist_ignore_all_dups hist_reduce_blanks hist_verify
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=200000
+SAVEHIST=200000
 # display PID when suspending processes as well
 setopt longlistjobs
 # try to avoid the 'zsh: no matches found...'
@@ -22,25 +25,26 @@ setopt completeinword
 setopt noshwordsplit
 # allow use of comments in interactive code
 setopt interactivecomments
+# keep a quiet, deduped directory stack when using cd
+setopt autopushd pushd_ignore_dups pushd_silent
 
+# load prompts/tools and fail loudly if something is missing
 eval "$(starship init zsh)"
 eval "$(lua $(brew --prefix z.lua)/share/z.lua/z.lua --init enhanced once zsh)"
 eval "$(~/.local/bin/mise activate)"
-eval $(thefuck --alias)
 
-autoload -U +X compinit && compinit
+autoload -Uz compinit && compinit -C -d ~/.cache/zcompdump  # cached compinit for faster startup
+zmodload zsh/complist
+zstyle ':completion:*' menu select  # tab to scroll completions
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=**'  # case-insensitive, fuzzy-ish matches
 zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 
 # source <(carapace _carapace)
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-[ -s "/Users/merlijnvos/.bun/_bun" ] && source "/Users/merlijnvos/.bun/_bun"
-
-export PATH=$PATH:/Users/merlijnvos/go/bin
-export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
+typeset -U path  # dedupe PATH entries
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
+path=(/opt/homebrew/opt/node@22/bin /opt/homebrew/opt/rustup/bin "$BUN_INSTALL/bin" "$HOME/.local/bin" "$HOME/go/bin" $path)
+export PATH
+source "/Users/merlijnvos/.bun/_bun"
 export EDITOR="nvim"
 export SHELL="/bin/zsh"
 export SNACKS_GHOSTTY=true
@@ -59,11 +63,13 @@ alias 3..='cd ../../..'
 alias 4..='cd ../../../..'
 alias 5..='cd ../../../../..'
 
+# make directory and cd into it
 mkcd () {
   \mkdir -p "$1"
   cd "$1"
 }
 
+# create a temporary directory and cd into it
 tempe () {
   cd "$(mktemp -d)"
   chmod -R 0700 .
@@ -84,3 +90,5 @@ boop () {
   fi
   $(exit "$last")
 }
+
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh  # keep highlighting last
