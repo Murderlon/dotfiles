@@ -17,7 +17,7 @@
   # Show all commmits which have not been released yet (commits since the last tag)
   unreleased = "!git log --pretty=oneline --graph --abbrev-commit $(git describe --tags --abbrev=0 @^)..@"
   # Delete all local branches which no longer have a remote
-  cleanbranches = "!git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' refs/heads | awk '$2 == \"[gone]\" {print $1}' | while read -r branch; do git branch -D \"$branch\"; done"
+  cleanbranches = "!f(){ git fetch -p && cur=$(git branch --show-current); git for-each-ref --format '%(refname:short) %(upstream) %(upstream:track)' refs/heads | while read branch up track; do [ \"$branch\" != \"$cur\" ] && { [ -z \"$up\" ] || [ \"$track\" = \"[gone]\" ]; } && git branch -D \"$branch\"; done; }; f"
 
 [apply]
   # Detect whitespace errors when applying a patch
@@ -60,6 +60,11 @@
 [merge]
   # Include summaries of merged commits in newly created merge commit messages
   log = true
+	conflictStyle = diff3
+
+[merge "mergiraf"]
+  name = mergiraf
+  driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
 
 [push]
   # https://git-scm.com/docs/git-config#git-config-pushdefault

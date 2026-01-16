@@ -9,7 +9,7 @@ return {
       {
         "<leader><leader>",
         function()
-          require("fff").find_files()
+          require("fff").find_files_in_dir(vim.fn.getcwd())
         end,
         desc = "FFFind files",
       },

@@ -92,3 +92,7 @@ boop () {
 }
 
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh  # keep highlighting last
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
