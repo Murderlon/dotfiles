@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-stow -vt ~ git tmux nvim kitty zsh fish starship
+stow -vt ~ git tmux nvim zsh fish starship
 
 for script in scripts/*; do
   [ -f "$script" ] || continue

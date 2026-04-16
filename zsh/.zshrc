@@ -30,10 +30,13 @@ setopt autopushd pushd_ignore_dups pushd_silent
 
 # load prompts/tools and fail loudly if something is missing
 eval "$(starship init zsh)"
-eval "$(lua $(brew --prefix z.lua)/share/z.lua/z.lua --init enhanced once zsh)"
-eval "$(~/.local/bin/mise activate)"
 
-autoload -Uz compinit && compinit -C -d ~/.cache/zcompdump  # cached compinit for faster startup
+ZLUA_SCRIPT="/opt/homebrew/opt/z.lua/share/z.lua/z.lua"
+eval "$(lua "$ZLUA_SCRIPT" --init enhanced once zsh)"
+
+eval "$(mise activate zsh)"
+
+autoload -Uz compinit && compinit -d ~/.cache/zcompdump
 zmodload zsh/complist
 zstyle ':completion:*' menu select  # tab to scroll completions
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=**'  # case-insensitive, fuzzy-ish matches
@@ -44,19 +47,19 @@ typeset -U path  # dedupe PATH entries
 export BUN_INSTALL="$HOME/.bun"
 path=(/opt/homebrew/opt/node@22/bin /opt/homebrew/opt/rustup/bin "$BUN_INSTALL/bin" "$HOME/.local/bin" "$HOME/go/bin" $path)
 export PATH
-source "/Users/merlijnvos/.bun/_bun"
+export PATH="/opt/homebrew/opt/node@24/bin:$PATH"
+source "$HOME/.bun/_bun"
 export EDITOR="nvim"
-export SHELL="/bin/zsh"
 export SNACKS_GHOSTTY=true
 
 bindkey -s '^p' 'tmux-sessionizer\n'
 bindkey '^R' history-incremental-search-backward
 
 alias vim="nvim"
+alias yarn="corepack yarn"
 alias ls="eza"
 alias j="z"
 alias tks="tmux kill-server"
-alias claude="/Users/merlijnvos/.claude/local/claude"
 alias ..='cd ..'
 alias 2..='cd ../..'
 alias 3..='cd ../../..'
@@ -65,6 +68,10 @@ alias 5..='cd ../../../../..'
 
 # make directory and cd into it
 mkcd () {
+  if [[ -z "$1" ]]; then
+    echo "usage: mkcd <dir>" >&2
+    return 1
+  fi
   \mkdir -p "$1"
   cd "$1"
 }
@@ -73,7 +80,11 @@ mkcd () {
 tempe () {
   cd "$(mktemp -d)"
   chmod -R 0700 .
-  if [[ $# -eq 1 ]]; then
+  if [[ $# -gt 1 ]]; then
+    echo "usage: tempe [subdir]" >&2
+    return 1
+  fi
+  if [[ $# -eq 1 && -n "$1" ]]; then
     \mkdir -p "$1"
     cd "$1"
     chmod -R 0700 .
@@ -88,11 +99,14 @@ boop () {
   else
     sfx bad
   fi
-  $(exit "$last")
+  return "$last"
 }
 
+. "$HOME/.atuin/bin/env"
+eval "$(atuin init zsh)"
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh  # keep highlighting last
 
-. "$HOME/.atuin/bin/env"
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
-eval "$(atuin init zsh)"
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"

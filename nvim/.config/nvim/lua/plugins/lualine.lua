@@ -59,7 +59,8 @@ return {
 
       -- Function to get the color of a highlight group
       local function get_color(hlgroup, attr)
-        local color = vim.api.nvim_get_hl_by_name(hlgroup, true)[attr]
+        local hl = vim.api.nvim_get_hl(0, { name = hlgroup, link = false })
+        local color = hl[attr]
         if color then
           return string.format("#%06x", color)
         else
@@ -67,24 +68,25 @@ return {
         end
       end
 
-      -- Get the colors from the current theme
-      local black = get_color("Normal", "background")
-      local white = get_color("Normal", "foreground")
-      local gray = get_color("Comment", "foreground")
+      local function build_theme()
+        local bg = get_color("Normal", "bg")
+        local fg = get_color("Normal", "fg")
+        return {
+          normal = {
+            a = { bg = bg, fg = fg },
+            b = { bg = bg, fg = fg },
+            c = { bg = bg, fg = fg },
+          },
+        }
+      end
 
-      local colors = {
-        black = black,
-        white = white,
-        gray = gray,
-      }
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          lualine.setup({ options = { theme = build_theme() } })
+        end,
+      })
 
-      local theme = {
-        normal = {
-          a = { bg = colors.black, fg = colors.white },
-          b = { bg = colors.black, fg = colors.white },
-          c = { bg = colors.black, fg = colors.white },
-        },
-      }
+      local theme = build_theme()
 
       local config = {
         options = {

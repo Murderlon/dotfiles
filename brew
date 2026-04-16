@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
 brew install \
-  awscli \
   bash \
-  caddy \
-  carapace \
   curl \
-  deno \
   difftastic \
   eza \
   fd \
@@ -23,13 +19,11 @@ brew install \
   neovim \
   newt \
   node \
-  nushell \
   ripgrep \
   rustup \
   sqlite \
   starship \
   stow \
-  thefuck \
   tmate \
   tmux \
   tokei \
