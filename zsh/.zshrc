@@ -56,6 +56,7 @@ bindkey -s '^p' 'tmux-sessionizer\n'
 bindkey '^R' history-incremental-search-backward
 
 alias vim="nvim"
+alias claude='claude --enable-auto-mode'
 alias yarn="corepack yarn"
 alias ls="eza"
 alias j="z"

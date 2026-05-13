@@ -51,3 +51,6 @@ nnoremap("<C-W>j", "<cmd>cprev<CR>zz")
 
 -- Search and replace word under cursor in the entire file
 nnoremap("<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+-- Open `hunk diff` in a new tmux window (full screen)
+nnoremap("<leader>gd", ":silent !tmux neww hunk diff<CR>", { desc = "Hunk diff (tmux window)" })

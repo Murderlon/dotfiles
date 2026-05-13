@@ -29,6 +29,7 @@
   whitespace = error  # threat incorrect whitespace as errors
   preloadindex = true  # preload index for faster status
 	ignorecase = false
+	pager = hunk pager
 
 [advice]  # disable advices
   addEmptyPathspec = false

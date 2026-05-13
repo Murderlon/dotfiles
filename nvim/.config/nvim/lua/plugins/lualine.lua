@@ -71,11 +71,12 @@ return {
       local function build_theme()
         local bg = get_color("Normal", "bg")
         local fg = get_color("Normal", "fg")
+        local subtle = get_color("CursorLine", "bg") or bg
         return {
           normal = {
-            a = { bg = bg, fg = fg },
-            b = { bg = bg, fg = fg },
-            c = { bg = bg, fg = fg },
+            a = { bg = fg, fg = bg, gui = "bold" },
+            b = { bg = subtle, fg = fg },
+            c = { bg = subtle, fg = fg },
           },
         }
       end
@@ -95,7 +96,41 @@ return {
           theme = theme,
         },
         sections = {
-          lualine_a = {},
+          lualine_a = {
+            {
+              function()
+                local mode_map = {
+                  n = "NORMAL",
+                  no = "O-PENDING",
+                  nt = "N-TERMINAL",
+                  niI = "(I) NORMAL",
+                  niR = "(R) NORMAL",
+                  v = "VISUAL",
+                  V = "V-LINE",
+                  ["\22"] = "V-BLOCK",
+                  s = "SELECT",
+                  S = "S-LINE",
+                  ["\19"] = "S-BLOCK",
+                  i = "INSERT",
+                  ic = "INSERT (compl)",
+                  ix = "INSERT (^X)",
+                  R = "REPLACE",
+                  Rc = "REPLACE (compl)",
+                  Rx = "REPLACE (^X)",
+                  Rv = "V-REPLACE",
+                  c = "COMMAND",
+                  cv = "EX",
+                  r = "PROMPT",
+                  rm = "MORE",
+                  ["r?"] = "CONFIRM",
+                  ["!"] = "SHELL",
+                  t = "TERMINAL",
+                }
+                local m = vim.fn.mode(1)
+                return mode_map[m] or m
+              end,
+            },
+          },
           lualine_b = {},
           lualine_c = {
             {
