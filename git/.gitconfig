@@ -29,7 +29,6 @@
   whitespace = error  # threat incorrect whitespace as errors
   preloadindex = true  # preload index for faster status
 	ignorecase = false
-	pager = hunk pager
 
 [advice]  # disable advices
   addEmptyPathspec = false
@@ -49,10 +48,19 @@
 [commit]
   gpgsign = true
 
+[difftool]
+  # Run the difftool immediately, don't ask 'are you sure' each time.
+  prompt = false
+
+[pager]
+  # Use a pager if the difftool output is larger than one screenful,
+  # consistent with the behaviour of `git diff`.
+  difftool = true
+
 [diff]
-  context = 3  # less context in diffs
-  renames = copies  # detect copies as renames in diffs
-  interHunkContext = 10  # merge near hunks in diffs
+  # Set difftastic as the default difftool, so we don't need to specify
+  # `-t difftastic` every time.
+  tool = difftastic
 
 [help]
   # Automatically correct and execute mistyped commands

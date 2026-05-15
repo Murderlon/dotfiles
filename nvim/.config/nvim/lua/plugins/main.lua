@@ -88,4 +88,17 @@ return {
       auto_install = true,
     },
   },
+
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters = {
+        oxfmt = {
+          command = "oxfmt",
+          args = { "--stdin-filepath", "$FILENAME" },
+          stdin = true,
+        },
+      },
+    },
+  },
 }
