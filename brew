@@ -6,7 +6,6 @@ brew install \
   difftastic \
   eza \
   fd \
-  fish \
   fzf \
   gh \
   git \
@@ -16,6 +15,7 @@ brew install \
   jq \
   lazygit \
   luajit \
+  mergiraf \
   neovim \
   newt \
   node \
@@ -24,10 +24,12 @@ brew install \
   sqlite \
   starship \
   stow \
-  tmate \
   tmux \
   tokei \
   tree \
   tree-sitter \
+  tree-sitter-cli \
   wget \
+  z.lua \
+  zsh \
   zsh-syntax-highlighting

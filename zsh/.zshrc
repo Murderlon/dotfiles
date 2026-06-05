@@ -55,7 +55,7 @@ export SNACKS_GHOSTTY=true
 bindkey -s '^p' 'tmux-sessionizer\n'
 bindkey '^R' history-incremental-search-backward
 
-alias vim="NVIM_APPNAME=nvim-minimax nvim ."
+alias vim="nvim"
 alias claude="claude --enable-auto-mode"
 
 # 1Password Environments helper:
