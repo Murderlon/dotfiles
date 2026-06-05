@@ -11,6 +11,7 @@ require("lazy").setup({
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     -- Disable plugins
     { "nvim-neo-tree/neo-tree.nvim", enabled = false },
+    { "nvim-neo-tree/neo-tree.nvim", enabled = false },
     -- import/override with your plugins
     { import = "plugins" },
   },

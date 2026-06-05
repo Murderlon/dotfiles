@@ -1,5 +1,8 @@
 return {
   { "akinsho/bufferline.nvim", opts = { options = { mode = "tabs" } } },
+
+  { "snacks.nvim", opts = { indent = { enabled = false } } },
+
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
@@ -91,14 +94,46 @@ return {
 
   {
     "stevearc/conform.nvim",
-    opts = {
-      formatters = {
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      opts.formatters_by_ft.json = { lsp_format = "never" }
+      opts.formatters_by_ft.jsonc = { lsp_format = "never" }
+
+      for _, ft in ipairs({ "markdown", "markdown.mdx" }) do
+        opts.formatters_by_ft[ft] = vim.tbl_filter(function(formatter)
+          return formatter ~= "markdownlint-cli2"
+        end, opts.formatters_by_ft[ft] or {})
+      end
+
+      opts.formatters = vim.tbl_deep_extend("force", opts.formatters or {}, {
         oxfmt = {
           command = "oxfmt",
           args = { "--stdin-filepath", "$FILENAME" },
           stdin = true,
         },
-      },
-    },
+      })
+    end,
+  },
+
+  {
+    "mason-org/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = vim.tbl_filter(function(tool)
+        return tool ~= "markdownlint-cli2"
+      end, opts.ensure_installed or {})
+    end,
+  },
+
+  {
+    "mfussenegger/nvim-lint",
+    opts = function(_, opts)
+      opts.linters_by_ft = opts.linters_by_ft or {}
+
+      for _, ft in ipairs({ "markdown", "markdown.mdx" }) do
+        opts.linters_by_ft[ft] = vim.tbl_filter(function(linter)
+          return linter ~= "markdownlint-cli2"
+        end, opts.linters_by_ft[ft] or {})
+      end
+    end,
   },
 }

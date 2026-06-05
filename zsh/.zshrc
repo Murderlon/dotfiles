@@ -55,8 +55,36 @@ export SNACKS_GHOSTTY=true
 bindkey -s '^p' 'tmux-sessionizer\n'
 bindkey '^R' history-incremental-search-backward
 
-alias vim="nvim"
-alias claude='claude --enable-auto-mode'
+alias vim="NVIM_APPNAME=nvim-minimax nvim ."
+alias claude="claude --enable-auto-mode"
+
+# 1Password Environments helper:
+#   1env cognition              # print the environment's current variables
+#   1env cognition -- echo hi   # run a command with those variables injected
+# Raw environment IDs are also accepted.
+typeset -gA __1env_environments=(
+  cognition 7hhjzrhfnm7lxj2kcx3iffclhq
+  eval-flow 7tgkghpknccsxg4zphsjeibqpi
+)
+
+1env() {
+  if (( $# == 0 )); then
+    echo "usage: 1env <environment-name-or-id> [-- <command> ...]" >&2
+    return 2
+  fi
+
+  local environment="$1"
+  shift
+
+  local environment_id="${__1env_environments[$environment]:-$environment}"
+
+  if (( $# == 0 )); then
+    op environment read "$environment_id"
+    return
+  fi
+
+  op run --environment "$environment_id" "$@"
+}
 alias ls="eza"
 alias j="z"
 alias tks="tmux kill-server"
@@ -65,98 +93,6 @@ alias 2..='cd ../..'
 alias 3..='cd ../../..'
 alias 4..='cd ../../../..'
 alias 5..='cd ../../../../..'
-
-# Force dep installs through sfw (socket firewall) so packages get
-# checked for supply-chain risks before they land on disk.
-# unalias first so re-sourcing this file doesn't hit "defining function
-# based on alias" parse errors from a stale shell.
-unalias npm pnpm yarn corepack pip pip3 uv 2>/dev/null
-
-__sfw_block() {
-  print -u2 "\e[31mblocked:\e[0m $* — press enter to run via sfw"
-  # push `sfw <cmd>` into the next prompt's editor buffer
-  print -z "sfw $*"
-  return 1
-}
-
-__sfw_is_install() {
-  case "$1" in
-    add|install|i|ci|isntall) return 0 ;;
-  esac
-  return 1
-}
-
-npm() {
-  if __sfw_is_install "$1"; then
-    __sfw_block npm "$@"
-    return
-  fi
-  command npm "$@"
-}
-
-pnpm() {
-  if __sfw_is_install "$1"; then
-    __sfw_block pnpm "$@"
-    return
-  fi
-  command pnpm "$@"
-}
-
-yarn() {
-  # bare `yarn` is an implicit install. sfw spawns a child process and
-  # won't see this shell function, so if yarn isn't a real binary in
-  # PATH we point the hint at corepack instead.
-  if (( $# == 0 )) || __sfw_is_install "$1"; then
-    if (( $+commands[yarn] )); then
-      __sfw_block yarn "$@"
-    else
-      __sfw_block corepack yarn "$@"
-    fi
-    return
-  fi
-  if (( $+commands[yarn] )); then
-    command yarn "$@"
-  else
-    command corepack yarn "$@"
-  fi
-}
-
-corepack() {
-  case "$1" in
-    npm|pnpm|yarn)
-      # `corepack yarn` alone implicitly installs
-      if [[ "$1" == yarn && $# -eq 1 ]] || __sfw_is_install "$2"; then
-        __sfw_block corepack "$@"
-        return
-      fi
-      ;;
-  esac
-  command corepack "$@"
-}
-
-pip() {
-  if [[ "$1" == install ]]; then
-    __sfw_block pip "$@"
-    return
-  fi
-  command pip "$@"
-}
-
-pip3() {
-  if [[ "$1" == install ]]; then
-    __sfw_block pip3 "$@"
-    return
-  fi
-  command pip3 "$@"
-}
-
-uv() {
-  if [[ "$1" == add ]] || { [[ "$1" == pip ]] && [[ "$2" == install ]]; }; then
-    __sfw_block uv "$@"
-    return
-  fi
-  command uv "$@"
-}
 
 # make directory and cd into it
 mkcd () {
@@ -202,3 +138,11 @@ fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 # Vite+ bin (https://viteplus.dev)
 . "$HOME/.vite-plus/env"
+
+# pnpm
+export PNPM_HOME="/Users/merlijnvos/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
