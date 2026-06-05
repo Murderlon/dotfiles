@@ -1,0 +1,13 @@
+auto-update-channel = tip
+font-family = Berkeley Mono
+font-size = 16
+font-feature = -calt, -liga, -dlig
+theme = light:Rose Pine Dawn, dark:Rose Pine
+cursor-style = block
+mouse-hide-while-typing = true
+window-padding-balance = true
+window-height = 10000
+window-width = 10000
+mouse-scroll-multiplier = 0.5
+keybind = shift+enter=text:\n
+macos-option-as-alt = left
