@@ -119,25 +119,11 @@ tempe () {
   fi
 }
 
-# makes a happy sound if the previous command succeeded and a sad sound otherwise
-boop () {
-  local last="$?"
-  if [[ "$last" == '0' ]]; then
-    sfx good
-  else
-    sfx bad
-  fi
-  return "$last"
-}
-
 . "$HOME/.atuin/bin/env"
 eval "$(atuin init zsh)"
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh  # keep highlighting last
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
-
-# Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
 
 # pnpm
 export PNPM_HOME="/Users/merlijnvos/Library/pnpm"

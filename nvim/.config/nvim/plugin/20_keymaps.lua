@@ -79,7 +79,7 @@ Config.leader_group_clues = {
   { mode = 'n', keys = '<Leader>l', desc = '+Language' },
   { mode = 'n', keys = '<Leader>m', desc = '+Map' },
   { mode = 'n', keys = '<Leader>o', desc = '+Other' },
-  { mode = 'n', keys = '<Leader>s', desc = '+Session' },
+  { mode = 'n', keys = '<Leader>s', desc = '+Search' },
   { mode = 'n', keys = '<Leader>t', desc = '+Terminal' },
   { mode = 'n', keys = '<Leader>v', desc = '+Visits' },
 
@@ -301,17 +301,11 @@ nmap_leader('or', '<Cmd>lua MiniMisc.resize_window()<CR>', 'Resize to default wi
 nmap_leader('ot', '<Cmd>lua MiniTrailspace.trim()<CR>', 'Trim trailspace')
 nmap_leader('oz', '<Cmd>lua MiniMisc.zoom()<CR>', 'Zoom toggle')
 
--- s is for 'Session'. Common usage:
--- - `<Leader>sn` - start new session
--- - `<Leader>sr` - read previously started session
--- - `<Leader>sR` - restart Neovim preserving current session
-local session_new = 'vim.ui.input({ prompt = "Session name: " }, MiniSessions.write)'
-
-nmap_leader('sd', '<Cmd>lua MiniSessions.select("delete")<CR>', 'Delete')
-nmap_leader('sn', '<Cmd>lua ' .. session_new .. '<CR>', 'New')
-nmap_leader('sr', '<Cmd>lua MiniSessions.select("read")<CR>', 'Read')
-nmap_leader('sR', '<Cmd>lua MiniSessions.restart()<CR>', 'Restart')
-nmap_leader('sw', '<Cmd>lua MiniSessions.write()<CR>', 'Write current')
+-- s is for 'Search'. Common usage:
+-- - `<Leader>ss` - search LSP symbols in the current file
+-- - `<Leader>sw` - grep word under cursor
+nmap_leader('ss', '<Cmd>Pick lsp scope="document_symbol"<CR>', 'Symbols document')
+nmap_leader('sw', '<Cmd>Pick grep pattern="<cword>"<CR>', 'Grep current word')
 
 -- t is for 'Terminal'
 nmap_leader('tt', '<Cmd>horizontal term<CR>', 'Terminal (horizontal)')
