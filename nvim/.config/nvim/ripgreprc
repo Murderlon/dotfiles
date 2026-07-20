@@ -1,0 +1,3 @@
+# Used by mini.pick for file discovery and grep.
+--hidden
+--glob=!.git/

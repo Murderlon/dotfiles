@@ -583,10 +583,6 @@ later(function()
     },
   })
 
-  -- 'mini.map' intentionally doesn't provide autoopen. The docs suggest calling
-  -- `MiniMap.open()` on startup; here `later()` already runs after first draw.
-  MiniMap.open()
-
   -- Map built-in navigation characters to force map refresh
   for _, key in ipairs({ 'n', 'N', '*', '#' }) do
     local rhs = key
@@ -682,6 +678,9 @@ end)
 -- - `:h MiniPick.builtin` and `:h MiniExtra.pickers` - available pickers;
 --   Execute one either with Lua function, `:Pick <picker-name>` command, or
 --   one of `<Leader>f` mappings defined in 'plugin/20_keymaps.lua'
+-- `mini.pick` delegates file discovery and grep to `rg`. Include dotfiles while
+-- still respecting Git ignores, and avoid traversing Git's internal directory.
+vim.env.RIPGREP_CONFIG_PATH = vim.fn.stdpath('config') .. '/ripgreprc'
 later(function() require('mini.pick').setup() end)
 
 -- Manage and expand snippets (templates for a frequently used text).

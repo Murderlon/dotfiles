@@ -26,7 +26,7 @@ end
 -- Usage: `yiw` to yank a word and `]p` to put it on the next line.
 nmap('[p', '<Cmd>exe "iput! " . v:register<CR>', 'Paste Above')
 nmap(']p', '<Cmd>exe "iput "  . v:register<CR>', 'Paste Below')
-nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', 'Source definition')
+nmap('gd', '<Cmd>lua vim.lsp.buf.implementation()<CR>', 'Implementation')
 -- Quickfix list navigation
 nmap("<C-W>k", "<cmd>cnext<CR>zz")
 nmap("<C-W>j", "<cmd>cprev<CR>zz")
