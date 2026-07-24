@@ -1,0 +1,27 @@
+{
+  "name": "pi-config",
+  "version": "1.0.0",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "format": "prettier --write \"extensions/**/*.ts\" \"skills/**/*.md\" \"*.json\"",
+    "format:check": "prettier --check \"extensions/**/*.ts\" \"skills/**/*.md\" \"*.json\"",
+    "test": "node --test --experimental-strip-types extensions/background-terminals/manager.test.ts extensions/background-terminals/output.test.ts extensions/background-terminals/prompt.test.ts extensions/background-terminals/result-delivery.test.ts extensions/background-terminals/ps.test.ts extensions/firecrawl-search/index.test.ts extensions/git-info/changed-files-view.test.ts extensions/git-info/process.test.ts extensions/git-info/refresh-coordinator.test.ts extensions/subagents/by-the-way.test.ts extensions/subagents/context-usage.test.ts extensions/subagents/manager.test.ts extensions/subagents/result-delivery.test.ts extensions/subagents/takeover.test.ts"
+  },
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.218",
+    "@earendil-works/pi-ai": "^0.82.0",
+    "@earendil-works/pi-coding-agent": "^0.82.0",
+    "@earendil-works/pi-tui": "^0.82.0",
+    "@effect/platform-node": "^4.0.0-beta.101",
+    "effect": "^4.0.0-beta.101",
+    "firecrawl": "^4.30.1",
+    "typebox": "^1.3.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2"
+  }
+}

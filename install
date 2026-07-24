@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-stow -vt ~ git tmux nvim zsh fish starship ghostty
+stow -vt ~ git tmux nvim zsh fish starship ghostty pi
+npm ci --prefix "$PWD/pi/.pi/agent"
+rm -rf "$HOME/.pi/agent/node_modules"
+ln -s "$PWD/pi/.pi/agent/node_modules" "$HOME/.pi/agent/node_modules"
 
 for script in scripts/*; do
   [ -f "$script" ] || continue
