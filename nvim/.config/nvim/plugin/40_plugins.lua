@@ -22,6 +22,56 @@ Config.now(function()
   require('auto-dark-mode').setup()
 end)
 
+-- Navigation =================================================================
+
+-- Fast file and content search with a persistent index and frecency ranking.
+later(function()
+  local update_fff = function()
+    require('fff.download').download_or_build_binary()
+  end
+  Config.on_packchanged(
+    'fff.nvim',
+    { 'install', 'update' },
+    update_fff,
+    'Download or build fff binary'
+  )
+
+  vim.g.fff = { lazy_sync = true }
+  add({
+    {
+      src = 'https://github.com/dmtrKovalenko/fff',
+      name = 'fff.nvim',
+    },
+  })
+
+  local disable_completion = function(ev)
+    vim.b[ev.buf].minicompletion_disable = true
+  end
+  Config.new_autocmd(
+    'FileType',
+    'fff_input',
+    disable_completion,
+    'Disable mini.completion in fff prompt'
+  )
+end)
+
+-- Edit the filesystem as a regular text buffer. These settings restore the
+-- latest Oil setup from before this config switched to 'mini.files'.
+now_if_args(function()
+  add({ 'https://github.com/stevearc/oil.nvim' })
+
+  require('oil').setup({
+    default_file_explorer = true,
+    view_options = {
+      show_hidden = true,
+      is_always_hidden = function(name)
+        if name:match('.DS_Store') then return true end
+        return false
+      end,
+    },
+  })
+end)
+
 -- Tree-sitter ================================================================
 
 -- Tree-sitter is a tool for fast incremental parsing. It converts text into

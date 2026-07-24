@@ -131,21 +131,6 @@ nmap_leader('bW', '<Cmd>lua MiniBufremove.wipeout(0, true)<CR>', 'Wipeout!')
 local edit_plugin_file = function(filename)
   return string.format('<Cmd>edit %s/plugin/%s<CR>', vim.fn.stdpath('config'), filename)
 end
-local explore_at_file = function()
-  local mini_files = require('mini.files')
-  if vim.bo.filetype ~= 'minifiles' then
-    return mini_files.open(vim.api.nvim_buf_get_name(0))
-  end
-
-  local state = mini_files.get_explorer_state()
-  if state.depth_focus > 1 then return mini_files.go_out() end
-
-  local cur_dir = state.branch[state.depth_focus]
-  local parent_dir = vim.fs.dirname(cur_dir)
-  if parent_dir ~= nil and parent_dir ~= cur_dir then
-    mini_files.set_branch({ parent_dir, cur_dir }, { depth_focus = 1 })
-  end
-end
 local explore_quickfix = function()
   vim.cmd(vim.fn.getqflist({ winid = true }).winid ~= 0 and 'cclose' or 'copen')
 end
@@ -153,7 +138,7 @@ local explore_locations = function()
   vim.cmd(vim.fn.getloclist(0, { winid = true }).winid ~= 0 and 'lclose' or 'lopen')
 end
 
-nmap('-', explore_at_file, 'File directory')
+nmap('-', '<Cmd>Oil<CR>', 'File directory')
 nmap_leader('ei', '<Cmd>edit $MYVIMRC<CR>', 'init.lua')
 nmap_leader('ek', edit_plugin_file('20_keymaps.lua'), 'Keymaps config')
 nmap_leader('em', edit_plugin_file('30_mini.lua'), 'MINI config')
@@ -164,15 +149,23 @@ nmap_leader('eq', explore_quickfix, 'Quickfix list')
 nmap_leader('eQ', explore_locations, 'Location list')
 
 -- f is for 'Fuzzy Find'. Common usage:
--- - `<Leader>ff` - find files; for best performance requires `ripgrep`
--- - `<Leader>fg` - find inside files; requires `ripgrep`
+-- - `<Leader>ff` - find files
+-- - `<Leader>fg` - find inside files
 -- - `<Leader>fh` - find help tag
 -- - `<Leader>fr` - resume latest picker
 -- - `<Leader>fv` - all visited paths; requires 'mini.visits'
 --
--- All these use 'mini.pick'. See `:h MiniPick-overview` for an overview.
+-- File and grep pickers use 'fff'. Specialized pickers continue to use
+-- 'mini.pick'; see `:h MiniPick-overview` for an overview.
 local pick_added_hunks_buf = '<Cmd>Pick git_hunks path="%" scope="staged"<CR>'
 local pick_workspace_symbols_live = '<Cmd>Pick lsp scope="workspace_symbol_live"<CR>'
+local fff_find_files = function() require('fff').find_files() end
+local fff_find_dotfiles = function()
+  require('fff').find_files_in_dir(vim.fn.expand('~/code/dotfiles'))
+end
+local fff_live_grep = function() require('fff').live_grep() end
+local fff_grep_under_cursor = function() require('fff').live_grep_under_cursor() end
+local fff_resume = function() require('fff').resume() end
 
 nmap_leader('f/', '<Cmd>Pick history scope="/"<CR>', '"/" history')
 nmap_leader('f:', '<Cmd>Pick history scope=":"<CR>', '":" history')
@@ -182,15 +175,11 @@ nmap_leader('fb', '<Cmd>Pick buffers<CR>', 'Buffers')
 nmap_leader('fc', '<Cmd>Pick git_commits<CR>', 'Commits (all)')
 nmap_leader('fC', '<Cmd>Pick git_commits path="%"<CR>', 'Commits (buf)')
 nmap_leader('fd', '<Cmd>Pick diagnostic scope="current"<CR>', 'Diagnostic buffer')
-nmap_leader(
-  'fD',
-  '<Cmd>lua MiniPick.builtin.files({ tool = "git" }, { source = { cwd = vim.fn.expand("~/code/dotfiles") } })<CR>',
-  'Dotfiles'
-)
-nmap_leader('ff', '<Cmd>Pick files<CR>', 'Files')
-nmap_leader('<space>', '<Cmd>Pick files<CR>', 'Files')
-nmap_leader('fg', '<Cmd>Pick grep_live<CR>', 'Grep live')
-nmap_leader('fG', '<Cmd>Pick grep pattern="<cword>"<CR>', 'Grep current word')
+nmap_leader('fD', fff_find_dotfiles, 'Dotfiles')
+nmap_leader('ff', fff_find_files, 'Files')
+nmap_leader('<space>', fff_find_files, 'Files')
+nmap_leader('fg', fff_live_grep, 'Grep live')
+nmap_leader('fG', fff_grep_under_cursor, 'Grep current word')
 nmap_leader('fh', '<Cmd>Pick help<CR>', 'Help tags')
 nmap_leader('fH', '<Cmd>Pick hl_groups<CR>', 'Highlight groups')
 nmap_leader('fk', '<Cmd>Pick keymaps<CR>', 'Keymaps')
@@ -198,7 +187,7 @@ nmap_leader('fl', '<Cmd>Pick buf_lines scope="all"<CR>', 'Lines (all)')
 nmap_leader('fL', '<Cmd>Pick buf_lines scope="current"<CR>', 'Lines (buf)')
 nmap_leader('fm', '<Cmd>Pick git_hunks<CR>', 'Modified hunks (all)')
 nmap_leader('fM', '<Cmd>Pick git_hunks path="%"<CR>', 'Modified hunks (buf)')
-nmap_leader('fr', '<Cmd>Pick resume<CR>', 'Resume')
+nmap_leader('fr', fff_resume, 'Resume')
 nmap_leader('fR', '<Cmd>Pick lsp scope="references"<CR>', 'References (LSP)')
 nmap_leader('fs', '<Cmd>Pick lsp scope="document_symbol"<CR>', 'Symbols document')
 nmap_leader('fS', pick_workspace_symbols_live, 'Symbols workspace (live)')
@@ -305,7 +294,7 @@ nmap_leader('oz', '<Cmd>lua MiniMisc.zoom()<CR>', 'Zoom toggle')
 -- - `<Leader>ss` - search LSP symbols in the current file
 -- - `<Leader>sw` - grep word under cursor
 nmap_leader('ss', '<Cmd>Pick lsp scope="document_symbol"<CR>', 'Symbols document')
-nmap_leader('sw', '<Cmd>Pick grep pattern="<cword>"<CR>', 'Grep current word')
+nmap_leader('sw', fff_grep_under_cursor, 'Grep current word')
 
 -- t is for 'Terminal'
 nmap_leader('tt', '<Cmd>horizontal term<CR>', 'Terminal (horizontal)')

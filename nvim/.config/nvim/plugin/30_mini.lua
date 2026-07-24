@@ -67,7 +67,7 @@ now(function()
 end)
 
 -- Icon provider. Usually no need to use manually. It is used by plugins like
--- 'mini.pick', 'mini.files', 'mini.statusline', and others.
+-- 'mini.pick', 'mini.statusline', and others.
 now(function()
   -- Set up to not prefer extension-based icon for some extensions
   local ext3_blocklist = { scm = true, txt = true, yml = true }
@@ -181,61 +181,6 @@ now_if_args(function()
   -- Advertise to servers that Neovim now supports certain set of completion and
   -- signature features through 'mini.completion'.
   vim.lsp.config('*', { capabilities = MiniCompletion.get_lsp_capabilities() })
-end)
-
--- Navigate and manipulate file system
---
--- Navigation is done using column view (Miller columns) to display nested
--- directories, they are displayed in floating windows in top left corner.
---
--- Manipulate files and directories by editing text as regular buffers.
---
--- Example usage:
--- - `<Leader>ed` - open current working directory
--- - `<Leader>ef` - open directory of current file (needs to be present on disk)
---
--- Basic navigation:
--- - `l` - go in entry at cursor: navigate into directory or open file
---   (closes explorer after opening a file)
--- - `h` - go out of focused directory
--- - Navigate window as any regular buffer
--- - Press `g?` inside explorer to see more mappings
---
--- Basic manipulation:
--- - After any following action, press `=` in Normal mode to synchronize, read
---   carefully about actions, press `y` or `<CR>` to confirm
--- - New entry: press `o` and type its name; end with `/` to create directory
--- - Rename: press `C` and type new name
--- - Delete: type `dd`
--- - Move/copy: type `dd`/`yy`, navigate to target directory, press `p`
---
--- See also:
--- - `:h MiniFiles-navigation` - more details about how to navigate
--- - `:h MiniFiles-manipulation` - more details about how to manipulate
--- - `:h MiniFiles-examples` - examples of common setups
-now_if_args(function()
-  require('mini.files').setup({
-    content = {
-      filter = function() return true end,
-    },
-    mappings = {
-      -- Make regular "go in" close explorer after opening a file.
-      -- See `:h MiniFiles.config` / `:h MiniFiles.go_in()` (`close_on_file`).
-      go_in = 'L',
-      go_in_plus = 'l',
-    },
-  })
-
-  -- Add common bookmarks for every explorer. Example usage inside explorer:
-  -- - `'c` to navigate into your config directory
-  -- - `g?` to see available bookmarks
-  local add_marks = function()
-    MiniFiles.set_bookmark('c', vim.fn.stdpath('config'), { desc = 'Config' })
-    local vimpack_plugins = vim.fn.stdpath('data') .. '/site/pack/core/opt'
-    MiniFiles.set_bookmark('p', vimpack_plugins, { desc = 'Plugins' })
-    MiniFiles.set_bookmark('w', vim.fn.getcwd, { desc = 'Working directory' })
-  end
-  Config.new_autocmd('User', 'MiniFilesExplorerOpen', add_marks, 'Add bookmarks')
 end)
 
 -- Miscellaneous small but useful functions. Example usage:
@@ -362,7 +307,7 @@ later(function() require('mini.bufremove').setup() end)
 -- - Press keys until they resolve into some mapping.
 --
 -- Note: it is designed to work in buffers for normal files. It doesn't work in
--- special buffers (like for 'mini.starter' or 'mini.files') to not conflict
+-- special buffers (like for 'mini.starter') to not conflict
 -- with its local mappings.
 --
 -- See also:
@@ -649,28 +594,9 @@ later(function()
   require('mini.pairs').setup({ modes = { command = true } })
 end)
 
--- Pick anything with single window layout and fast matching. This is one of
--- the main usability improvements as it powers a lot of "find things quickly"
--- workflows. How to use a picker:
--- - Start picker, usually with `:Pick <picker-name>` command. Like `:Pick files`.
---   It shows a single window in the bottom left corner filled with possible items
---   to choose from. Current item has special full line highlighting.
---   At the top there is a current query used to filter+sort items.
--- - Type characters (appear at top) to narrow down items. There is fuzzy matching:
---   characters may not match one-by-one, but they should be in correct order.
--- - Navigate down/up with `<C-n>`/`<C-p>`.
--- - Press `<Tab>` to show item's preview. `<Tab>` again goes back to items.
--- - Press `<S-Tab>` to show picker's info. `<S-Tab>` again goes back to items.
--- - Press `<CR>` to choose an item. The exact action depends on the picker: `files`
---   picker opens a selected file, `help` picker opens help page on selected tag.
---   To close picker without choosing an item, press `<Esc>`.
---
--- Example usage:
--- - `<Leader>ff` - *f*ind *f*iles; for best performance requires `ripgrep`
--- - `<Leader>fg` - *f*ind inside files (a.k.a. "to *g*rep"); requires `ripgrep`
--- - `<Leader>fh` - *f*ind *h*elp tag
--- - `<Leader>fr` - *r*esume latest picker
--- - `:h vim.ui.select()` - implemented with 'mini.pick'
+-- Specialized fuzzy pickers that are not covered by 'fff'. Examples include
+-- help tags, buffers, diagnostics, Git data, LSP symbols, and visited paths.
+-- It also implements `vim.ui.select()`.
 --
 -- See also:
 -- - `:h MiniPick-overview` - overview of picker functionality
@@ -678,9 +604,6 @@ end)
 -- - `:h MiniPick.builtin` and `:h MiniExtra.pickers` - available pickers;
 --   Execute one either with Lua function, `:Pick <picker-name>` command, or
 --   one of `<Leader>f` mappings defined in 'plugin/20_keymaps.lua'
--- `mini.pick` delegates file discovery and grep to `rg`. Include dotfiles while
--- still respecting Git ignores, and avoid traversing Git's internal directory.
-vim.env.RIPGREP_CONFIG_PATH = vim.fn.stdpath('config') .. '/ripgreprc'
 later(function() require('mini.pick').setup() end)
 
 -- Manage and expand snippets (templates for a frequently used text).
