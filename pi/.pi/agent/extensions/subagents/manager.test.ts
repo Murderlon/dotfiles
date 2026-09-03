@@ -174,9 +174,7 @@ test("the global concurrency cap includes by-the-way sessions", async () => {
   await withManager(async (manager, runtime) => {
     const tasks: SpawnTask[] = [
       { ...task("side question"), origin: "btw" },
-      task("Task 2"),
-      task("Task 3"),
-      task("Task 4"),
+      ...Array.from({ length: 11 }, (_, index) => task(`Task ${index + 2}`)),
     ];
     const spawns = await runTool(
       runtime,
@@ -184,7 +182,7 @@ test("the global concurrency cap includes by-the-way sessions", async () => {
         concurrency: "unbounded",
       }),
     );
-    assert.equal(spawns.length, 4);
+    assert.equal(spawns.length, 12);
     await assert.rejects(
       runTool(
         runtime,
@@ -193,25 +191,25 @@ test("the global concurrency cap includes by-the-way sessions", async () => {
           origin: "btw",
         }),
       ),
-      /Max 4 subagents/,
+      /Max 12 subagents/,
     );
   });
 });
 
-test("the concurrency cap rejects a fifth running subagent", async () => {
+test("the concurrency cap rejects a thirteenth running subagent", async () => {
   await withManager(async (manager, runtime) => {
     const spawns = await runTool(
       runtime,
       Effect.forEach(
-        [1, 2, 3, 4],
+        Array.from({ length: 12 }, (_, index) => index + 1),
         (n) => manager.spawn("codex", task(`Task ${n}`)),
         { concurrency: "unbounded" },
       ),
     );
-    assert.equal(spawns.length, 4);
+    assert.equal(spawns.length, 12);
     await assert.rejects(
-      runTool(runtime, manager.spawn("codex", task("Task 5"))),
-      /Max 4 subagents/,
+      runTool(runtime, manager.spawn("codex", task("Task 13"))),
+      /Max 12 subagents/,
     );
   });
 });
@@ -230,7 +228,7 @@ test("pi spawn fails fast without the parent model registry", async () => {
 
 test("idle restarts respect the concurrency cap", async () => {
   await withManager(async (manager, runtime) => {
-    // Settle one subagent, then fill all four slots with running ones.
+    // Settle one subagent, then fill all twelve slots with running ones.
     const settled = await runTool(
       runtime,
       manager.spawn("claude", task("early finisher")),
@@ -239,15 +237,15 @@ test("idle restarts respect the concurrency cap", async () => {
     await runTool(
       runtime,
       Effect.forEach(
-        [1, 2, 3, 4],
+        Array.from({ length: 12 }, (_, index) => index + 1),
         (n) => manager.spawn("codex", task(`Task ${n}`)),
         { concurrency: "unbounded" },
       ),
     );
-    // Restarting the settled one would be a fifth concurrent run.
+    // Restarting the settled one would be a thirteenth concurrent run.
     await assert.rejects(
       runTool(runtime, manager.send(settled.id, "go again")),
-      /Max 4 subagents/,
+      /Max 12 subagents/,
     );
     assert.equal(manager.view.get(settled.id)?.status, "done");
   });

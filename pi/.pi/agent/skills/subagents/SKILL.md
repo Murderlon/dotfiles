@@ -22,7 +22,6 @@ Pi can use any model shown by `pi --list-models`. Prefer `provider/model-id`; a 
 | inherited parent model (default) | inherited          |
 | `openai-codex/gpt-5.6-sol`       | `high`             |
 | `openai-codex/gpt-5.6-terra`     | `high`             |
-| `opencode/claude-fable-5`        | `medium`           |
 
 **Thinking budgets:** `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`. These map directly to pi thinking levels.
 
@@ -30,11 +29,11 @@ Pi can use any model shown by `pi --list-models`. Prefer `provider/model-id`; a 
 
 **Harness:** `claude`
 **Prompt nicknames:** “claude”, “Claude Code”, “claude agent”, “claude subagent”, "cc"
-**Best default:** use the latest fable model on high reasoning. Do not default to anything else, if the user does not specify, use fable.
+**Best default:** use the latest Opus 5 model on high reasoning. Do not default to anything else; if the user does not specify, use Opus 5.
 
-| Model hint | Model               | Recommended effort |
-| ---------- | ------------------- | ------------------ |
-| `fable`    | latest Claude Fable | `high`             |
+| Model hint | Model                | Recommended effort |
+| ---------- | -------------------- | ------------------ |
+| `opus`     | latest Claude Opus 5 | `high`             |
 
 **Thinking budgets:** `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`. The extension maps these to Claude thinking-token budgets: 0, 1,024, 4,096, 10,000, 16,000, 32,000, and 63,999 tokens respectively.
 
@@ -58,7 +57,7 @@ Requires the Codex CLI to be installed and authenticated.
 
 ## Spawn and Manage
 
-Call `subagent_spawn` with a complete `prompt`, short `name`, chosen `harness`, and optional `working_dir`, `model`, and `reasoning_effort`. At most four subagents run concurrently.
+Call `subagent_spawn` with a complete `prompt`, short `name`, chosen `harness`, and optional `working_dir`, `model`, and `reasoning_effort`. At most twelve subagents run concurrently.
 
 - `subagent_check({ id })`: peek without blocking.
 - `subagent_list()`: list all runs.
