@@ -1,0 +1,9 @@
+# Repository-only support files: never link these into the target home.
+^/system(?:/|$)
+^/droidcam-watch\.env\.example$
+
+# Ignore generated Python state and editor backups too.
+__pycache__
+\.py[cod]$
+~$
+\.bak(?:\..*)?$

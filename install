@@ -1,11 +1,47 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-stow -vt ~ git tmux nvim zsh fish starship ghostty pi
-npm ci --prefix "$PWD/pi/.pi/agent"
-rm -rf "$HOME/.pi/agent/node_modules"
-ln -s "$PWD/pi/.pi/agent/node_modules" "$HOME/.pi/agent/node_modules"
+fail() { printf '%s\n' "$*" >&2; exit 1; }
+repo=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+case $(uname -s) in
+  Darwin) platform=macOS ;;
+  Linux) platform=omarchy ;;
+  *) fail 'Unsupported platform.' ;;
+esac
 
-for script in scripts/*; do
-  [ -f "$script" ] || continue
-  sudo ln -sf "$PWD/$script" "/usr/local/bin/$(basename "$script")"
+if [[ ${1:-} == --help || ${1:-} == -h ]]; then
+  printf 'Usage: %s [--apply] [PACKAGE ...]\nPreview all current-platform packages by default. GNU Stow is required.\n' "$0"
+  exit 0
+fi
+mode=--simulate
+if [[ ${1:-} == --apply ]]; then mode=--stow; shift; fi
+target=$(cd -- "$HOME" && pwd -P)
+case $target in /|"$repo"|"$repo"/*) fail 'Refusing filesystem-root or repository target.' ;; esac
+cd -- "$repo/$platform/stow"
+
+# Every directory here is a package; callers can select a subset.
+if (($# == 0)); then set -- */; fi
+packages=()
+for package in "$@"; do
+  package=${package%/}
+  [[ $package =~ ^[[:alnum:]_][[:alnum:]_.-]*$ && -d $package ]] || fail "Unknown package: $package"
+  packages+=("$package")
 done
+
+# Implicit Stow options can enable adoption/overrides or silently skip files.
+for rc in "$HOME/.stowrc" "$HOME/.stow-global-ignore" .stowrc; do
+  if [[ -e $rc || -L $rc ]]; then fail "Review/remove implicit Stow settings first: $rc"; fi
+done
+
+# --no-folding doesn't undo existing directory links; protected dirs are skipped.
+for package in "${packages[@]}"; do
+  while IFS= read -r -d '' directory; do
+    destination="$target${directory#"$package"}"
+    if [[ -L $destination || -e $destination/.stow || -e $destination/.nonstow ]]; then
+      fail "Resolve symlinked/protected target directory first: $destination"
+    fi
+  done < <(find "$package" -type d \( -name node_modules -o -name .git -o -name __pycache__ \) -prune -o -type d -print0)
+done
+
+# Stow preflights conflicts itself; never adopt/override files or manage services.
+exec stow --dir="$PWD" --target="$target" --no-folding --verbose "$mode" "${packages[@]}"

@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+# Keep a stable, user-owned AppImage path so T3 Code can update itself.
+platform_flags=()
+if [[ -n "${WAYLAND_DISPLAY:-}" || "${XDG_SESSION_TYPE:-}" == wayland ]]; then
+  platform_flags=(--ozone-platform=wayland)
+  for flag in "$@"; do
+    case "$flag" in
+      --ozone-platform=* | --ozone-platform-hint=*) platform_flags=() ;;
+    esac
+  done
+fi
+exec "$HOME/Applications/T3-Code-Nightly.AppImage" "${platform_flags[@]}" "$@"

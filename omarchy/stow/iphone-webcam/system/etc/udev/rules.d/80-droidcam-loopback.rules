@@ -1,0 +1,2 @@
+# Human-readable stable alias used by the user service.
+SUBSYSTEM=="video4linux", ATTR{name}=="DroidCam", SYMLINK+="droidcam-video"

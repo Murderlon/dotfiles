@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Local workaround for monitors that ignore Omarchy's fast brightness write.
+# Use full DDC checks for VCP 10 writes; they prime this monitor before writing.
+args=("$@")
+for ((i=0; i<${#args[@]}-2; i++)); do
+  if [[ ${args[i]} == setvcp && ${args[i+1]} == 10 ]]; then
+    fast=0
+    retry=()
+    for arg in "${args[@]}"; do
+      case $arg in
+        --skip-ddc-checks) fast=1 ;;
+        --noverify) retry+=(--verify) ;;
+        *) retry+=("$arg") ;;
+      esac
+    done
+    if ((fast)); then
+      exec /usr/bin/ddcutil "${retry[@]}"
+    fi
+  fi
+done
+exec /usr/bin/ddcutil "$@"

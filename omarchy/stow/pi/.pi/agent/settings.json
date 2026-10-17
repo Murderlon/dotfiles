@@ -1,0 +1,7 @@
+{
+  "theme": "omarchy-system",
+  "lastChangelogVersion": "1.3.0",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-6.1-sol",
+  "defaultThinkingLevel": "medium"
+}

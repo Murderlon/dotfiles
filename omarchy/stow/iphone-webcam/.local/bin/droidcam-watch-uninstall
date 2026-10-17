@@ -1,0 +1,78 @@
+#!/bin/bash
+set -euo pipefail
+
+purge_system=0
+assume_yes=0
+for argument in "$@"; do
+  case "$argument" in
+    --purge-system) purge_system=1 ;;
+    --yes) assume_yes=1 ;;
+    -h|--help)
+      echo "Usage: droidcam-watch-uninstall [--purge-system] [--yes]"
+      exit 0
+      ;;
+    *) echo "Unknown option: $argument" >&2; exit 2 ;;
+  esac
+done
+
+if [[ $assume_yes -ne 1 ]]; then
+  printf 'Remove the DroidCam watcher and Omarchy plugin%s? [y/N] ' "$([[ $purge_system -eq 1 ]] && echo ' plus system configuration')"
+  read -r answer
+  [[ $answer == y || $answer == Y ]] || exit 0
+fi
+
+systemctl --user disable --now droidcam-watch.service 2>/dev/null || true
+omarchy plugin disable merlijn.droidcam 2>/dev/null || true
+
+if [[ $purge_system -eq 1 ]]; then
+  helper=$(mktemp --tmpdir droidcam-watch-uninstall.XXXXXX)
+  trap 'rm -f "$helper"' EXIT
+  cat >"$helper" <<'ROOT'
+#!/bin/bash
+set -euo pipefail
+rm -f /etc/modules-load.d/80-droidcam-loopback.conf
+rm -f /etc/modprobe.d/80-droidcam-loopback.conf
+rm -f /etc/udev/rules.d/80-droidcam-loopback.rules
+python3 <<'PY'
+from pathlib import Path
+import re
+path = Path('/etc/pacman.conf')
+text = path.read_text(encoding='utf-8')
+target = 'etc/modules-load.d/droidcam.conf'
+lines = []
+for line in text.splitlines(keepends=True):
+    match = re.match(r'^(\s*NoExtract\s*=\s*)(.*?)(\r?\n)?$', line)
+    if not match:
+        lines.append(line)
+        continue
+    values = [value for value in match.group(2).split() if value != target]
+    if values:
+        newline = match.group(3) or '\n'
+        lines.append(match.group(1) + ' '.join(values) + newline)
+path.write_text(''.join(lines), encoding='utf-8')
+PY
+if [[ -f /var/lib/droidcam-watch/droidcam.conf.package-original ]]; then
+  install -Dm644 /var/lib/droidcam-watch/droidcam.conf.package-original /etc/modules-load.d/droidcam.conf
+fi
+rm -rf /var/lib/droidcam-watch
+udevadm control --reload-rules
+ROOT
+  chmod 0700 "$helper"
+  pkexec "$helper"
+fi
+
+rm -rf "$HOME/.config/omarchy/plugins/merlijn.droidcam"
+rm -f "$HOME/.config/systemd/user/droidcam-watch.service"
+rm -f "$HOME/.config/systemd/user/default.target.wants/droidcam-watch.service"
+rm -f "$HOME/.config/droidcam-watch.env"
+rm -f "$HOME/.local/libexec/droidcam-watch"
+rm -f "$HOME/.local/bin/droidcamctl"
+rm -rf "$HOME/.local/share/droidcam-watch"
+rm -rf "$HOME/.config/droidcam-watch-backups"
+rm -f "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/droidcam-watch-control.lock"
+systemctl --user daemon-reload
+
+echo "DroidCam watcher removed. Documentation and this uninstaller remain under ~/.local/share/doc and ~/.local/bin."
+if [[ $purge_system -eq 1 ]]; then
+  echo "System configuration rolled back; reboot before reusing DroidCam."
+fi

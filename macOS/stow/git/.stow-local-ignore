@@ -1,0 +1,3 @@
+# Keep .gitignore deployable; Stow's built-in ignore list hides it otherwise.
+^/\.git$
+\.DS_Store$

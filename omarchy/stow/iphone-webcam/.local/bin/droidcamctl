@@ -1,0 +1,305 @@
+#!/usr/bin/python3
+"""Control, query, and diagnose the DroidCam iPhone USB watcher."""
+
+from __future__ import annotations
+
+import datetime as dt
+import fcntl
+import json
+import os
+from pathlib import Path
+import shutil
+import stat
+import subprocess
+import sys
+import time
+from typing import Any
+
+UNIT = "droidcam-watch.service"
+ENV_FILE = Path.home() / ".config/droidcam-watch.env"
+
+
+def systemctl(*arguments: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["/usr/bin/systemctl", "--user", *arguments],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
+    )
+
+
+def unit_state() -> tuple[str, str]:
+    result = systemctl("show", UNIT, "--property=ActiveState", "--property=UnitFileState")
+    values: dict[str, str] = {}
+    if result.returncode == 0:
+        for line in result.stdout.splitlines():
+            if "=" in line:
+                key, value = line.split("=", 1)
+                values[key] = value
+    return values.get("ActiveState", "inactive"), values.get("UnitFileState", "disabled")
+
+
+def is_enabled_state(state: str) -> bool:
+    return state in {"enabled", "enabled-runtime", "linked", "linked-runtime"}
+
+
+def runtime_dir() -> Path:
+    return Path(os.environ["XDG_RUNTIME_DIR"]) / "droidcam-watch"
+
+
+def lease_valid(payload: dict[str, Any]) -> bool:
+    raw = payload.get("lease_until")
+    if not isinstance(raw, str):
+        return False
+    try:
+        expiry = dt.datetime.fromisoformat(raw)
+    except ValueError:
+        return False
+    if expiry.tzinfo is None:
+        expiry = expiry.replace(tzinfo=dt.timezone.utc)
+    return dt.datetime.now(dt.timezone.utc) < expiry
+
+
+def status() -> dict[str, Any]:
+    active_state, unit_file_state = unit_state()
+    enabled = is_enabled_state(unit_file_state)
+    active = active_state in {"active", "activating", "reloading"}
+    path = runtime_dir() / "status.json"
+
+    if active:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(payload, dict):
+                raise ValueError("status is not an object")
+        except (OSError, ValueError, json.JSONDecodeError):
+            payload = {
+                "schema": 1,
+                "state": "starting",
+                "reason": "status_pending",
+                "ready": False,
+            }
+        else:
+            if not lease_valid(payload):
+                payload["state"] = "error"
+                payload["reason"] = "status_stale"
+                payload["ready"] = False
+    else:
+        payload = {
+            "schema": 1,
+            "state": "stopped",
+            "reason": "auto_connect_disabled" if not enabled else "service_inactive",
+            "ready": False,
+            "iphone_present": False,
+            "app_ready": False,
+        }
+
+    payload["service_enabled"] = enabled
+    payload["service_active"] = active
+    payload["systemd_active_state"] = active_state
+    payload["systemd_unit_file_state"] = unit_file_state
+    return payload
+
+
+def print_status() -> None:
+    print(json.dumps(status(), separators=(",", ":"), sort_keys=True))
+
+
+def reset_failed() -> None:
+    systemctl("reset-failed", UNIT)
+
+
+def run_control(command: str) -> int:
+    lock_path = Path(os.environ["XDG_RUNTIME_DIR"]) / "droidcam-watch-control.lock"
+    with lock_path.open("w") as lock_file:
+        fcntl.flock(lock_file, fcntl.LOCK_EX)
+        active_state, unit_file_state = unit_state()
+        enabled = is_enabled_state(unit_file_state)
+
+        if command == "enable":
+            reset_failed()
+            result = systemctl("enable", "--now", UNIT)
+        elif command == "disable":
+            result = systemctl("disable", "--now", UNIT)
+        elif command == "toggle":
+            if enabled:
+                result = systemctl("disable", "--now", UNIT)
+            else:
+                reset_failed()
+                result = systemctl("enable", "--now", UNIT)
+        elif command == "reconnect":
+            if not enabled:
+                print("DroidCam auto-connect is disabled", file=sys.stderr)
+                return 2
+            if active_state == "active":
+                result = systemctl("reload", UNIT)
+            else:
+                reset_failed()
+                result = systemctl("start", UNIT)
+        elif command == "start":
+            reset_failed()
+            result = systemctl("start", UNIT)
+        elif command == "stop":
+            result = systemctl("stop", UNIT)
+        else:
+            raise AssertionError(command)
+
+        if result.returncode != 0:
+            message = result.stderr.strip() or result.stdout.strip() or "systemctl failed"
+            print(message, file=sys.stderr)
+            return result.returncode
+
+    time.sleep(0.15)
+    print_status()
+    return 0
+
+
+def read_environment() -> dict[str, str]:
+    values: dict[str, str] = {}
+    try:
+        lines = ENV_FILE.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return values
+    for raw in lines:
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        values[key.strip()] = value.strip().strip('"').strip("'")
+    return values
+
+
+def read_first_parameter(path: str) -> str | None:
+    try:
+        return Path(path).read_text(encoding="utf-8").strip().split(",", 1)[0]
+    except OSError:
+        return None
+
+
+def run_readonly(command: list[str], timeout: int = 5) -> tuple[int, str]:
+    try:
+        result = subprocess.run(
+            command,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return 255, str(error)
+    return result.returncode, result.stdout.strip()
+
+
+def doctor() -> int:
+    environment = read_environment()
+    configured_device = environment.get("DROIDCAM_DEVICE", "/dev/droidcam-video")
+    configured_udid = environment.get("DROIDCAM_UDID", "")
+    device = Path(configured_device)
+    checks: list[dict[str, Any]] = []
+
+    def add(name: str, ok: bool, detail: str, *, required: bool = True) -> None:
+        checks.append({"name": name, "ok": ok, "required": required, "detail": detail})
+
+    for executable in ("droidcam-cli", "idevice_id", "idevicepair", "v4l2-ctl"):
+        location = shutil.which(executable)
+        add(f"command:{executable}", location is not None, location or "not found")
+
+    add("environment", bool(environment), str(ENV_FILE))
+    add("configured_udid", bool(configured_udid), configured_udid or "missing")
+    add("v4l2loopback_module", Path("/sys/module/v4l2loopback").exists(), "/sys/module/v4l2loopback")
+
+    try:
+        metadata = device.stat()
+        is_character = stat.S_ISCHR(metadata.st_mode)
+    except OSError as error:
+        is_character = False
+        device_detail = str(error)
+    else:
+        device_detail = str(device.resolve(strict=False))
+    add("video_device", is_character, device_detail)
+
+    target = device.resolve(strict=False)
+    try:
+        label = (Path("/sys/class/video4linux") / target.name / "name").read_text(encoding="utf-8").strip()
+    except OSError:
+        label = ""
+    add("video_label", label == "DroidCam", label or "unavailable")
+    add(
+        "exclusive_caps",
+        read_first_parameter("/sys/module/v4l2loopback/parameters/exclusive_caps") == "Y",
+        read_first_parameter("/sys/module/v4l2loopback/parameters/exclusive_caps") or "unavailable",
+    )
+    add(
+        "video_nr",
+        read_first_parameter("/sys/module/v4l2loopback/parameters/video_nr") == "10",
+        read_first_parameter("/sys/module/v4l2loopback/parameters/video_nr") or "unavailable",
+    )
+
+    unit_path = Path.home() / ".config/systemd/user/droidcam-watch.service"
+    add("service_unit", unit_path.is_file(), str(unit_path))
+    active_state, unit_file_state = unit_state()
+    add("service_enabled", is_enabled_state(unit_file_state), unit_file_state, required=False)
+    add("service_active", active_state == "active", active_state, required=False)
+
+    modules_load = Path("/etc/modules-load.d/80-droidcam-loopback.conf")
+    modprobe_config = Path("/etc/modprobe.d/80-droidcam-loopback.conf")
+    udev_rule = Path("/etc/udev/rules.d/80-droidcam-loopback.rules")
+    add("modules_load_config", modules_load.is_file(), str(modules_load))
+    add("modprobe_config", modprobe_config.is_file(), str(modprobe_config))
+    add("udev_rule", udev_rule.is_file(), str(udev_rule))
+    try:
+        pacman_config = Path("/etc/pacman.conf").read_text(encoding="utf-8")
+    except OSError:
+        pacman_config = ""
+    no_extract = any(
+        line.strip().startswith("NoExtract") and "etc/modules-load.d/droidcam.conf" in line.split("=", 1)[-1].split()
+        for line in pacman_config.splitlines()
+    )
+    add("pacman_noextract", no_extract, "etc/modules-load.d/droidcam.conf")
+
+    usb_rc, usb_output = run_readonly(["/usr/bin/idevice_id", "-l"])
+    devices = [line for line in usb_output.splitlines() if line and not line.startswith("ERROR:")] if usb_rc == 0 else []
+    phone_present = configured_udid in devices
+    add("iphone_present", phone_present, configured_udid if phone_present else "not attached", required=False)
+    if phone_present:
+        pair_rc, pair_output = run_readonly(["/usr/bin/idevicepair", "-u", configured_udid, "validate"])
+        add("iphone_pairing", pair_rc == 0, pair_output or f"exit {pair_rc}")
+
+    required_ok = all(check["ok"] for check in checks if check["required"])
+    payload = {
+        "schema": 1,
+        "healthy": required_ok,
+        "checks": checks,
+        "status": status(),
+    }
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0 if required_ok else 1
+
+
+def usage() -> int:
+    print(
+        "Usage: droidcamctl {status|doctor|enable|disable|toggle|reconnect|start|stop}",
+        file=sys.stderr,
+    )
+    return 2
+
+
+def main() -> int:
+    if len(sys.argv) != 2:
+        return usage()
+    command = sys.argv[1]
+    if command == "status":
+        print_status()
+        return 0
+    if command == "doctor":
+        return doctor()
+    if command in {"enable", "disable", "toggle", "reconnect", "start", "stop"}:
+        return run_control(command)
+    return usage()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=T3 Code Nightly
+Comment=T3 Code nightly with in-app updates
+Exec=t3code %U
+Icon=com.t3tools.T3Code.desktop
+Terminal=false
+StartupWMClass=com.t3tools.T3Code
+Categories=Development;IDE;
+MimeType=x-scheme-handler/t3code;

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "merlijn.droidcam",
+  "name": "iPhone Webcam",
+  "version": "1.1.0",
+  "author": "Merlijn",
+  "license": "MIT",
+  "description": "DroidCam iPhone USB status and controls for the Omarchy bar.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "iPhone Webcam",
+    "description": "Shows DroidCam USB status and a live preview, with auto-connect controls.",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "refreshIntervalSec": 60
+    },
+    "schema": [
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Fallback status check (seconds)",
+        "min": 15,
+        "max": 300,
+        "step": 15,
+        "defaultValue": 60
+      }
+    ]
+  }
+}

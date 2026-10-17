@@ -1,2 +1,12 @@
 .DS_Store
-/pi/.pi/agent/node_modules/
+# Ignore dependency directories and local symlink bridges alike.
+node_modules
+__pycache__/
+*.py[cod]
+*.spl
+*.bak
+*.bak.*
+.env
+*.env
+*.pem
+*.key

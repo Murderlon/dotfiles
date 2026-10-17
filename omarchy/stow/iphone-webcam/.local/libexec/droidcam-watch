@@ -1,0 +1,783 @@
+#!/usr/bin/python3
+"""Supervise DroidCam Classic's iOS USB client and publish JSON status."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+import datetime as dt
+import fcntl
+import json
+import os
+from pathlib import Path
+import random
+import select
+import signal
+import socket
+import stat
+import subprocess
+import sys
+import tempfile
+import time
+from typing import Any
+
+
+def env_int(name: str, default: int, minimum: int, maximum: int) -> int:
+    raw = os.environ.get(name, str(default))
+    try:
+        value = int(raw)
+    except ValueError as error:
+        raise ValueError(f"{name} must be an integer") from error
+    if not minimum <= value <= maximum:
+        raise ValueError(f"{name} must be between {minimum} and {maximum}")
+    return value
+
+
+def utc_now() -> dt.datetime:
+    return dt.datetime.now(dt.timezone.utc)
+
+
+def iso_at(value: dt.datetime) -> str:
+    return value.isoformat(timespec="milliseconds")
+
+
+def normalize_udid(value: str) -> str:
+    return "".join(character for character in value.upper() if character.isalnum())
+
+
+def preserve_format(last_stream_ended: float | None, now: float, grace: int) -> bool:
+    return last_stream_ended is not None and now - last_stream_ended < grace
+
+
+def app_may_be_unavailable(reason: str) -> bool:
+    return reason == "connect_timeout" or reason.startswith("client_exited_")
+
+
+_EARLY_SIGNALS: list[int] = []
+
+
+def _capture_early_signal(signum: int, _frame: Any) -> None:
+    _EARLY_SIGNALS.append(signum)
+
+
+@dataclass
+class FrameActivity:
+    """Turn process write-byte deltas into completed-frame activity."""
+
+    frame_bytes: int
+    last_wchar: int
+    pending_bytes: int = 0
+
+    def observe(self, wchar: int) -> bool:
+        if wchar < self.last_wchar:
+            self.last_wchar = wchar
+            self.pending_bytes = 0
+            return False
+        self.pending_bytes += wchar - self.last_wchar
+        self.last_wchar = wchar
+        if self.pending_bytes < self.frame_bytes:
+            return False
+        self.pending_bytes %= self.frame_bytes
+        return True
+
+
+@dataclass
+class AttachmentNotifier:
+    """Notify for an initially unopened app, never for a stream disconnect."""
+
+    attached_at: float = 0.0
+    failures: int = 0
+    notified: bool = False
+    ever_streamed: bool = False
+
+    def attach(self, now: float) -> None:
+        self.attached_at = now
+        self.failures = 0
+        self.notified = False
+        self.ever_streamed = False
+
+    def detach(self) -> None:
+        self.attached_at = 0.0
+        self.failures = 0
+        self.notified = False
+        self.ever_streamed = False
+
+    def mark_streaming(self) -> None:
+        self.ever_streamed = True
+
+    def failed(self, now: float) -> bool:
+        self.failures += 1
+        if self.ever_streamed or self.notified:
+            return False
+        if self.failures < 2 or now - self.attached_at < 5:
+            return False
+        self.notified = True
+        return True
+
+
+class USBEvents:
+    """Receive kernel USB add/remove events without polling a subprocess."""
+
+    NETLINK_KOBJECT_UEVENT = 15
+
+    def __init__(self) -> None:
+        self.socket: socket.socket | None = None
+        try:
+            event_socket = socket.socket(
+                socket.AF_NETLINK,
+                socket.SOCK_DGRAM | socket.SOCK_CLOEXEC,
+                self.NETLINK_KOBJECT_UEVENT,
+            )
+            event_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 256 * 1024)
+            event_socket.bind((0, 1))
+            event_socket.setblocking(False)
+            self.socket = event_socket
+        except OSError as error:
+            print(f"usb-events unavailable; using timed fallback: {error}", file=sys.stderr, flush=True)
+
+    def wait(self, timeout: float) -> bool:
+        if self.socket is None:
+            time.sleep(timeout)
+            return False
+        readable, _, _ = select.select([self.socket], [], [], timeout)
+        if not readable:
+            return False
+        saw_usb = False
+        while True:
+            try:
+                payload = self.socket.recv(64 * 1024)
+            except BlockingIOError:
+                break
+            except OSError:
+                break
+            fields = payload.split(b"\0")
+            if b"SUBSYSTEM=usb" in fields:
+                saw_usb = True
+        return saw_usb
+
+
+class Watcher:
+    def __init__(self) -> None:
+        self.udid = os.environ.get("DROIDCAM_UDID", "").strip()
+        self.port = env_int("DROIDCAM_PORT", 4747, 1, 65535)
+        self.device = os.environ.get("DROIDCAM_DEVICE", "/dev/droidcam-video")
+        self.size = os.environ.get("DROIDCAM_SIZE", "1920x1080").lower()
+        self.connect_timeout = env_int("DROIDCAM_CONNECT_TIMEOUT", 15, 3, 120)
+        self.stale_timeout = env_int("DROIDCAM_STALE_TIMEOUT", 8, 3, 120)
+        self.max_backoff = env_int("DROIDCAM_MAX_BACKOFF", 10, 2, 300)
+        self.poll_interval = env_int("DROIDCAM_POLL_INTERVAL", 2, 1, 30)
+        self.format_grace = env_int("DROIDCAM_FORMAT_GRACE", 15, 0, 300)
+
+        try:
+            self.width, self.height = (int(part) for part in self.size.split("x", 1))
+        except (ValueError, TypeError) as error:
+            raise ValueError("DROIDCAM_SIZE must look like 1920x1080") from error
+        if self.width < 160 or self.height < 120 or self.width > 8192 or self.height > 8192:
+            raise ValueError("DROIDCAM_SIZE is outside the supported range")
+        if not self.udid:
+            raise ValueError("DROIDCAM_UDID is required")
+
+        runtime = os.environ.get("RUNTIME_DIRECTORY")
+        if not runtime:
+            runtime = str(Path(os.environ["XDG_RUNTIME_DIR"]) / "droidcam-watch")
+        self.runtime_dir = Path(runtime)
+        self.runtime_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+        self.status_path = self.runtime_dir / "status.json"
+        self.client_log_path = self.runtime_dir / "client.log"
+        self.lock_file = (self.runtime_dir / "watch.lock").open("w")
+        try:
+            fcntl.flock(self.lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise RuntimeError("another DroidCam watcher is already running") from error
+
+        self.usb_events = USBEvents()
+        self.child: subprocess.Popen[bytes] | None = None
+        self.child_log: Any = None
+        self.stopping = False
+        self.reconnect_requested = False
+        self.attempt = 0
+        self.current_state = "starting"
+        self.current_reason: str | None = None
+        self.current_extra: dict[str, Any] = {}
+        self.last_status_write = 0.0
+        self.notifier = AttachmentNotifier()
+        self.was_present = False
+        self.keep_format_sticky = False
+        self.last_stream_ended: float | None = None
+        self.last_client_error = ""
+        self.last_logged_client_error = ""
+        self.last_client_error_log_time = 0.0
+        self.transition_log_times: dict[tuple[str, str | None], float] = {}
+
+    def handle_signal(self, signum: int, _frame: Any) -> None:
+        if signum == signal.SIGUSR1:
+            self.reconnect_requested = True
+        else:
+            self.stopping = True
+
+    def wait_interruptible(self, seconds: float, *, wake_on_usb: bool = True) -> str:
+        deadline = time.monotonic() + max(0.0, seconds)
+        while True:
+            if self.stopping:
+                return "stop"
+            if self.reconnect_requested:
+                return "reload"
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return "timeout"
+            usb_event = self.usb_events.wait(min(0.5, remaining))
+            if usb_event and wake_on_usb:
+                return "usb"
+
+    def write_status(self, state: str, reason: str | None = None, **extra: Any) -> None:
+        now_monotonic = time.monotonic()
+        changed = state != self.current_state or reason != self.current_reason
+        heartbeat_due = now_monotonic - self.last_status_write >= 4
+        detail_changed = extra != self.current_extra
+        if not changed and not detail_changed and not heartbeat_due:
+            return
+
+        if changed:
+            transition = (state, reason)
+            last_logged = self.transition_log_times.get(transition, 0.0)
+            noisy_retry = state in {"connecting", "waiting_app", "backoff"}
+            if not noisy_retry or now_monotonic - last_logged >= 300:
+                print(f"state={state} reason={reason or '-'}", flush=True)
+                self.transition_log_times[transition] = now_monotonic
+        self.current_state = state
+        self.current_reason = reason
+        self.current_extra = extra
+        now = utc_now()
+        target = Path(self.device).resolve(strict=False)
+        payload: dict[str, Any] = {
+            "schema": 1,
+            "state": state,
+            "reason": reason,
+            "ready": state == "streaming",
+            "iphone_present": bool(extra.get("iphone_present", False)),
+            "app_ready": state == "streaming",
+            "udid": self.udid,
+            "port": self.port,
+            "size": self.size,
+            "video_device": self.device,
+            "video_target": str(target),
+            "client_pid": self.child.pid if self.child and self.child.poll() is None else None,
+            "attempt": self.attempt,
+            "retry_in_ms": extra.get("retry_in_ms"),
+            "last_frame_activity": extra.get("last_frame_activity"),
+            "last_client_error": self.last_client_error or None,
+            "updated_at": iso_at(now),
+            "lease_until": iso_at(now + dt.timedelta(seconds=12)),
+        }
+        for key, value in extra.items():
+            if key not in payload:
+                payload[key] = value
+
+        fd, temporary_name = tempfile.mkstemp(prefix="status.", suffix=".tmp", dir=self.runtime_dir)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as temporary:
+                json.dump(payload, temporary, separators=(",", ":"), sort_keys=True)
+                temporary.write("\n")
+                temporary.flush()
+                os.fsync(temporary.fileno())
+            os.replace(temporary_name, self.status_path)
+        finally:
+            try:
+                os.unlink(temporary_name)
+            except FileNotFoundError:
+                pass
+        self.last_status_write = now_monotonic
+
+    def wait_with_status(
+        self,
+        seconds: float,
+        state: str,
+        reason: str | None,
+        **extra: Any,
+    ) -> str:
+        deadline = time.monotonic() + seconds
+        next_update = 0.0
+        while True:
+            remaining = max(0.0, deadline - time.monotonic())
+            now = time.monotonic()
+            if now >= next_update:
+                self.write_status(
+                    state,
+                    reason,
+                    retry_in_ms=round(remaining * 1000),
+                    **extra,
+                )
+                next_update = now + 1
+            outcome = self.wait_interruptible(min(0.5, remaining))
+            if outcome != "timeout" or remaining <= 0.5:
+                return outcome
+
+    def wait_with_heartbeat(
+        self,
+        seconds: float,
+        state: str,
+        reason: str | None,
+        **extra: Any,
+    ) -> str:
+        deadline = time.monotonic() + seconds
+        while True:
+            self.write_status(state, reason, **extra)
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return "timeout"
+            outcome = self.wait_interruptible(min(4, remaining))
+            if outcome != "timeout":
+                return outcome
+
+    def apple_usb_present(self) -> bool:
+        wanted = normalize_udid(self.udid)
+        for vendor_path in Path("/sys/bus/usb/devices").glob("*/idVendor"):
+            try:
+                if vendor_path.read_text(encoding="ascii").strip().lower() != "05ac":
+                    continue
+                serial_path = vendor_path.parent / "serial"
+                if not serial_path.exists():
+                    continue
+                serial = normalize_udid(serial_path.read_text(encoding="utf-8").strip())
+                if serial == wanted:
+                    return True
+            except OSError:
+                continue
+        return False
+
+    def ios_devices(self) -> list[str] | None:
+        if not self.apple_usb_present():
+            return []
+        try:
+            result = subprocess.run(
+                ["/usr/bin/idevice_id", "-l"],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                timeout=3,
+                check=False,
+                text=True,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+        if result.returncode != 0:
+            return None
+        return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+
+    def validate_video_device(self) -> tuple[bool, str | None]:
+        path = Path(self.device)
+        try:
+            metadata = path.stat()
+        except FileNotFoundError:
+            return False, "video_device_missing"
+        if not stat.S_ISCHR(metadata.st_mode):
+            return False, "video_device_not_character_device"
+
+        target = path.resolve(strict=False)
+        name_path = Path("/sys/class/video4linux") / target.name / "name"
+        try:
+            name = name_path.read_text(encoding="utf-8").strip()
+        except OSError:
+            return False, "video_device_unverifiable"
+        if name != "DroidCam":
+            return False, "video_device_wrong"
+        if not Path("/sys/module/v4l2loopback").exists():
+            return False, "v4l2loopback_not_loaded"
+        return True, None
+
+    def process_holds_device(self, pid: int) -> bool:
+        try:
+            wanted = self.device_stat()
+            if wanted is None:
+                return False
+            for descriptor in Path(f"/proc/{pid}/fd").iterdir():
+                try:
+                    opened = descriptor.stat()
+                except OSError:
+                    continue
+                if stat.S_ISCHR(opened.st_mode) and opened.st_rdev == wanted.st_rdev:
+                    return True
+        except OSError:
+            return False
+        return False
+
+    def device_stat(self) -> os.stat_result | None:
+        try:
+            return Path(self.device).stat()
+        except OSError:
+            return None
+
+    def external_client_pid(self) -> int | None:
+        own_pid = self.child.pid if self.child else None
+        own_uid = os.getuid()
+        for entry in Path("/proc").iterdir():
+            if not entry.name.isdigit():
+                continue
+            pid = int(entry.name)
+            if pid in (os.getpid(), own_pid):
+                continue
+            try:
+                if entry.stat().st_uid != own_uid:
+                    continue
+                command = (entry / "comm").read_text(encoding="utf-8").strip()
+            except OSError:
+                continue
+            if command in {"droidcam", "droidcam-cli"} and self.process_holds_device(pid):
+                return pid
+        return None
+
+    def clear_keep_format(self, *, quiet: bool = False) -> tuple[bool, str | None]:
+        if not Path(self.device).exists():
+            return False, "video_device_missing"
+        try:
+            result = subprocess.run(
+                ["/usr/bin/v4l2-ctl", "-d", self.device, "-c", "keep_format=0"],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE,
+                timeout=4,
+                check=False,
+                text=True,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return False, "clear_keep_format_failed"
+        if result.returncode != 0:
+            if not quiet:
+                print(f"failed to clear keep_format: {result.stderr.strip()}", file=sys.stderr, flush=True)
+            return False, "clear_keep_format_failed"
+        self.keep_format_sticky = False
+        return True, None
+
+    @staticmethod
+    def process_wchar(pid: int) -> int | None:
+        try:
+            lines = Path(f"/proc/{pid}/io").read_text(encoding="utf-8").splitlines()
+        except OSError:
+            return None
+        for line in lines:
+            if line.startswith("wchar:"):
+                try:
+                    return int(line.split(":", 1)[1].strip())
+                except ValueError:
+                    return None
+        return None
+
+    def start_child(self) -> None:
+        command = [
+            "/usr/bin/droidcam-cli",
+            "-v",
+            "-nocontrols",
+            f"-dev={self.device}",
+            f"-size={self.size}",
+            "ios",
+            str(self.port),
+        ]
+        self.child_log = self.client_log_path.open("wb")
+        self.child = subprocess.Popen(
+            command,
+            stdin=subprocess.DEVNULL,
+            stdout=self.child_log,
+            stderr=subprocess.STDOUT,
+            start_new_session=False,
+        )
+        self.keep_format_sticky = True
+
+    def terminate_child(self) -> None:
+        child = self.child
+        if child is not None:
+            if child.poll() is None:
+                try:
+                    child.terminate()
+                    child.wait(timeout=2)
+                except subprocess.TimeoutExpired:
+                    child.kill()
+                    try:
+                        child.wait(timeout=2)
+                    except subprocess.TimeoutExpired:
+                        pass
+                except ProcessLookupError:
+                    pass
+            try:
+                child.wait(timeout=0)
+            except (subprocess.TimeoutExpired, ChildProcessError):
+                pass
+        if self.child_log is not None:
+            try:
+                self.child_log.close()
+            except OSError:
+                pass
+        self.child = None
+        self.child_log = None
+
+    def client_error_tail(self) -> str:
+        try:
+            raw = self.client_log_path.read_bytes()[-16_384:]
+        except OSError:
+            return ""
+        lines = [line.strip() for line in raw.decode("utf-8", errors="replace").splitlines()[-20:] if line.strip()]
+        benign = ("Audio loopback device not found", "Is snd_aloop loaded?", "Client v", "Video: ")
+        meaningful = [line for line in lines if not line.startswith(benign)]
+        return "\n".join(meaningful)[-8_192:]
+
+    def remember_client_error(self) -> None:
+        error = self.client_error_tail()
+        if not error:
+            return
+        self.last_client_error = error
+        now = time.monotonic()
+        if error != self.last_logged_client_error or now - self.last_client_error_log_time >= 300:
+            lines = error.splitlines()
+            keywords = ("error", "failed", "refused", "cannot", "reset")
+            summary = next((line for line in reversed(lines) if any(word in line.lower() for word in keywords)), lines[-1])
+            print(f"droidcam-cli failed: {summary}", file=sys.stderr, flush=True)
+            self.last_logged_client_error = error
+            self.last_client_error_log_time = now
+
+    def notify_open_app(self) -> None:
+        try:
+            subprocess.Popen(
+                [
+                    "/usr/bin/notify-send",
+                    "--app-name=DroidCam",
+                    "--icon=camera-video",
+                    "Open DroidCam on iPhone",
+                    "Keep the iPhone unlocked with DroidCam open; it will connect automatically.",
+                ],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+        except OSError:
+            pass
+
+    def connection_attempt(self) -> tuple[bool, str]:
+        if not self.should_preserve_format():
+            cleared, reason = self.clear_keep_format()
+            if not cleared:
+                return False, reason or "clear_keep_format_failed"
+
+        self.attempt += 1
+        self.start_child()
+        assert self.child is not None
+        baseline = self.process_wchar(self.child.pid)
+        if baseline is None:
+            self.terminate_child()
+            self.remember_client_error()
+            return False, "proc_io_unavailable"
+
+        required_bytes = self.width * self.height * 3 // 2
+        activity = FrameActivity(required_bytes, baseline)
+        deadline = time.monotonic() + self.connect_timeout
+        next_device_check = time.monotonic() + self.poll_interval
+        while not self.stopping and not self.reconnect_requested and time.monotonic() < deadline:
+            if self.child.poll() is not None:
+                code = self.child.returncode
+                self.terminate_child()
+                self.remember_client_error()
+                return False, f"client_exited_{code}"
+            current = self.process_wchar(self.child.pid)
+            if current is None:
+                self.terminate_child()
+                self.remember_client_error()
+                return False, "proc_io_unavailable"
+            if activity.observe(current) and self.process_holds_device(self.child.pid):
+                self.last_client_error = ""
+                return True, "stream_started"
+            if time.monotonic() >= next_device_check:
+                if not self.apple_usb_present():
+                    self.terminate_child()
+                    return False, "iphone_absent"
+                next_device_check = time.monotonic() + self.poll_interval
+            self.write_status("connecting", "waiting_for_frames", iphone_present=True)
+            outcome = self.wait_interruptible(0.25)
+            if outcome == "usb" and not self.apple_usb_present():
+                self.terminate_child()
+                return False, "iphone_absent"
+
+        self.terminate_child()
+        if self.stopping:
+            return False, "stopping"
+        if self.reconnect_requested:
+            return False, "reconnect_requested"
+        self.remember_client_error()
+        return False, "connect_timeout"
+
+    def monitor_stream(self) -> str:
+        assert self.child is not None
+        last_wchar = self.process_wchar(self.child.pid)
+        if last_wchar is None:
+            return "proc_io_unavailable"
+        activity = FrameActivity(self.width * self.height * 3 // 2, last_wchar)
+        last_activity = time.monotonic()
+        last_activity_wall = utc_now()
+        next_device_check = 0.0
+
+        while not self.stopping and not self.reconnect_requested:
+            if self.child.poll() is not None:
+                return f"client_exited_{self.child.returncode}"
+            now = time.monotonic()
+            current = self.process_wchar(self.child.pid)
+            if current is None:
+                return "proc_io_unavailable"
+            if activity.observe(current):
+                last_activity = now
+                last_activity_wall = utc_now()
+            if not self.process_holds_device(self.child.pid):
+                return "video_device_released"
+            if now - last_activity > self.stale_timeout:
+                return "frame_stalled"
+            if now >= next_device_check:
+                devices = self.ios_devices()
+                if devices is None:
+                    return "usbmuxd_unavailable"
+                if self.udid not in devices:
+                    return "iphone_absent"
+                if len(devices) > 1:
+                    return "multiple_ios_devices"
+                next_device_check = now + self.poll_interval
+            self.write_status(
+                "streaming",
+                None,
+                iphone_present=True,
+                last_frame_activity=iso_at(last_activity_wall),
+            )
+            outcome = self.wait_interruptible(1)
+            if outcome == "usb" and not self.apple_usb_present():
+                return "iphone_absent"
+        return "stopping" if self.stopping else "reconnect_requested"
+
+    def should_preserve_format(self) -> bool:
+        return preserve_format(self.last_stream_ended, time.monotonic(), self.format_grace)
+
+    def run(self) -> int:
+        backoff = 1.0
+
+        self.write_status("starting", None)
+        try:
+            while not self.stopping:
+                if self.reconnect_requested:
+                    self.reconnect_requested = False
+                    self.terminate_child()
+                    backoff = 1.0
+                    print("manual reconnect requested", flush=True)
+
+                valid, video_reason = self.validate_video_device()
+                if not valid:
+                    self.write_status("error", video_reason)
+                    self.wait_interruptible(2)
+                    continue
+
+                external_pid = self.external_client_pid()
+                if external_pid is not None:
+                    self.write_status(
+                        "blocked",
+                        "external_client",
+                        external_client_pid=external_pid,
+                    )
+                    self.wait_interruptible(2)
+                    continue
+
+                if not self.apple_usb_present():
+                    self.was_present = False
+                    self.notifier.detach()
+                    self.attempt = 0
+                    backoff = 1.0
+                    self.last_stream_ended = None
+                    self.last_client_error = ""
+                    if self.keep_format_sticky:
+                        self.clear_keep_format(quiet=True)
+                    self.wait_with_heartbeat(30, "waiting_device", "iphone_absent")
+                    continue
+
+                devices = self.ios_devices()
+                if devices is None:
+                    self.write_status("waiting_device", "usbmuxd_starting")
+                    self.wait_interruptible(1)
+                    continue
+                present = self.udid in devices
+                if not present:
+                    self.write_status("waiting_device", "iphone_initializing")
+                    self.wait_interruptible(1)
+                    continue
+                if not self.was_present:
+                    self.was_present = True
+                    self.notifier.attach(time.monotonic())
+                    self.attempt = 0
+                    backoff = 1.0
+                if len(devices) > 1:
+                    if self.keep_format_sticky:
+                        self.clear_keep_format(quiet=True)
+                    self.write_status("conflict", "multiple_ios_devices", iphone_present=True)
+                    self.wait_interruptible(2)
+                    continue
+
+                connected, reason = self.connection_attempt()
+                if self.stopping:
+                    break
+                if self.reconnect_requested:
+                    continue
+                if connected:
+                    backoff = 1.0
+                    self.notifier.mark_streaming()
+                    stream_reason = self.monitor_stream()
+                    self.terminate_child()
+                    if stream_reason not in {"reconnect_requested", "stopping"}:
+                        self.remember_client_error()
+                    self.last_stream_ended = time.monotonic()
+                    if stream_reason == "stopping":
+                        break
+                    if stream_reason == "iphone_absent":
+                        self.was_present = False
+                        self.notifier.detach()
+                        self.clear_keep_format(quiet=True)
+                        continue
+                    if stream_reason == "reconnect_requested":
+                        continue
+                    reason = stream_reason
+                else:
+                    if reason == "iphone_absent":
+                        self.was_present = False
+                        self.notifier.detach()
+                        self.clear_keep_format(quiet=True)
+                        continue
+                    if app_may_be_unavailable(reason) and self.notifier.failed(time.monotonic()):
+                        self.notify_open_app()
+                    if not self.should_preserve_format():
+                        self.clear_keep_format(quiet=True)
+
+                delay = min(backoff, float(self.max_backoff))
+                jittered = delay + random.uniform(0, min(0.5, delay / 4))
+                outcome = self.wait_with_status(
+                    jittered,
+                    "backoff" if connected else "waiting_app",
+                    reason,
+                    iphone_present=True,
+                )
+                if outcome in {"reload", "usb"}:
+                    continue
+                backoff = min(backoff * 2, float(self.max_backoff))
+        finally:
+            self.terminate_child()
+            self.clear_keep_format(quiet=True)
+        return 0
+
+
+def main() -> int:
+    signal.signal(signal.SIGTERM, _capture_early_signal)
+    signal.signal(signal.SIGINT, _capture_early_signal)
+    signal.signal(signal.SIGUSR1, _capture_early_signal)
+    try:
+        watcher = Watcher()
+        signal.signal(signal.SIGTERM, watcher.handle_signal)
+        signal.signal(signal.SIGINT, watcher.handle_signal)
+        signal.signal(signal.SIGUSR1, watcher.handle_signal)
+        for signum in _EARLY_SIGNALS:
+            watcher.handle_signal(signum, None)
+        return watcher.run()
+    except Exception as error:
+        print(f"droidcam-watch: {error}", file=sys.stderr, flush=True)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

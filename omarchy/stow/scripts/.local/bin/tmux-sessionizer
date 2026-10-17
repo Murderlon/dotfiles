@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Personal Neovim <C-p> companion; select repositories from ~/Code.
+set -euo pipefail
+if (($# == 1)); then
+  selected=$1
+elif (($# == 0)); then
+  selected=$(find "${CODE_DIR:-$HOME/Code}" -mindepth 1 -maxdepth 1 -type d | fzf) || exit 0
+else
+  printf 'Usage: tmux-sessionizer [DIRECTORY]\n' >&2
+  exit 2
+fi
+[[ -n $selected && -d $selected ]] || exit 0
+selected_name=$(basename -- "$selected" | tr '.:' '__')
+if [[ -z ${TMUX:-} ]]; then
+  exec tmux new-session -A -s "$selected_name" -c "$selected"
+fi
+if ! tmux has-session -t "=$selected_name" 2>/dev/null; then
+  tmux new-session -ds "$selected_name" -c "$selected"
+fi
+tmux switch-client -t "=$selected_name"

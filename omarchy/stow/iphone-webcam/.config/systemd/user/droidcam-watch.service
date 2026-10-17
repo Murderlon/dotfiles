@@ -1,0 +1,47 @@
+[Unit]
+Description=DroidCam iPhone USB watcher
+Documentation=https://www.dev47apps.com/droidcam/linux/
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=exec
+EnvironmentFile=%h/.config/droidcam-watch.env
+ExecStart=%h/.local/libexec/droidcam-watch
+ExecReload=/usr/bin/kill -USR1 $MAINPID
+ExecStopPost=-/usr/bin/v4l2-ctl -d ${DROIDCAM_DEVICE} -c keep_format=0
+RuntimeDirectory=droidcam-watch
+RuntimeDirectoryMode=0700
+UMask=0077
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=droidcam-watch
+Restart=on-failure
+RestartSec=3s
+KillMode=mixed
+TimeoutStopSec=15s
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+CapabilityBoundingSet=
+AmbientCapabilities=
+MemoryMax=512M
+TasksMax=64
+ReadWritePaths=%t/droidcam-watch
+
+[Install]
+WantedBy=default.target
